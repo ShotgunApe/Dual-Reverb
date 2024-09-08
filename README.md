@@ -1,3 +1,6 @@
-# IS
+# Independent Study Thesis
 
-## More info - surely this will work
+CSCI-45100
+
+### Code
+Write documentation here eventually
