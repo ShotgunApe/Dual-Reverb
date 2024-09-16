@@ -50,7 +50,8 @@ public:
 
 //------------------------------------------------------------------------
 protected:
-
+    // Include parameters to be modified by VST here
+    Steinberg::Vst::ParamValue mReverbGain = 1.0f;
 };
 
 //------------------------------------------------------------------------

@@ -5,6 +5,10 @@
 #include "myplugincontroller.h"
 #include "myplugincids.h"
 #include "vstgui/plugin-bindings/vst3editor.h"
+#include "base/source/fstreamer.h"
+
+//for parameters
+#include "plugids.h"
 
 using namespace Steinberg;
 
@@ -25,6 +29,7 @@ tresult PLUGIN_API CReverbController::initialize (FUnknown* context)
 	}
 
 	// Here you could register some parameters
+    parameters.addParameter(STR16("Gain"), STR16("dB"), 0, 0.5f, Vst::ParameterInfo::kCanAutomate, ReverbParams::kParamReverbGainId, 0);
 
 	return result;
 }
@@ -44,6 +49,14 @@ tresult PLUGIN_API CReverbController::setComponentState (IBStream* state)
 	// Here you get the state of the component (Processor part)
 	if (!state)
 		return kResultFalse;
+
+    IBStreamer streamer (state, kLittleEndian);
+    float savedParam1 = 0.f;
+    if (streamer.readFloat(savedParam1) == false)
+        return kResultFalse;
+
+    if (auto param = parameters.getParameter(ReverbParams::kParamReverbGainId))
+        param->setNormalized(savedParam1);
 
 	return kResultOk;
 }
