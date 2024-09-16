@@ -51,8 +51,8 @@ endif(SMTG_ENABLE_VSTGUI_SUPPORT)
 
 smtg_target_add_plugin_snapshots (IS-Reverb
     RESOURCES
-        resource/C3E0B4FE897150D8888FBADBF2EDFEF4_snapshot.png
-        resource/C3E0B4FE897150D8888FBADBF2EDFEF4_snapshot_2.0x.png
+        resource/099A656FF6B1532DB9389F6F9E80B962_snapshot.png
+        resource/099A656FF6B1532DB9389F6F9E80B962_snapshot_2.0x.png
 )
 
 target_link_libraries(IS-Reverb

@@ -9,10 +9,10 @@
 
 namespace fhw {
 //------------------------------------------------------------------------
-static const Steinberg::FUID kCReverbProcessorUID (0xC3E0B4FE, 0x897150D8, 0x888FBADB, 0xF2EDFEF4);
-static const Steinberg::FUID kCReverbControllerUID (0x0C3AED8A, 0xDA6B50F3, 0x9F96F1B0, 0xFDA682D0);
+static const Steinberg::FUID kCReverbProcessorUID (0x099A656F, 0xF6B1532D, 0xB9389F6F, 0x9E80B962);
+static const Steinberg::FUID kCReverbControllerUID (0x162D94BD, 0x39A25C85, 0xA83E47D9, 0x4E7B2393);
 
-#define CReverbVST3Category "TestCategory"
+#define CReverbVST3Category "Fx"
 
 //------------------------------------------------------------------------
 } // namespace fhw
