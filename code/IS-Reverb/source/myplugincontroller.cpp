@@ -7,9 +7,6 @@
 #include "vstgui/plugin-bindings/vst3editor.h"
 #include "base/source/fstreamer.h"
 
-//for parameters
-#include "plugids.h"
-
 using namespace Steinberg;
 
 namespace fhw {

@@ -9,8 +9,6 @@
 #include "pluginterfaces/vst/ivstparameterchanges.h"
 #include "public.sdk/source/vst/vstaudioprocessoralgo.h"
 
-#include "plugids.h"
-
 using namespace Steinberg;
 
 namespace fhw {
@@ -71,7 +69,7 @@ tresult PLUGIN_API CReverbProcessor::process (Vst::ProcessData& data)
 {
 	//--- First : Read inputs parameter changes-----------
 
-
+    if (data.inputParameterChanges)
     {
         int32 numParamsChanged = data.inputParameterChanges->getParameterCount ();
         for (int32 index = 0; index < numParamsChanged; index++)
