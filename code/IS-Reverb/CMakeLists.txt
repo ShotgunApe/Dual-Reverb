@@ -53,6 +53,7 @@ smtg_target_add_plugin_snapshots (IS-Reverb
     RESOURCES
         resource/099A656FF6B1532DB9389F6F9E80B962_snapshot.png
         resource/099A656FF6B1532DB9389F6F9E80B962_snapshot_2.0x.png
+        resource/test-v2.png
 )
 
 target_link_libraries(IS-Reverb

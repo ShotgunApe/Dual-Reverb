@@ -81,6 +81,7 @@ tresult PLUGIN_API CReverbProcessor::process (Vst::ProcessData& data)
                 int32 numPoints = paramQueue->getPointCount ();
                 switch (paramQueue->getParameterId ())
                 {
+                    // for each input, include a case that check if a parameter has changed
                     case ReverbParams::kParamReverbGainId:
                         if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue)
                             mReverbGain = value;
