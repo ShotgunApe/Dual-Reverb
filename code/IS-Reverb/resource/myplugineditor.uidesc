@@ -8,6 +8,9 @@
 		},
 		"fonts": {},
 		"colors": {},
+		"control-tags": {
+			"GAIN": "102"
+		},
 		"custom": {
 			"FocusDrawing": {},
 			"VST3Editor": {
@@ -39,6 +42,9 @@
 				"SelectedRow": "0"
 			},
 			"UIFontsDataSource": {
+				"SelectedRow": "-1"
+			},
+			"UITagsDataSource": {
 				"SelectedRow": "-1"
 			}
 		},
@@ -328,6 +334,7 @@
 							"angle-start": "135",
 							"circle-drawing": "false",
 							"class": "CKnob",
+							"control-tag": "GAIN",
 							"corona-color": "~ GreyCColor",
 							"corona-dash-dot": "true",
 							"corona-dash-dot-lengths": "1.26,0.1",
@@ -338,14 +345,10 @@
 							"corona-line-cap-butt": "true",
 							"corona-outline": "true",
 							"corona-outline-width-add": "2",
-							"default-value": "0.5",
 							"handle-color": "~ WhiteCColor",
 							"handle-line-width": "8",
 							"handle-shadow-color": "~ BlackCColor",
 							"knob-range": "200",
-							"max-value": "1",
-							"min-value": "0",
-							"mouse-enabled": "true",
 							"opacity": "1",
 							"origin": "420, 140",
 							"size": "70, 70",

@@ -26,6 +26,7 @@ tresult PLUGIN_API CReverbController::initialize (FUnknown* context)
 	}
 
 	// Here you could register some parameters
+	setKnobMode(Vst::kLinearMode);
     parameters.addParameter(STR16("Gain"), STR16("dB"), 0, 0.5f, Vst::ParameterInfo::kCanAutomate, ReverbParams::kParamReverbGainId, 0);
 
 	return result;

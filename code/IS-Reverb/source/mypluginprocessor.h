@@ -5,6 +5,7 @@
 #pragma once
 
 #include "public.sdk/source/vst/vstaudioeffect.h"
+#include "myplugincids.h"
 
 namespace fhw {
 
@@ -31,6 +32,9 @@ public:
 	
 	/** Called at the end before destructor */
 	Steinberg::tresult PLUGIN_API terminate () SMTG_OVERRIDE;
+
+	/** Used to set delay lines (9/23/24)*/
+	Steinberg::tresult PLUGIN_API setBusArrangements (Steinberg::Vst::SpeakerArrangement* inputs, Steinberg::int32 numIns, Steinberg::Vst::SpeakerArrangement* outputs, Steinberg::int32 numOuts) SMTG_OVERRIDE;
 	
 	/** Switch the Plug-in on/off */
 	Steinberg::tresult PLUGIN_API setActive (Steinberg::TBool state) SMTG_OVERRIDE;
@@ -51,7 +55,17 @@ public:
 //------------------------------------------------------------------------
 protected:
     // Include parameters to be modified by VST here
+
+	// mReverbGain refers to the final stage of processing - how loud/soft should the output signal be after it has been manipulated
     Steinberg::Vst::ParamValue mReverbGain = 1.0f;
+
+	// mReverbDecayGain provides the decay amount that the signal should be subject to after each delay
+	Steinberg::Vst::ParamValue mReverbDecayGain = 0.45f;
+
+	// mBuffer refers to the buffer itself that contains the delayed signal
+	float** mBuffer;
+
+	Steinberg::int32 mBufferPos;
 };
 
 //------------------------------------------------------------------------

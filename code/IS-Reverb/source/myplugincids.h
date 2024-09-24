@@ -17,6 +17,7 @@ static const Steinberg::FUID kCReverbControllerUID (0x162D94BD, 0x39A25C85, 0xA8
 // Include enum with parameters for knobs, add more with time as functionality increases (9/16/24)
 enum ReverbParams : Steinberg::Vst::ParamID {
     kParamReverbGainId = 102,
+    kParamReverbDecayGainId = 103,
 };
 
 //------------------------------------------------------------------------
