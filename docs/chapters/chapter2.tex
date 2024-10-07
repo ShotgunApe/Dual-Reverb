@@ -2,7 +2,7 @@
 \chapter{Realtime Audio Programming}
 \hspace*{-0.12cm}This chapter will consider the theory behind audio programming and the different principles that are followed to create a functional program. It will begin with an overview of two types of signals: \textit{continuous signals} and \textit{discrete signals}. Next, it will cover the methods by which a digital system communicates with its speakers to create sound. After, the requirements that a realtime audio program needs in order to function will be considered. Specifically, this will include program structure and functionality. Finally, several libraries and other software available that handles these requirements will be discussed in length.
 \section{Sound As A Discrete Signal}
-Sound is a physical phenomenon. Vibrations travel though a medium such as air to create waves and differences in pressure, which travel at the the speed of sound (roughly 343 m/s). Naturally, representing this in a digital setting involves simplifying the physical nature of sound waves into an easily digestible format.
+Sound is a physical phenomenon. Vibrations travel though a medium such as air to create waves and differences in pressure, which travel at the the speed of sound (roughly 331 m/s) \cite{Ling_2016}. Naturally, representing this in a digital setting involves simplifying the physical nature of sound waves into an easily digestible format.
 
 Consider Figure 3.1.
 
@@ -21,7 +21,8 @@ Consider Figure 3.1.
 			\addplot [
 			jump mark mid,
 			domain = -3.5:3.5,
-			samples = 1000,
+			samples = 100,
+			smooth,
 			very thick, red
 			] {(cos(deg(3 * x)))};
 
@@ -38,16 +39,69 @@ This is a representation of a sinusoid under the time domain. Each crest and tro
 	f(t)=Acos(2\pi ft + \varTheta), t \in (-\infty, \infty)
 \end{equation}\end{defn}
 
-where \textit{f} is frequency, \textit{t} is time, and $\varTheta$ is the phase offset in radians \cite{Symons_2013}. One is not limited to sinusoids, however. One can create (or deconstruct) any type of non-sinusoidal signal by taking the sum of several sinusoids to approximate a desired signal, given a sufficiently high number of sine waves are used. This is defined as:
+where \textit{f} is frequency, \textit{t} is time, and $\varTheta$ is the phase offset in radians \cite{Symons_2013}. One is not limited to sinusoids, however. One can create (or deconstruct) any type of non-sinusoidal signal by taking the sum of several sinusoids, given a sufficiently high number of sine waves are used. This is defined as:
 
-\begin{defn}[Definition of a non-sinusoidal continuous signal]\label{def1}
+\begin{defn}[Definition of a non-sinusoidal continuous signal]\label{def2}
 	\begin{equation}\label{intro2f(t)}
 	f(t)=\sum_{k=1}^{N_h} A_k cos(2\pi kft + \varTheta_k)
 \end{equation}\end{defn}
 
-where \textit{k} is one sinusoid in the sum, $N_h$ is the number of total sinusoids used to construct the signal, $A_k$ the amplitude of a particular signal for each \textit{k}, $\varTheta_k$ the phase for each \textit{k}, and \textit{f} the fundamental frequency of $f(t)$ \cite{Symons_2013}.
+where \textit{k} is one sinusoid in the sum, $N_h$ is the number of total sinusoids used to construct the signal, $A_k$ the amplitude of a particular signal for each \textit{k}, $\varTheta_k$ the phase for each \textit{k}, and \textit{f} the fundamental frequency of $f(t)$ \cite{Symons_2013}. With this definition in mind, any signal can be represented as the sum of several sinusoids, seen in Figure 3.2.
 
-One can represent Figure 3.1 digitally by taking measurements of the function \(f_1(t)\) at regular points in time, each known as a \textit{sample}. By convention, samples are in the range (-1,1). By graphing each sample into the function \(f_2(t)\), one can create a digital version of this analog signal.
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+\begin{center}
+	\fbox{
+	\begin{tikzpicture}
+		\begin{axis} [
+			axis x line = middle, % The x axis should go through the origin
+			xlabel = \(t\),
+			ylabel = {\(f_1(t)\)},
+			height = 5cm,
+			width = 12cm
+			]
+
+			\addplot [
+			jump mark mid,
+			domain=-6.5:6.5,
+			samples=100,
+			smooth,
+			very thick, red
+			] {(0.5 * sin(deg(2 * x)))};
+
+			\addplot [
+			jump mark mid,
+			domain=-6.5:6.5,
+			samples=100,
+			smooth,
+			very thick, blue
+			] {(0.5 * sin(deg(3 * x)))};
+
+			\addplot [
+			jump mark mid,
+			domain=-6.5:6.5,
+			samples=100,
+			smooth,
+			very thick, blue!60!red!40 %xcolor the goat
+			] {((0.5 * sin(deg(3 * x))) + (0.5 * (sin(deg(2 * x)))))};
+		\end{axis}
+	\end{tikzpicture}}
+	\caption{A graph of a waveform, deconstructed to its sinusoids.}
+\end{center}
+\end{figure}
+
+To create a digitial representation of this signal, the \textit{Nyquist-Shannon Sampling Theorem} provides guidelines for how signals should be \textit{bandlimited} - or rather, have their frequencies limited - and how frequently a signal should be sampled to ensure its accuracy.
+
+\begin{defn}[The Nyquist-Shannon Sampling Theorem \cite{Orfanidis_1998}]\label{def3}
+\hfill
+\begin{enumerate}
+	\item The signal must be \textit{bandlimited}, containing no frequencies beyond a particular maximum $F_{max}$.
+	\item The \textit{sampling rate} of a signal must be at least twice the maximum frequency $F_{max}$.
+\end{enumerate}
+\end{defn}
+
+[insert stuff about nyquist frequencies here]
+
+The process of \textit{sampling} an analog signal is done by taking measurements of a particular function at regular points in time. Each individual measurement of the original analog signal is a \textit{sample}. By convention, samples are in the range (-1,1).
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\begin{center}
@@ -65,19 +119,19 @@ One can represent Figure 3.1 digitally by taking measurements of the function \(
 				ycomb,
 				mark = text,
 				text mark = , % so jank
-				domain = -3.5:3.5,
-				samples = 40,
+				domain = -6.5:6.5,
+				samples = 80,
 				red
-				] {(cos(deg(3 * x)))};
+				] {((0.5 * sin(deg(3 * x))) + (0.5 * (sin(deg(2 * x)))))};
 
 			\end{axis}
 		\end{tikzpicture}
 		}
-		\caption{A discrete graph of the sine wave \(f_2(t) = cos(3t)\) taken with 40 samples.}
+		\caption{A discrete graph of a waveform taken with 80 samples.}
 	\end{center}
 \end{figure}
 
-This is a discrete representation of our original graph \(f_1(t) = sin(3t)\). []
+This is a discrete representation of our original continuous signal. Under this representation, one may predict how to represent this in code. If each sample refers to a \textit{float} in the range (-1,1), an array of floats is sufficient to store this waveform in memory.
 
 
 
