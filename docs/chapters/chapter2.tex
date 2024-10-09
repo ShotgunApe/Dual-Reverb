@@ -135,7 +135,7 @@ The process of \textit{sampling} an analog signal is done by taking measurements
 This is a discrete representation of our original continuous signal. Under this representation, one may predict how to represent this in code. If each sample refers to a \textit{float} in the range (-1,1), an array of floats is sufficient to store this waveform in memory. With this representation of sound, one can now use this data to process sound digitally.
 
 \section{The Realtime Programming Bus Schedule}
-To process sound digitally, there are a few different methods of doing so: []. Unlike a music player, our program has to follow the set schedule requested by the audio driver of the device. At regular intervals, the sound card of a device requests audio data to be sent to the system's speakers. [find citations]
+To process sound digitally, our program has to follow the set schedule requested by the audio driver of the device. It would be impractical to send each sample individually, therefore, a \textit{buffer} of audio data is sent at regular intervals. As buffers of audio data are sent, the integrated sound card of a device accesses the data to be output to the speaker of the device  \cite{Walker_2005}. The smaller the buffer, the less latency there is between audio processing and output. However, this leaves less time to process audio for the digital system. For whatever reason, if data is not available for the sound card to access, the resulting sound will create ``clicks'' and ``pops'' where there is a gap in the audio stream \cite{Walker_2005}. Figure 3.4 describes how this data travels in a digital setting.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]
@@ -155,7 +155,7 @@ To process sound digitally, there are a few different methods of doing so: []. U
 			(Generally Integrated)};
 			\node (B) [startstop, right of=A, xshift=4cm] {Driver};
 			\node (C) [startstop, below of=B, yshift=-1.3cm] {OS \\
-			(Windows, Mac, etc.)};
+			(Win, Mac, etc.)};
 			\node (D) [startstop, left of=C, xshift=-4cm] {Audio Driver \\
 			(ASIO, Core Audio, etc.)};
 			\node (end) [startstop, left of =D, xshift=-5cm] {Host Application \\
@@ -168,7 +168,7 @@ To process sound digitally, there are a few different methods of doing so: []. U
 			\draw [<->, thick] (start) ++(3.2, 0) -- +(0.58, 0);
 			\draw [<->, thick] (A) ++(2.22, 0) -- +(1.28, 0);
 			\draw [<->, thick] (B) ++(0, -1.71) -- +(0, 1.21);
-			\draw [<->, thick] (C) ++(-2.59, 0) -- +(0.49, 0);
+			\draw [<->, thick] (C) ++(-2.59, 0) -- +(1, 0);
 			\draw [<->, thick] (D) ++(-3.55, 0) -- +(1.14, 0);
 		\end{tikzpicture}
 		}
@@ -176,5 +176,10 @@ To process sound digitally, there are a few different methods of doing so: []. U
 	\end{center}
 \end{figure}
 
+Audio is first processed by the audio plugin under a particular host application. This host application is most commonly a \textit{Digital Audio Workstation} (DAW), which handles several different audio plugins to generate and manipulate sound. This audio is processed by the audio driver into buffers. These buffers are sent to the integrated sound card via the OS's drivers, which is sent as output to the system's speakers.
+
 \section{The Golden Rules}
+The typical structure of a audio program separates the internal processing and the external GUI. []
+
 \section{Software Available}
+There are several libraries and development kits available that assist in the development of audio plugins.
