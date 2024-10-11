@@ -166,9 +166,9 @@ To process sound digitally, our program has to follow the set schedule requested
 			};
 
 			\draw [<->, thick] (start) ++(3.2, 0) -- +(0.58, 0);
-			\draw [<->, thick] (A) ++(2.22, 0) -- +(1.28, 0);
-			\draw [<->, thick] (B) ++(0, -1.71) -- +(0, 1.21);
-			\draw [<->, thick] (C) ++(-2.59, 0) -- +(1, 0);
+			\draw [<->, thick] (A) -- node {} (B);
+			\draw [<->, thick] (B) -- node {} (C);
+			\draw [<->, thick] (C) -- node {} (D);
 			\draw [<->, thick] (D) ++(-3.55, 0) -- +(1.14, 0);
 		\end{tikzpicture}
 		}
@@ -180,8 +180,58 @@ Audio is first processed by the audio plugin under a particular host application
 
 This is important to distinguish as a real time program does not simply play audio files akin to one using sound effects for a video game; our program needs to play this sound as it is being generated on-the-fly. This provides limitations that prevent one from using \verb|std::cout| to print information to the terminal during execution, for example. (eh)
 
-\section{The Golden Rules}
-The typical structure of a audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern.
-
 \section{Software Available}
-There are several libraries and development kits available that assist in the development of audio plugins, the majority of which use C++.
+There are several libraries and software development kits available that assist in the development of audio plugins, the majority of which use C++. Many of these provide appropriate program structure, classes, and tests that solve the issue of creating a compatible program (mention before?) debugging any issues with one's program. A few popular libraries include:
+
+\begin{enumerate}
+	\item JUCE
+	\item iPlug2
+	\item DISTHRO
+\end{enumerate}
+
+These libraries create an abstraction layer that handles several plugin formats. These allow one to create an application [].
+
+These libraries also provide several algorithms that allow one to prototype plugins quickly. []
+
+There are several formats available to programmers [].
+
+The \textit{Virtual Studio Technology} specification allows developers to independently create [], however, the execution of these programs depends on the platform of choice.
+
+\section{The Golden Rules}
+The typical structure of a audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, the VST SDK uses a variation of the combined controller and data model (cite vst sdk doc too) \cite{Bucanek2009}. Figure 3.5 provides a diagram of this model. The corresponding interfaces for each part respectively are the \verb|Steinberg::Vst::IAudioProcessor|  and
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]
+	\tikzstyle{arrow} = [thick,->,>=stealth]
+	\begin{center}
+		\fbox{
+		\begin{tikzpicture}
+			\node (start) [inner sep=10pt, startstop] {Controller / \\ Data Model};
+			\node (A) [startstop, right of=start, xshift=5cm] {View};
+
+			\draw [->, thick] (start) ++(1.5, 0.2) -- node[anchor=south] {\footnotesize{Action}} +(3, 0) (A);
+			\draw [<-, thick] (start) ++(1.5, -0.2) -- node[anchor=north] {\footnotesize{Notification}} +(3, 0) (A);
+			\draw [->, thick] (start) ++(-1.5,0.5) -- +(-2,0) -- +(-2,-1) -- node[anchor=south] {\footnotesize{Change}} +(0, -1) (start);
+		\end{tikzpicture}
+		}
+		\caption{A Combined Controller and Data Model \cite{Bucanek2009}.}
+	\end{center}
+\end{figure}
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]
+	\tikzstyle{arrow} = [thick,->,>=stealth]
+	\begin{center}
+		\fbox{
+		\begin{tikzpicture}
+			\node (start) [inner sep=10pt, startstop] {Processor / \\ Data Model};
+			\node (A) [startstop, right of=start, xshift=5cm] {View / \\  Controller};
+
+			\draw [->, thick] (start) ++(1.5, 0.2) -- node[anchor=south] {\footnotesize{Action}} +(3, 0) (A);
+			\draw [<-, thick] (start) ++(1.5, -0.2) -- node[anchor=north] {\footnotesize{Notification}} +(3, 0) (A);
+			\draw [->, thick] (start) ++(-1.5,0.5) -- +(-2,0) -- +(-2,-1) -- node[anchor=south] {\footnotesize{Change}} +(0, -1) (start);
+		\end{tikzpicture}
+		}
+		\caption{The VST SDK Model.}
+	\end{center}
+\end{figure}
