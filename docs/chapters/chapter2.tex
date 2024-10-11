@@ -176,10 +176,12 @@ To process sound digitally, our program has to follow the set schedule requested
 	\end{center}
 \end{figure}
 
-Audio is first processed by the audio plugin under a particular host application. This host application is most commonly a \textit{Digital Audio Workstation} (DAW), which handles several different audio plugins to generate and manipulate sound. This audio is processed by the audio driver into buffers. These buffers are sent to the integrated sound card via the OS's drivers, which is sent as output to the system's speakers.
+Audio is first processed by the audio plugin under a particular host application. This host application is most commonly a \textit{Digital Audio Workstation} (DAW), which handles several different audio plugins to generate and manipulate sound. This audio is then processed by the audio driver into buffers. There are several available drivers that exist, such as ASIO for Windows and Core Audio for Mac (cite). These buffers are sent to the integrated sound card via the OS's drivers, which is sent as output to the system's speakers. Output is completed by the Digital-Audio Converter (DAC) which []. To recieve input, the audio recorded by a microphone connected to the digital system []. The system's [].
+
+This is important to distinguish as a real time program does not simply play audio files akin to one using sound effects for a video game; our program needs to play this sound as it is being generated on-the-fly. This provides limitations that prevent one from using \verb|std::cout| to print information to the terminal during execution, for example. (eh)
 
 \section{The Golden Rules}
-The typical structure of a audio program separates the internal processing and the external GUI. []
+The typical structure of a audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern.
 
 \section{Software Available}
-There are several libraries and development kits available that assist in the development of audio plugins.
+There are several libraries and development kits available that assist in the development of audio plugins, the majority of which use C++.
