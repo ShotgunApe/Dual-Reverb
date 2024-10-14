@@ -198,25 +198,7 @@ There are several formats available to programmers [].
 The \textit{Virtual Studio Technology} specification allows developers to independently create [], however, the execution of these programs depends on the platform of choice.
 
 \section{The Golden Rules}
-The typical structure of a audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, the VST SDK uses a variation of the combined controller and data model (cite vst sdk doc too) \cite{Bucanek2009}. Figure 3.5 provides a diagram of this model. The corresponding interfaces for each part respectively are the \verb|Steinberg::Vst::IAudioProcessor|  and
-
-\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
-	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]
-	\tikzstyle{arrow} = [thick,->,>=stealth]
-	\begin{center}
-		\fbox{
-		\begin{tikzpicture}
-			\node (start) [inner sep=10pt, startstop] {Controller / \\ Data Model};
-			\node (A) [startstop, right of=start, xshift=5cm] {View};
-
-			\draw [->, thick] (start) ++(1.5, 0.2) -- node[anchor=south] {\footnotesize{Action}} +(3, 0) (A);
-			\draw [<-, thick] (start) ++(1.5, -0.2) -- node[anchor=north] {\footnotesize{Notification}} +(3, 0) (A);
-			\draw [->, thick] (start) ++(-1.5,0.5) -- +(-2,0) -- +(-2,-1) -- node[anchor=south] {\footnotesize{Change}} +(0, -1) (start);
-		\end{tikzpicture}
-		}
-		\caption{A Combined Controller and Data Model \cite{Bucanek2009}.}
-	\end{center}
-\end{figure}
+The typical structure of a audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, the VST SDK uses a variation of this model that combines the view and controller of the model (cite vst sdk doc too) \cite{Bucanek2009}. Figure 3.5 provides a diagram of this. The corresponding interfaces for each part respectively are the \verb|Steinberg::Vst::IAudioProcessor|  and [].
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]
@@ -229,9 +211,30 @@ The typical structure of a audio program separates the internal processing and t
 
 			\draw [->, thick] (start) ++(1.5, 0.2) -- node[anchor=south] {\footnotesize{Action}} +(3, 0) (A);
 			\draw [<-, thick] (start) ++(1.5, -0.2) -- node[anchor=north] {\footnotesize{Notification}} +(3, 0) (A);
-			\draw [->, thick] (start) ++(-1.5,0.5) -- +(-2,0) -- +(-2,-1) -- node[anchor=south] {\footnotesize{Change}} +(0, -1) (start);
+			\draw [->, thick] (start) ++(-1.5,0.5) -- +(-2,0) -- +(-2,-1) -- node[anchor=north] {\footnotesize{Change}} +(0, -1) (start);
 		\end{tikzpicture}
 		}
 		\caption{The VST SDK Model.}
 	\end{center}
 \end{figure}
+
+[put more words, eventually talk about UML diagram, maybe in next section?]
+
+\subsection{Development With The VST SDK}
+Development in []. Creating a C++ project using the design principles above can be done by using the VST Project Generator. It is a cmake script that [].
+
+
+\lstset{language =[ANSI]C++}
+\lstset{backgroundcolor=\color{white},rulecolor=\color{black}}
+\lstset{linewidth=.95\textwidth,breaklines=true}
+\lstset{commentstyle=\textit,stringstyle=\upshape,showspaces=false}
+\lstset{frame = single}
+\lstset{numbers=left,numberstyle=\tiny,basicstyle=\small}
+\lstset{commentstyle=\normalfont\itshape,breakautoindent=true}
+\lstset{abovecaptionskip=1.2\baselineskip,xleftmargin=30pt}
+\lstset{framesep=6pt}
+\begin{singlespace}
+\lstinputlisting[caption=VST3 Project Generator Script Usage, label=motion]{source/template.txt}
+\end{singlespace}
+
+With the design of the plugin taken care of, one can begin implementation of the plugin processor that will manipulate the input signal.

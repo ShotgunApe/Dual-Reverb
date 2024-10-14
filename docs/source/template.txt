@@ -1,0 +1,16 @@
+cmake \
+    -DSMTG_VENDOR_NAME_CLI="fhw" \
+    -DSMTG_VENDOR_HOMEPAGE_CLI="https://fhw.moe" \
+    -DSMTG_VENDOR_EMAIL_CLI="wsieber03@gmail.com" \
+    -DSMTG_PLUGIN_NAME_CLI="IS-Reverb" \
+    -DSMTG_PREFIX_FOR_FILENAMES_CLI="" \
+    -DSMTG_PLUGIN_IDENTIFIER_CLI="com.fhw.vst3.reverb" \
+    -DSMTG_CMAKE_PROJECT_NAME_CLI="IS-Reverb" \
+    -DSMTG_VENDOR_NAMESPACE_CLI="fhw" \
+    -DSMTG_PLUGIN_CLASS_NAME_CLI="CReverb" \
+    -DSMTG_PLUGIN_CATEGORY_CLI="Fx" \
+    -DSMTG_PLUGIN_BUNDLE_NAME_CLI="IS-Reverb" \
+    -DSMTG_VST3_SDK_SOURCE_DIR_CLI="../../../vstsdk/VST_SDK/vst3sdk" \
+    -DSMTG_GENERATOR_OUTPUT_DIRECTORY_CLI="" \
+    -DSMTG_ENABLE_VSTGUI_SUPPORT_CLI=ON \
+    -P GenerateVST3Plugin.cmake
