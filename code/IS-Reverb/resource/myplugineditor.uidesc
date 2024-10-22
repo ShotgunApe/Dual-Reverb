@@ -28,7 +28,7 @@
 				"SplitViewSize_1_1": "0.5088495575221239075602852608426474034786",
 				"SplitViewSize_2_0": "0.7336561743341404318030640752112958580256",
 				"SplitViewSize_2_1": "0.2633171912832929506542711806105216965079",
-				"TabSwitchValue": "0",
+				"TabSwitchValue": "1",
 				"Version": "1"
 			},
 			"UITemplateController": {
@@ -45,7 +45,7 @@
 				"SelectedRow": "-1"
 			},
 			"UITagsDataSource": {
-				"SelectedRow": "-1"
+				"SelectedRow": "0"
 			}
 		},
 		"templates": {
@@ -344,6 +344,7 @@
 							"font": "~ NormalFont",
 							"font-antialias": "true",
 							"font-color": "~ BlackCColor",
+							"frame-color": "~ BlackCColor",
 							"frame-width": "1",
 							"immediate-text-change": "false",
 							"max-value": "1",

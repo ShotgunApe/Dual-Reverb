@@ -33,9 +33,6 @@ public:
 	/** Called at the end before destructor */
 	Steinberg::tresult PLUGIN_API terminate () SMTG_OVERRIDE;
 
-	/** Used to set delay lines (9/23/24)*/
-	Steinberg::tresult PLUGIN_API setBusArrangements (Steinberg::Vst::SpeakerArrangement* inputs, Steinberg::int32 numIns, Steinberg::Vst::SpeakerArrangement* outputs, Steinberg::int32 numOuts) SMTG_OVERRIDE;
-	
 	/** Switch the Plug-in on/off */
 	Steinberg::tresult PLUGIN_API setActive (Steinberg::TBool state) SMTG_OVERRIDE;
 

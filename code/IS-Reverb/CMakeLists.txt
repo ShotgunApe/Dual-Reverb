@@ -30,6 +30,8 @@ smtg_add_vst3plugin(IS-Reverb
     source/myplugincontroller.h
     source/myplugincontroller.cpp
     source/mypluginentry.cpp
+    source/reverbstruct.h
+    source/reverbstruct.cpp
 )
 
 #- VSTGUI Wanted ----

@@ -5,6 +5,8 @@
 #include "mypluginprocessor.h"
 #include "myplugincids.h"
 
+#include "reverbstruct.h"
+
 #include "base/source/fstreamer.h"
 #include "pluginterfaces/vst/ivstparameterchanges.h"
 #include "public.sdk/source/vst/vstaudioprocessoralgo.h"
@@ -58,15 +60,6 @@ tresult PLUGIN_API CReverbProcessor::terminate ()
 	
 	//---do not forget to call parent ------
 	return AudioEffect::terminate ();
-}
-
-//------------------------------------------------------------------------
-tresult PLUGIN_API CReverbProcessor::setBusArrangements(Steinberg::Vst::SpeakerArrangement* inputs, Steinberg::int32 numIns, 
-                                                        Steinberg::Vst::SpeakerArrangement* outputs, Steinberg::int32 numOuts) {
-    if (numIns == 1 && numOuts == 1 && inputs[0 == outputs[0]])
-        return Steinberg::Vst::AudioEffect::setBusArrangements(inputs, numIns, outputs, numOuts);
-    return kResultFalse;
-
 }
 
 //------------------------------------------------------------------------
@@ -139,6 +132,9 @@ tresult PLUGIN_API CReverbProcessor::process (Vst::ProcessData& data)
 
     if (data.numSamples > 0) {
         //--- Here you have to implement your processing
+
+        //eventually replace each section of code here with appropriate processing from reverbstruct 10/21/24
+
         Steinberg::Vst::SpeakerArrangement arr;
         getBusArrangement(Steinberg::Vst::kOutput, 0, arr);
         int32 numChannels = Steinberg::Vst::SpeakerArr::getChannelCount(arr);
@@ -219,6 +215,12 @@ tresult PLUGIN_API CReverbProcessor::getState (IBStream* state)
     streamer.writeFloat(mReverbDecayGain);
 	return kResultOk;
 }
+
+
+
+
+
+
 
 //------------------------------------------------------------------------
 } // namespace fhw
