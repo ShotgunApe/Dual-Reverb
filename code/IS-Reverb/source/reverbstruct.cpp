@@ -21,7 +21,9 @@ tresult PLUGIN_API CReverbStructure::setBusArrangements(Steinberg::Vst::SpeakerA
 ////////////////////////////////////////
 
 
+tresult PLUGIN_API createLine () {
 
+}
 
 
 }

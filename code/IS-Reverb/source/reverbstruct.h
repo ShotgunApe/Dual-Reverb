@@ -7,6 +7,8 @@
 #include "public.sdk/source/vst/vstaudioeffect.h"
 #include "myplugincids.h"
 
+#include "dsp/delay.h"
+
 namespace fhw {
 
 //------------------------------------------------------------------------
