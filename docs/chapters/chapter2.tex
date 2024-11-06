@@ -136,13 +136,7 @@ This is a discrete representation of our original continuous signal. Such a snip
 
 \section{The Real-time Programming Bus Schedule}
 
-In a digital system, hardware components get the attention of the processor by sending \textit{interrupts} \cite{Rubini2005-kv}. Keyboards, hard drives, and network cards are all components that use interrupts to account for real-world imperfections in the transfer of data. Audio, likewise, utilizes interrupts for the playback of sound. At regular intervals, the audio driver reads a buffer of data to be played by the speaker of the device \cite{Walker_2005}. [] By utilizing a double buffer to prevent unfinished data being read, the program [].
-
-An issue occurs if time spent []. For this reason, processing these buffers need to be labeled a higher priority when interrupting the processor.
-
-Consider:
-
-[insert graph about audio data being late]
+In a digital system, hardware components get the attention of the processor by sending \textit{interrupts} \cite{Rubini2005-kv}. Keyboards, hard drives, and network cards are all components that use interrupts. By using interrupts, one can account for real-world imperfections in the transfer of data. Speakers, likewise, utilize interrupts for the playback of sound. To play sound, a continuous stream of audio data must be sent to the sound card or audio chipset of the device \cite{Walker_2005}. To do this, data is sent in chunks, each known as a \textit{buffer}. When the sound card finishes playing a buffer, it sends an interrupt to the processor requesting a new one for playback. For most applications, buffer sizes can be large enough to prevent audio from ever dropping. This allows for intermediate applications or virtual mixers to play audio from multiple sources without issue. However, in the case that lower latency is expected for the end user, lowering the buffer size lowers the latency at the cost of higher performance requirements \cite{corless2009pc-based}. This high performant expectation is an example of a \textit{real-time system}, which is defined as follows:
 
 \begin{defn}[Definition of a Real-time System \cite{realtimefaq}]\label{def3}
 \hfill \break
@@ -151,7 +145,7 @@ only depends upon the logical correctness of the computation but also upon
 the time at which the result is produced.
 
 \begin{center}
-\hspace*{-6.8cm}\textnormal{Extended for the following case of DSP applications:}
+\hspace*{-10.8cm}\textnormal{Extended for DSP applications:}
 \end{center}
 
 \hspace*{-0.6cm}In a real-time DSP process, the analyzed (input) and/or generated (output)
@@ -162,15 +156,22 @@ processing delay.
 
 \end{defn}
 
+The delivery of each chunk of data is dependent of the implementation of the audio driver.
+
+
+By utilizing a double buffer to prevent unfinished data being read, the program [].
+
+An issue occurs if time spent []. For this reason, processing these buffers need to be labeled a higher priority when interrupting the processor.
+
+Consider:
+
+[insert graph about audio data being late]
+
 Consider the following example: [stuff]
 
 [To process sound digitally, the program must follow strict guidelines in both functionality and time constraints.]
 
 [Imagine a bus. At regular intervals this bus []. In the time that bus takes its passengers to their destination and returns, the next bus must be fully admitted [rephrase] and seated. Should anyone not be in the bus at this point, it will leave without them. It can still drive, but it is less than ideal in doing so. [rephrase]]
-
-
-
-The method by which data will be processed is as follows: []. This is described as a \textit{real-time}
 
 To process sound digitally, our program has to follow the set schedule requested by the audio driver of the device. It would be impractical to send each sample individually, therefore, a \textit{buffer} of audio data is sent at regular intervals. As buffers of audio data are sent, the integrated sound card of a device accesses the data to be output to the speaker of the device  \cite{Walker_2005}. The smaller the buffer, the less latency there is between audio processing and output. However, this leaves less time to process audio for the digital system \cite{corless2009pc-based}. For whatever reason, if data is not available for the sound card to access, the resulting sound will create ``clicks'' and ``pops'' where there is a gap in the audio stream \cite{Walker_2005}. Figure 3.4 describes how this data travels in a digital setting.
 
