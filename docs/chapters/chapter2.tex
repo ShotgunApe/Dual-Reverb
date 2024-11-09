@@ -1,6 +1,6 @@
 %!TEX root = ../username.tex
-\chapter{Realtime Audio Programming}
-\hspace*{-0.15cm}This chapter will consider the theory behind realtime audio programming and the different principles that are followed to create a functional program. It will begin with an overview of digital signal processing. Specifically, this will include the mathematical background required to understand sound. Next, it will cover the methods by which a digital system communicates with several components to create sound. Specifically, this will include how audio data is handled by a digital system's drivers and its corresponding speakers. After, the requirements that a realtime audio program needs in order to function will be considered. This will include a program's typical structure and functionality. Finally, several libraries and other software available that handles these requirements will be discussed in length - focusing primarily on the Virtual Studio Technology Software Development Kit.
+\chapter{Real-time Audio Programming}
+\hspace*{-0.15cm}This chapter will consider the theory behind real-time audio programming and the different principles that are followed to create a functional program. It will begin with an overview of digital signal processing. Specifically, this will include the mathematical background required to understand sound. Next, it will cover the methods by which a digital system communicates with several components to create sound. Specifically, this will include how audio data is handled by a digital system's drivers and its corresponding speakers. After, the requirements that a real-time audio program needs in order to function will be considered. This will include a program's typical structure and functionality. Finally, libraries and other software available that handles these requirements will be discussed in length - focusing primarily on the Virtual Studio Technology Software Development Kit.
 
 \section{Sound As A Discrete Signal}
 Sound is a physical phenomenon. Vibrations travel though a medium such as air to create waves and differences in pressure, which travel at the the speed of sound (roughly 331 m/s) \cite{Ling_2016}. These vibrations have varying lengths and intensity depending on the manner in which the sound is created. Changes in frequency are reflected as the pitch of a tone, such as different notes on an instrument. Changes in intensity reflect how loud a particular sound is, such as the different dynamics one can play on an instrument \cite{Ling_2016}. The human brain interprets these differences in pressure by converting waves into electrical signals. When a wave reaches the human ear, the ear canal resonates and converts the sound into mechanical vibrations for the cochlea \cite{Ling_2016}. The cochlea in turn converts these into electrical signals for the brain. Like the human brain, interpreting sound in a digital setting involves simplifying the physical nature of sound waves into a format understandable by computers.
@@ -14,7 +14,7 @@ Consider Figure 3.1.
 		\begin{axis} [
 			axis x line = middle, % The x axis should go through the origin
 			xlabel = \(t\),
-			ylabel = {\(f_1(t)\)},
+			ylabel = {\(f(t)\)},
 			height = 5cm,
 			width = 12cm
 			]
@@ -29,7 +29,7 @@ Consider Figure 3.1.
 
 		\end{axis}
 	\end{tikzpicture}}
-	\caption{A graph of the wave \(f_1(t) = cos(3t)\).}
+	\caption{A graph of the wave \(f(t) = cos(3t)\).}
 \end{center}
 \end{figure}
 
@@ -56,7 +56,7 @@ where \textit{k} is one sinusoid in the sum, $N_h$ is the number of total sinuso
 		\begin{axis} [
 			axis x line = middle, % The x axis should go through the origin
 			xlabel = \(t\),
-			ylabel = {\(f_1(t)\)},
+			ylabel = {\(f(t)\)},
 			height = 5cm,
 			width = 12cm
 			]
@@ -111,7 +111,7 @@ The process of \textit{sampling} an analog signal is done by taking measurements
 			\begin{axis} [
 				axis x line = middle, % The x axis should go through the origin
 				xlabel = \(t\),
-				ylabel = {\(f_2(t)\)},
+				ylabel = {\(f(t)\)},
 				height = 5cm,
 				width = 12cm
 				]
@@ -158,19 +158,149 @@ processing delay.
 
 Suppose, then, that a hardware device or software application interrupts the processor in the same manner during the time a high performant application is expected. To prevent low-priority interrupts from being executed before high-priority calls, \textit{preemption} allows the processor to prioritize interrupts to maintain correctness in a real-time system \cite{realtime-linux}. On UNIX-like operating systems, interrupts are queued to be executed by the processor with a priority number. They are then dequeued in priority order, thus allowing applications with real-time requirements the ability to be prioritized \cite{posix4}. While real-time systems can differ in how integral it is that deadlines are met, the audio stream can continue playback even if buffers are dropped. For this reason, high performant audio applications must comply to \textit{soft real-time requirements} and maintain deadlines \textit{on average} \cite{realtime-linux}. In an ideal world, however, no buffers should be dropped to maintain integrity of the audio stream.
 
-Consider Figure []:
+Consider Figure 3.4:
 
-The delivery of each chunk of data is dependent of the implementation of the audio driver. For example, one such implementation may utilize a double buffer to help prevent unfinished data being read [asio sdk]. Regardless of implementation, processing must be done by the time the sound card iterrupts the processor for a new buffer in the continuous stream of audio. [] (do i even need this?)
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\begin{tikzpicture}
+			\begin{axis} [
+				axis x line = middle, % The x axis should go through the origin
+				xlabel = \(t\),
+				ylabel = {\(f(t)\)},
+				height = 5cm,
+				width = 12cm
+				]
 
+				\addplot+ [
+				ycomb,
+				mark = text,
+				text mark = , % so jank
+				domain = -6.5:0,
+				samples = 59,
+				red
+				] {(cos(deg(x))};
 
-[Imagine a bus. At regular intervals this bus []. In the time that bus takes its passengers to their destination and returns, the next bus must be fully admitted [rephrase] and seated. Should anyone not be in the bus at this point, it will leave without them. It can still drive, but it is less than ideal in doing so. [rephrase]]
+				\addplot+ [
+				ycomb,
+				mark = text,
+				text mark = , % so jank
+				domain = 0:6.5,
+				samples = 59,
+				red
+				] {(cos(deg(x))};
 
+				\addplot+ [
+				ycomb,
+				very thick,
+				mark = text,
+				text mark = , % so jank
+				domain = -6.5:6.5,
+				samples = 80,
+				black
+				] coordinates {(3.141592, -1) (3.141592, 1)};
 
-Consider the scenario where an unrelated interrupt prevents a buffer from being processed in real-time:
+				\addplot+ [
+				ycomb,
+				very thick,
+				mark = text,
+				text mark = , % so jank
+				domain = -6.5:6.5,
+				samples = 80,
+				black
+				] coordinates {(-3.141592, -1) (-3.141592, 1)};
 
-[insert graph about audio data being late]
+				\addplot+ [
+				ycomb,
+				very thick,
+				mark = text,
+				text mark = , % so jank
+				domain = -6.5:6.5,
+				samples = 80,
+				black
+				] coordinates {(0, -1) (0, 1)};
 
-For whatever reason, if data is not available for the sound card to access, the resulting sound will create ``clicks'' and ``pops'' where there is a gap in the audio stream \cite{Walker_2005}. To summarize, Figure 3.4 describes how this data travels in a digital setting.
+			\end{axis}
+		\end{tikzpicture}
+		}
+		\caption{A discrete graph distinguishing buffers at regular intervals.}
+	\end{center}
+\end{figure}
+
+If a buffer is dropped in the digital system, the data cannot be output by the speaker. The resulting sound will create ``clicks'' and ``pops'' where there is a gap in the audio stream \cite{Walker_2005}.
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\begin{tikzpicture}
+			\begin{axis} [
+				axis x line = middle, % The x axis should go through the origin
+				xlabel = \(t\),
+				ylabel = {\(f(t)\)},
+				height = 5cm,
+				width = 12cm
+				]
+
+				\addplot+ [
+				ycomb,
+				mark = text,
+				text mark = , % so jank
+				domain = -6.5:0,
+				samples = 59,
+				red
+				] {(cos(deg(x))};
+
+				\addplot+ [
+				ycomb,
+				mark = text,
+				text mark = , % so jank
+				domain = 3.1415:6.5,
+				samples = 30,
+				red
+				] {(cos(deg(x))};
+
+				\addplot+ [
+				ycomb,
+				very thick,
+				mark = text,
+				text mark = , % so jank
+				domain = -6.5:6.5,
+				samples = 80,
+				black
+				] coordinates {(3.141592, -1) (3.141592, 1)};
+
+				\addplot+ [
+				ycomb,
+				very thick,
+				mark = text,
+				text mark = , % so jank
+				domain = -6.5:6.5,
+				samples = 80,
+				black
+				] coordinates {(-3.141592, -1) (-3.141592, 1)};
+
+				\addplot+ [
+				ycomb,
+				very thick,
+				mark = text,
+				text mark = , % so jank
+				domain = -6.5:6.5,
+				samples = 80,
+				black
+				] coordinates {(0, -1) (0, 1)};
+
+			\end{axis}
+		\end{tikzpicture}
+		}
+		\caption{A discrete graph with a dropped buffer.}
+	\end{center}
+\end{figure}
+
+The delivery of each chunk of data is dependent of the implementation of the audio driver. For example, one such implementation may utilize a double buffer to help prevent unfinished data being read [asio sdk]. Regardless of implementation, processing must be done by the time the sound card iterrupts the processor for a new buffer in the continuous stream of audio.
+
+Imagine a bus. At regular intervals this bus arrives to take passengers to their destination. In the time that bus takes its passengers to their destination and returns, the next bus must be ready to leave. Should anyone not be in the bus at this point, it will leave without them. It can still drive, but at the cost of missing passengers.
+
+To summarize, Figure 3.6 describes how this data travels in a digital setting.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]
@@ -211,9 +341,9 @@ For whatever reason, if data is not available for the sound card to access, the 
 	\end{center}
 \end{figure}
 
-Audio is first processed by the audio plugin under a particular host application. This host application is most commonly a \textit{Digital Audio Workstation} (DAW), which handles several different audio plugins to generate and manipulate sound. This audio is then processed by the audio driver into buffers. These buffers are sent to the integrated sound card via the OS's drivers, which is sent as output to the system's speakers. Output is completed by the Digital-Audio Converter (DAC) which []. To recieve input, the audio recorded by a microphone connected to the digital system []. The system's [].
+Audio is first processed by the audio plugin under a particular host application. This host application is most commonly a \textit{Digital Audio Workstation} (DAW), which handles several different audio plugins to generate and manipulate sound. This audio is then processed by the audio driver into buffers. These buffers are sent to the integrated sound card via the OS's drivers, [which is output to the system's speakers via the integrated sound card or audio chipset] bleh. Output is completed by the Digital-Audio Converter (DAC) which converts the discrete signal into a continuous form. (fix to prevent myself from being repetitive)
 
-A real time program does not simply play audio files akin to one using sound effects for a video game; the program needs to play this sound as it is being generated on-the-fly. This provides limitations that prevent one from using ]\verb|std::cout| [to print information to the terminal during execution, for example. (eh)
+A real-time program does not simply play audio files akin to one using sound effects for a video game; the program needs to play this sound as it is being generated on-the-fly. As one can imagine, this will provide limitations into the implementation of the program to prevent buffers from being dropped.
 
 \section{The Golden Rules}
 The typical structure of a audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, the VST SDK uses a variation of this model that combines the view and controller of the model (cite vst sdk doc too) \cite{Bucanek2009}. Figure 3.5 provides a diagram of this. The corresponding interfaces for each part respectively are the \verb|Steinberg::Vst::IAudioProcessor|  and [].
