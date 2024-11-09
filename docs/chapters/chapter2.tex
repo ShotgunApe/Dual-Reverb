@@ -156,7 +156,7 @@ processing delay.
 
 \end{defn}
 
-Suppose, then, that a hardware device or software application interrupts the processor in the same manner during the time a high performant application is expected. To prevent low-priority interrupts from being executed before high-priority calls, \textit{preemption} allows the processor to prioritize interrupts to maintain correctness in a real-time system \cite{realtime-linux}. On UNIX-like operating systems, interrupts are queued to be executed by the processor with a priority number. They are then dequeued in priority order, thus allowing applications with real-time requirements the ability to be prioritized \cite{posix4}. While real-time systems can differ in how integral it is that deadlines are met, the audio stream can continue playback even if buffers are dropped. For this reason, high performant audio applications must comply to \textit{soft real-time requirements} and maintain deadlines \textit{on average} \cite{realtime-linux}. In an ideal world, however, no buffers should be dropped to maintain integrity of the audio stream.
+Suppose, then, that a hardware device or software application interrupts the processor in the same manner during the time a high performant application is expected. To prevent low-priority interrupts from being executed before high-priority calls, \textit{preemption} allows the processor to prioritize interrupts to maintain correctness in a real-time system \cite{realtime-linux}. On UNIX-like operating systems, interrupts are queued to be executed by the processor with a priority number. They are then dequeued in priority order, thus allowing applications with real-time requirements the ability to be prioritized \cite{posix4}. While real-time systems can differ in how integral it is that deadlines are met, the audio stream can continue playback even if buffers are dropped. This is an example of a \textit{soft real-time system}, as deadlines only need to be maintained \textit{on average} \cite{realtime-linux}. In an ideal world, however, no buffers should be dropped to maintain integrity of the audio stream.
 
 Consider Figure 3.4:
 
@@ -227,7 +227,7 @@ Consider Figure 3.4:
 	\end{center}
 \end{figure}
 
-If a buffer is dropped in the digital system, the data cannot be output by the speaker. The resulting sound will create ``clicks'' and ``pops'' where there is a gap in the audio stream \cite{Walker_2005}.
+If a buffer is dropped in the digital system, it cannot be output by the speaker. The resulting sound will ``click'' and ``pop'' where there is a gap in the audio stream \cite{Walker_2005}.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\begin{center}
@@ -296,10 +296,6 @@ If a buffer is dropped in the digital system, the data cannot be output by the s
 	\end{center}
 \end{figure}
 
-The delivery of each chunk of data is dependent of the implementation of the audio driver. For example, one such implementation may utilize a double buffer to help prevent unfinished data being read [asio sdk]. Regardless of implementation, processing must be done by the time the sound card iterrupts the processor for a new buffer in the continuous stream of audio.
-
-Imagine a bus. At regular intervals this bus arrives to take passengers to their destination. In the time that bus takes its passengers to their destination and returns, the next bus must be ready to leave. Should anyone not be in the bus at this point, it will leave without them. It can still drive, but at the cost of missing passengers.
-
 To summarize, Figure 3.6 describes how this data travels in a digital setting.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
@@ -341,9 +337,9 @@ To summarize, Figure 3.6 describes how this data travels in a digital setting.
 	\end{center}
 \end{figure}
 
-Audio is first processed by the audio plugin under a particular host application. This host application is most commonly a \textit{Digital Audio Workstation} (DAW), which handles several different audio plugins to generate and manipulate sound. This audio is then processed by the audio driver into buffers. These buffers are sent to the integrated sound card via the OS's drivers, [which is output to the system's speakers via the integrated sound card or audio chipset] bleh. Output is completed by the Digital-Audio Converter (DAC) which converts the discrete signal into a continuous form. (fix to prevent myself from being repetitive)
+Audio is first processed by the audio plugin under a particular host application. This host application is most commonly a \textit{Digital Audio Workstation} (DAW), which handles several different audio plugins to generate and manipulate sound. This audio is then processed by the audio driver into buffers. Buffers are stored in memory until the processor is interrupted by the audio chipset or sound card, upon which the buffer is sent to be output to the system's speakers. This is completed by the Digital-to-Analog Converter (DAC) which converts the discrete signal into a continuous form for the speaker.
 
-A real-time program does not simply play audio files akin to one using sound effects for a video game; the program needs to play this sound as it is being generated on-the-fly. As one can imagine, this will provide limitations into the implementation of the program to prevent buffers from being dropped.
+A real-time program does not play audio files akin to one using sound effects for a video game; the program needs to play this sound as it is being generated on-the-fly. As one can imagine, this will provide limitations into the implementation of the program to prevent buffers from being dropped.
 
 \section{The Golden Rules}
 The typical structure of a audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, the VST SDK uses a variation of this model that combines the view and controller of the model (cite vst sdk doc too) \cite{Bucanek2009}. Figure 3.5 provides a diagram of this. The corresponding interfaces for each part respectively are the \verb|Steinberg::Vst::IAudioProcessor|  and [].
