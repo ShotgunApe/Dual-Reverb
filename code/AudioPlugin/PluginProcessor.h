@@ -42,7 +42,15 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //+++++++++++CUSTOM :)
+    void fillBuffer (int channel, int bufferSize, int delayBufferSize, float* channelData);
+    void readFromBuffer (int channel, int bufferSize, int delayBufferSize, juce::AudioBuffer<float>& buffer, juce::AudioBuffer<float>& delayBuffer);
+
 private:
+    // For circular buffer
+    juce::AudioBuffer<float> delayBuffer;
+    int writePosition { 0 };
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

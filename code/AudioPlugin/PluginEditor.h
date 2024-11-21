@@ -18,8 +18,9 @@ private:
     // access the processor object that created it.
     AudioPluginAudioProcessor& processorRef;
 
-    juce::Slider volume;
+    juce::Slider roomSize;
+    juce::Label textLabel { {}, "woo!" };
+    juce::ComboBox styleMenu;
 
-    juce::Slider room_size;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };
