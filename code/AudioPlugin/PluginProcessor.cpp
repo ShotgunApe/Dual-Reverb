@@ -1,5 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "DelayLine.h"
 
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
@@ -90,7 +91,6 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // initialisation that you need..
 
     delayBuffer.clear();
-
     auto delayBufferSize = sampleRate * 2.0;
     delayBuffer.setSize (getTotalNumOutputChannels(), (int) delayBufferSize);
 
@@ -136,61 +136,21 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         buffer.clear (i, 0, buffer.getNumSamples());
-    
-    auto bufferSize = buffer.getNumSamples();
-    auto delayBufferSize = delayBuffer.getNumSamples();
+    }
         
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-        juce::ignoreUnused (channelData);
+    for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+        // step 1 - Diffuse Initial Impact Response
 
-        // ..do something to the data...
-        fillBuffer (channel, bufferSize, delayBufferSize, channelData);
-        readFromBuffer (channel, bufferSize, delayBufferSize, buffer, delayBuffer);
+        // step 2 - Delay (Network ... eventually)
+        delayfillBuffer (buffer, channel);
+        readFromBuffer (buffer, delayBuffer, channel);
+        fillBuffer (buffer, channel);
     }
 
-    // wrap
-    writePosition += bufferSize;
-    writePosition %= delayBufferSize;
+    updateBufferPosition (buffer, delayBuffer);
 
-}
-
-void AudioPluginAudioProcessor::fillBuffer (int channel, int bufferSize, int delayBufferSize, float* channelData) {
-    if (delayBufferSize > bufferSize + writePosition)
-    {
-        delayBuffer.copyFrom (channel, writePosition, channelData, bufferSize);
-    }
-    else
-    {
-        auto numSamplesToEnd = delayBufferSize - writePosition;
-        delayBuffer.copyFrom (channel, writePosition, channelData, numSamplesToEnd);
-        
-        auto numSamplesAtStart = bufferSize - numSamplesToEnd;
-        delayBuffer.copyFrom (channel, 0, channelData + numSamplesToEnd, numSamplesAtStart);
-    }
-}
-
-void AudioPluginAudioProcessor::readFromBuffer (int channel, int bufferSize, int delayBufferSize, juce::AudioBuffer<float>& buffer, juce::AudioBuffer<float>& delayBuffer)
-{
-    // cant have negative array index ... wrap back circular buffer to get previous buffer
-    auto readPosition = writePosition - (getSampleRate() * 0.5f) ;
-    if (readPosition < 0) {
-        readPosition += delayBufferSize;
-    }
-    auto g = 0.4f;
-    if (readPosition + bufferSize < delayBufferSize) {
-        buffer.addFromWithRamp (channel, 0, delayBuffer.getReadPointer (channel, readPosition), bufferSize, g, g);
-    }
-    else {
-        auto numSamplesToEnd = delayBufferSize - readPosition;
-        buffer.addFromWithRamp (channel, 0, delayBuffer.getReadPointer (channel, readPosition), numSamplesToEnd, g, g);
-    
-        auto numSamplesAtStart = bufferSize - numSamplesToEnd;
-        buffer.addFromWithRamp (channel, numSamplesToEnd, delayBuffer.getReadPointer (channel, 0), numSamplesAtStart, g, g);
-    }
 }
 
 //==============================================================================
@@ -226,3 +186,6 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new AudioPluginAudioProcessor();
 }
+
+
+//+++++++++++++++++++++++++++++++++
