@@ -90,9 +90,9 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 
-    delayBuffer.clear();
+    line.get().clear();
     auto delayBufferSize = sampleRate * 2.0;
-    delayBuffer.setSize (getTotalNumOutputChannels(), (int) delayBufferSize);
+    line.get().setSize (getTotalNumOutputChannels(), (int) delayBufferSize);
 
     juce::ignoreUnused (sampleRate, samplesPerBlock);
 }
@@ -144,12 +144,12 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         // step 1 - Diffuse Initial Impact Response
 
         // step 2 - Delay (Network ... eventually)
-        delayfillBuffer (buffer, channel);
-        readFromBuffer (buffer, delayBuffer, channel);
-        fillBuffer (buffer, channel);
+        line.fillBuffer (buffer, channel);
+        line.readFromBuffer (buffer, line.get(), channel);
+        line.fillBuffer (buffer, channel);
     }
 
-    updateBufferPosition (buffer, delayBuffer);
+    line.updateBufferPosition (buffer, line.get());
 
 }
 
