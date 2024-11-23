@@ -344,8 +344,8 @@ Audio is first processed by the audio plugin under a particular host application
 A real-time program does not play audio files akin to one using sound effects for a video game; the program needs to play this sound as it is being generated on-the-fly. As one can imagine, this will provide limitations into the implementation of the program to prevent buffers from being dropped.
 \pagebreak
 
-\section{The Golden Rules}
-The typical structure of a audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, the VST SDK uses a variation of this model that combines the view and controller of the model (cite vst sdk doc too) \cite{Bucanek2009}. Figure 3.5 provides a diagram of this. The corresponding interfaces for each part respectively are the \verb|Steinberg::Vst::IAudioProcessor|  and [].
+\section{Program Structure}
+The typical structure of a audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.5 provides a diagram of this.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]
@@ -361,27 +361,21 @@ The typical structure of a audio program separates the internal processing and t
 			\draw [->, thick] (start) ++(-1.5,0.5) -- +(-2,0) -- +(-2,-1) -- node[anchor=north] {\footnotesize{Change}} +(0, -1) (start);
 		\end{tikzpicture}
 		}
-		\caption{The VST SDK Model.}
+		\caption{A Model of a Audio Plugin Application.}
 	\end{center}
 \end{figure}
 
-[put more words, eventually talk about UML diagram, maybe in next section?]
-
-\subsection{Development With The VST SDK}
-Development in []. Creating a C++ project using the design principles above can be done by using the VST Project Generator. It is a cmake script that [].
-
-
-\lstset{language =[ANSI]C++}
-\lstset{backgroundcolor=\color{white},rulecolor=\color{black}}
-\lstset{linewidth=.95\textwidth,breaklines=true}
-\lstset{commentstyle=\textit,stringstyle=\upshape,showspaces=false}
-\lstset{frame = single}
-\lstset{numbers=left,numberstyle=\tiny,basicstyle=\small}
-\lstset{commentstyle=\normalfont\itshape,breakautoindent=true}
-\lstset{abovecaptionskip=1.2\baselineskip,xleftmargin=30pt}
-\lstset{framesep=6pt}
-\begin{singlespace}
-\lstinputlisting[caption=VST3 Project Generator Script Usage, label=motion]{source/template.txt}
-\end{singlespace}
+%\lstset{language =[ANSI]C++}
+%\lstset{backgroundcolor=\color{white},rulecolor=\color{black}}
+%\lstset{linewidth=.95\textwidth,breaklines=true}
+%\lstset{commentstyle=\textit,stringstyle=\upshape,showspaces=false}
+%\lstset{frame = single}
+%\lstset{numbers=left,numberstyle=\tiny,basicstyle=\small}
+%\lstset{commentstyle=\normalfont\itshape,breakautoindent=true}
+%\lstset{abovecaptionskip=1.2\baselineskip,xleftmargin=30pt}
+%\lstset{framesep=6pt}
+%\begin{singlespace}
+%\lstinputlisting[caption=VST3 Project Generator Script Usage, label=motion]{source/template.txt}
+%\end{singlespace}
 
 With the design of the plugin taken care of, one can begin implementation of the plugin processor that will manipulate the input signal.

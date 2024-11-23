@@ -1,3 +1,8 @@
 %!TEX root = ../username.tex
 \chapter{Artificial Reverberation Algorithms}
 \section{Feedback Delay Networks}
+A \textit{filter} is defined as a medium through which a signal enters as an input and exits as an output \cite{FILTERS07}. It is a type of \textit{black box system} whose inner workings may modify the sound in some way. By extension, a \textit{digital filter} is a type of filter that operates on digital signals in the form of a computation. This computation can take the form of an equation on paper, or a loop of code in a computer.
+
+One type of filter is a \textit{comb filter}. This is defined as a filter whose output signal contains a delayed version of itself.
+
+Feedback Delay Networks are described as a generalized comb filter. As opposed to having a single delay line in the system, a number of delay lines are used in parallel each containing some combination of the output signal \cite{PUCKE}.
