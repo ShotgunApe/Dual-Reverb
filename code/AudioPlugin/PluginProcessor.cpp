@@ -1,6 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "DelayLine.h"
+#include "TestReverb.h"
 
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
@@ -90,9 +90,13 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 
-    line.get().clear();
-    auto delayBufferSize = sampleRate * 2.0;
-    line.get().setSize (getTotalNumOutputChannels(), (int) delayBufferSize);
+    for (int diffuserStep = 0; diffuserStep < m_diffusers.size(); ++diffuserStep) {
+		m_diffusers[diffuserStep] = std::make_unique<Diffuser>(sampleRate);
+    }
+
+    //line.get().clear();
+    //auto delayBufferSize = sampleRate * 2.0;
+    //line.get().setSize (getTotalNumOutputChannels(), (int) delayBufferSize);
 
     juce::ignoreUnused (sampleRate, samplesPerBlock);
 }
@@ -139,19 +143,19 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         buffer.clear (i, 0, buffer.getNumSamples());
     }
-        
+    std::array<float, 8> slice; //magic number numchanels for now
     for (int channel = 0; channel < totalNumInputChannels; ++channel) {
         // step 1 - Diffuse Initial Impact Response
-        
-
-
+        for (auto& diffuser : m_diffusers) {
+			diffuser->diffusionProcess(slice);
+		}
         // step 2 - Delay (Network ... eventually)
-        line.fillBuffer (buffer, channel);
-        line.readFromBuffer (buffer, line.get(), channel);
-        line.fillBuffer (buffer, channel);
+        //line.fillBuffer (buffer, channel);
+        //line.readFromBuffer (buffer, line.get(), channel);
+        //line.fillBuffer (buffer, channel);
     }
 
-    line.updateBufferPosition (buffer, line.get());
+    //line.updateBufferPosition (buffer, line.get());
 
 }
 

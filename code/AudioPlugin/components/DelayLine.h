@@ -12,7 +12,8 @@ public:
     void readFromBuffer (juce::AudioBuffer<float>& buffer, juce::AudioBuffer<float>& delayBuffer, int channel);
     void updateBufferPosition (juce::AudioBuffer<float>& buffer, juce::AudioBuffer<float>& delayBuffer);
     
-    juce::AudioBuffer<float>& get ();
+    juce::AudioBuffer<float>& getBuffer ();
+    float getSample (int channel);
 
 private:
     // For circular buffer

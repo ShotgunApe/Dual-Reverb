@@ -1,10 +1,10 @@
 #include "DelayLine.h"
 
-DelayLine::DelayLine()
+DelayLine::DelayLine ()
 {
 }
 
-DelayLine::~DelayLine()
+DelayLine::~DelayLine ()
 {
 }
 
@@ -59,7 +59,12 @@ void DelayLine::updateBufferPosition (juce::AudioBuffer<float>& buffer, juce::Au
     writePosition %= delayBufferSize;
 }
 
-juce::AudioBuffer<float>& DelayLine::get ()
+juce::AudioBuffer<float>& DelayLine::getBuffer ()
 {
     return delayBuffer;
+}
+
+float DelayLine::getSample (int channel)
+{
+    return delayBuffer.getSample(channel, writePosition); //unsure
 }
