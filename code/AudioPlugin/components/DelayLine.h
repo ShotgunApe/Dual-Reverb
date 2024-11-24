@@ -5,7 +5,7 @@
 class DelayLine
 {
 public:
-    DelayLine();
+    DelayLine(int size);
     ~DelayLine();
 
     void fillBuffer (juce::AudioBuffer<float>& buffer, int channel);
@@ -13,7 +13,6 @@ public:
     void updateBufferPosition (juce::AudioBuffer<float>& buffer, juce::AudioBuffer<float>& delayBuffer);
     
     juce::AudioBuffer<float>& getBuffer ();
-    float getSample (int channel);
 
 private:
     // For circular buffer

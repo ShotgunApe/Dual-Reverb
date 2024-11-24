@@ -45,11 +45,12 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    //static const int NUM_REVERB_CHANNELS = 8;
-    //using Filter = juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>>;
-    std::array<std::unique_ptr<Diffuser>, 4> m_diffusers;
 
-    //TestReverb reverb; // switch to line when using multiple soon
+    juce::AudioBuffer<float> outputBuffer;
+
+    //TestReverb reverb;
+    Diffuser diffuser;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

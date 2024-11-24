@@ -1,5 +1,5 @@
 #pragma once
-
+#include <juce_audio_processors/juce_audio_processors.h>
 #include "DelayLine.h"
 
 // Diffusion takes an input signal copied over several channels in parallel, delays the signal, shuffles, inverts, and redistributes it
@@ -9,14 +9,14 @@ public:
     // Number of channels to use
     static const int mixChannels = 8;
 
-    Diffuser(double sampleRate);
+    Diffuser();
     ~Diffuser();
 
-    void diffusionProcess(std::array<float, mixChannels>& slice); // Include more here eventually
+    void processDiffuser(juce::AudioBuffer<float>& buffer, int sample);
 
 private:
     // Matricies n stuff
-    std::array<float, mixChannels * mixChannels> mixMatrix;
-	std::array<float, mixChannels> flipPolarity;
-	std::vector<std::unique_ptr<DelayLine>> mDelays;
+    std::array<float, mixChannels * mixChannels> m_mixMatrix;
+    std::array<float, mixChannels> m_flipPolarity;
+    std::array<DelayLine, mixChannels> m_delays;
 };
