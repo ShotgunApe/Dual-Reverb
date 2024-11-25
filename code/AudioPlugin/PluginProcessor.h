@@ -2,7 +2,6 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "TestReverb.h"
-#include "components/Diffuser.h"
 
 //==============================================================================
 class AudioPluginAudioProcessor final : public juce::AudioProcessor
@@ -45,11 +44,13 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-
-    juce::AudioBuffer<float> outputBuffer;
-
     //TestReverb reverb;
-    Diffuser diffuser;
+    //juce::AudioBuffer<float> toOutput;
+
+    DelayLine realA;
+    DelayLine realB;
+    DelayLine realC;
+    DelayLine realD;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)

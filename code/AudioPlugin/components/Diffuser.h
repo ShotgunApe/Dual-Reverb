@@ -18,5 +18,5 @@ private:
     // Matricies n stuff
     std::array<float, mixChannels * mixChannels> m_mixMatrix;
     std::array<float, mixChannels> m_flipPolarity;
-    std::array<DelayLine, mixChannels> m_delays;
+    std::vector<DelayLine> m_delays;
 };

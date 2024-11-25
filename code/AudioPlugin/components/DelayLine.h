@@ -5,7 +5,7 @@
 class DelayLine
 {
 public:
-    DelayLine(int size);
+    DelayLine();
     ~DelayLine();
 
     void fillBuffer (juce::AudioBuffer<float>& buffer, int channel);

@@ -90,12 +90,15 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 
-    outputBuffer.setSize(8, samplesPerBlock);
-	outputBuffer.clear();
+    //reverb.prepareReverb(sampleRate);
 
-    //line.get().clear();
-    //auto delayBufferSize = sampleRate * 2.0;
-    //line.get().setSize (getTotalNumOutputChannels(), (int) delayBufferSize);
+    realA.getBuffer().clear();
+    auto delayBufferSize =  51346;
+    realA.getBuffer().setSize (getTotalNumOutputChannels(), (int) delayBufferSize);
+
+    realB.getBuffer().clear();
+    delayBufferSize =  96403;
+    realB.getBuffer().setSize (getTotalNumOutputChannels(), (int) delayBufferSize);
 
     juce::ignoreUnused (sampleRate, samplesPerBlock);
 }
@@ -139,27 +142,27 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    const int numSamples = buffer.getNumSamples();
-
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
+        buffer.clear (i, 0, buffer.getNumSamples());
+    }
+    //reverb.processReverb(buffer, totalNumInputChannels);
     for (int channel = 0; channel < totalNumInputChannels; ++channel) {
 
-        for (int sample = 0; sample < numSamples; ++sample) {
-            // step 1 - Diffuse Initial Impact Response
 
-            diffuser.processDiffuser(buffer, sample);
+        // step 1 - Diffuse Initial Impact Response
+        //toOutput.makeCopyOf(reverb.getChannel(), 0);
+        // step 2 - Delay (Network ... eventually)
 
+        realA.fillBuffer (buffer, channel);
+        realA.readFromBuffer (buffer, realA.getBuffer(), channel);
+        realA.fillBuffer (buffer, channel);
 
-            // step 2 - Delay (Network ... eventually)
-            //line.fillBuffer (buffer, channel);
-            //line.readFromBuffer (buffer, line.get(), channel);
-            //line.fillBuffer (buffer, channel);
-        }
+        realB.fillBuffer (buffer, channel);
+        realB.readFromBuffer (buffer, realB.getBuffer(), channel);
+        realB.fillBuffer (buffer, channel);
     }
-
-
-
-    //line.updateBufferPosition (buffer, line.get());
-
+    realA.updateBufferPosition(buffer, realA.getBuffer());
+    realB.updateBufferPosition(buffer, realB.getBuffer());
 }
 
 //==============================================================================

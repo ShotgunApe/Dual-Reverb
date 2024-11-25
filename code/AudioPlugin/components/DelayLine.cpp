@@ -1,8 +1,7 @@
 #include "DelayLine.h"
 
-DelayLine::DelayLine (int size)
+DelayLine::DelayLine ()
 {
-    delayBuffer.setSize(0, size);
 }
 
 DelayLine::~DelayLine ()
