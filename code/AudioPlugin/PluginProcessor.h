@@ -44,14 +44,8 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    //TestReverb reverb;
-    //juce::AudioBuffer<float> toOutput;
-
-    DelayLine realA;
-    DelayLine realB;
-    DelayLine realC;
-    DelayLine realD;
-
     //==============================================================================
+    TestReverb reverb;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

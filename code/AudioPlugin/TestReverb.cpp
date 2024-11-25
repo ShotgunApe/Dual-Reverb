@@ -10,48 +10,44 @@ TestReverb::~TestReverb()
 }
 
 void TestReverb::prepareReverb(double sampleRate)
-{
+{   
+    auto delayBufferSize = sampleRate * 2;
     channelA.getBuffer().clear();
+    channelA.getBuffer().setSize (2, (int) delayBufferSize); // output is STEREO (this caused me so much pain)
     channelB.getBuffer().clear();
+    channelB.getBuffer().setSize (2, (int) delayBufferSize); // ditto
     channelC.getBuffer().clear();
+    channelC.getBuffer().setSize (2, (int) delayBufferSize);
     channelD.getBuffer().clear();
+    channelD.getBuffer().setSize (2, (int) delayBufferSize);
 
-    std::random_device rd; // obtain a random number from hardware
-    std::mt19937 gen(rd()); // seed the generator
-    std::uniform_int_distribution<> distr(sampleRate, sampleRate * 2); // define the range
-
-    auto delayBufferSize = distr(gen);
-    channelA.getBuffer().setSize (1, (int) delayBufferSize); // output is mono for now i think
-
-    delayBufferSize = distr(gen);
-    channelB.getBuffer().setSize (1, (int) delayBufferSize); // output is mono for now i think
-
-    delayBufferSize = distr(gen);
-    channelC.getBuffer().setSize (1, (int) delayBufferSize); // output is mono for now i think
-
-    delayBufferSize = distr(gen);
-    channelD.getBuffer().setSize (1, (int) delayBufferSize); // output is mono for now i think
+    // create random amount of delay length for delay line :)
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(2400, 4800);
+    channelA.setDelay(dist6(rng));
+    channelB.setDelay(dist6(rng));
+    channelC.setDelay(dist6(rng));
+    channelD.setDelay(dist6(rng));
 }
 
-void TestReverb::processReverb(juce::AudioBuffer<float>& buffer, int totalNumInputChannels)
+void TestReverb::processReverb(juce::AudioBuffer<float>& buffer, int channel)
 {
-    for (int channel = 0; channel < totalNumInputChannels; ++channel) {
-        channelA.fillBuffer (buffer, channel);
-        channelA.readFromBuffer (buffer, channelA.getBuffer(), channel);
-        channelA.fillBuffer (buffer, channel);
-        
-        channelB.fillBuffer (buffer, channel);
-        channelB.readFromBuffer (buffer, channelB.getBuffer(), channel);
-        channelB.fillBuffer (buffer, channel);
+    channelA.fillBuffer (buffer, channel);
+    channelA.readFromBuffer (buffer, channelA.getBuffer(), channel);
+    channelA.fillBuffer (buffer, channel);
 
-        channelC.fillBuffer (buffer, channel);
-        channelC.readFromBuffer (buffer, channelC.getBuffer(), channel);
-        channelC.fillBuffer (buffer, channel);
+    channelB.fillBuffer (buffer, channel);
+    channelB.readFromBuffer (buffer, channelB.getBuffer(), channel);
+    channelB.fillBuffer (buffer, channel);
 
-        channelD.fillBuffer (buffer, channel);
-        channelD.readFromBuffer (buffer, channelD.getBuffer(), channel);
-        channelD.fillBuffer (buffer, channel);
-    }
+    channelC.fillBuffer (buffer, channel);
+    channelC.readFromBuffer (buffer, channelC.getBuffer(), channel);
+    channelC.fillBuffer (buffer, channel);
+
+    channelD.fillBuffer (buffer, channel);
+    channelD.readFromBuffer (buffer, channelD.getBuffer(), channel);
+    channelD.fillBuffer (buffer, channel);
 }
 
 void TestReverb::updatePosition(juce::AudioBuffer<float>& buffer)
@@ -60,9 +56,4 @@ void TestReverb::updatePosition(juce::AudioBuffer<float>& buffer)
     channelB.updateBufferPosition (buffer, channelB.getBuffer());
     channelC.updateBufferPosition (buffer, channelC.getBuffer());
     channelD.updateBufferPosition (buffer, channelD.getBuffer());
-}
-
-juce::AudioBuffer<float>& TestReverb::getChannel()
-{
-    return (channelA.getBuffer());
 }

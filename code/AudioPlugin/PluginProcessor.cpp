@@ -89,17 +89,7 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-
-    //reverb.prepareReverb(sampleRate);
-
-    realA.getBuffer().clear();
-    auto delayBufferSize =  51346;
-    realA.getBuffer().setSize (getTotalNumOutputChannels(), (int) delayBufferSize);
-
-    realB.getBuffer().clear();
-    delayBufferSize =  96403;
-    realB.getBuffer().setSize (getTotalNumOutputChannels(), (int) delayBufferSize);
-
+    reverb.prepareReverb(sampleRate);
     juce::ignoreUnused (sampleRate, samplesPerBlock);
 }
 
@@ -145,24 +135,15 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         buffer.clear (i, 0, buffer.getNumSamples());
     }
-    //reverb.processReverb(buffer, totalNumInputChannels);
+    
     for (int channel = 0; channel < totalNumInputChannels; ++channel) {
 
-
         // step 1 - Diffuse Initial Impact Response
-        //toOutput.makeCopyOf(reverb.getChannel(), 0);
+        
         // step 2 - Delay (Network ... eventually)
-
-        realA.fillBuffer (buffer, channel);
-        realA.readFromBuffer (buffer, realA.getBuffer(), channel);
-        realA.fillBuffer (buffer, channel);
-
-        realB.fillBuffer (buffer, channel);
-        realB.readFromBuffer (buffer, realB.getBuffer(), channel);
-        realB.fillBuffer (buffer, channel);
+        reverb.processReverb(buffer, channel);
     }
-    realA.updateBufferPosition(buffer, realA.getBuffer());
-    realB.updateBufferPosition(buffer, realB.getBuffer());
+    reverb.updatePosition(buffer);
 }
 
 //==============================================================================
