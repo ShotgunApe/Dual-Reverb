@@ -342,10 +342,11 @@ To summarize, Figure 3.6 describes how this data travels in a digital setting.
 Audio is first processed by the audio plugin under a particular host application. This host application is most commonly a \textit{Digital Audio Workstation} (DAW), which handles several different audio plugins to generate and manipulate sound. This audio is then processed by the audio driver into buffers. Buffers are stored in memory until the processor is interrupted by the audio chipset or sound card, upon which the buffer is sent to be output to the system's speakers. This is completed by the Digital-to-Analog Converter (DAC) which converts the discrete signal into a continuous form for the speaker.
 
 A real-time program does not play audio files akin to one using sound effects for a video game; the program needs to play this sound as it is being generated on-the-fly. As one can imagine, this will provide limitations into the implementation of the program to prevent buffers from being dropped.
-\pagebreak
+
+%\section{Discrete Signals Applied}
 
 \section{Program Structure}
-The typical structure of a audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.5 provides a diagram of this.
+The typical structure of a audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.7 provides a diagram of this.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]
@@ -361,7 +362,7 @@ The typical structure of a audio program separates the internal processing and t
 			\draw [->, thick] (start) ++(-1.5,0.5) -- +(-2,0) -- +(-2,-1) -- node[anchor=north] {\footnotesize{Change}} +(0, -1) (start);
 		\end{tikzpicture}
 		}
-		\caption{A Model of a Audio Plugin Application.}
+		\caption{A Model of an Audio Plugin Application.}
 	\end{center}
 \end{figure}
 
@@ -377,5 +378,7 @@ The typical structure of a audio program separates the internal processing and t
 %\begin{singlespace}
 %\lstinputlisting[caption=VST3 Project Generator Script Usage, label=motion]{source/template.txt}
 %\end{singlespace}
+
+
 
 With the design of the plugin taken care of, one can begin implementation of the plugin processor that will manipulate the input signal.

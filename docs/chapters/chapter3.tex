@@ -1,8 +1,11 @@
 %!TEX root = ../username.tex
 \chapter{Artificial Reverberation Algorithms}
-\section{Feedback Delay Networks}
+\hspace*{-0.15cm}This chapter will begin with a brief overview of concepts related to Digital Signal Processing to understand artificial reverberation algorithms. After, a description of Feedback Delay Networks will be provided, associated with its corresponding implementation in C++.
+
+\section{A Brief Description of Filters and Signal Flow Graphs}
 A \textit{filter} is defined as a medium through which a signal enters as an input and exits as an output \cite{FILTERS07}. It is a type of \textit{black box system} whose inner workings may modify the sound in some way. By extension, a \textit{digital filter} is a type of filter that operates on digital signals in the form of a computation. This computation can take the form of an equation on paper, or a loop of code in a computer.
 
-One type of filter is a \textit{comb filter}. This is defined as a filter whose output signal contains a delayed version of itself.
+\textit{Signal Flow Graphs} are used to visualize how filters manipulate a provided input and output \cite{FILTERS07}. They represent a system of linear equations that compute an output signal based on past and present input signals and past output signals. For example, the following graph describes one type of filter known as a \textit{comb filter}:
 
-Feedback Delay Networks are described as a generalized comb filter. As opposed to having a single delay line in the system, a number of delay lines are used in parallel each containing some combination of the output signal \cite{PUCKE}.
+\section{Feedback Delay Networks}
+Feedback Delay Networks are described as a generalized comb filter. As opposed to having a single delay line in the system, a number of delay lines are used in parallel each containing some combination of the output signal \cite{PUCKE}. A typical FDN is built with several delay lines \textit{N}, each having a length provided by the equation [].

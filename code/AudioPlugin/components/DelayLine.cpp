@@ -1,17 +1,17 @@
 #include "DelayLine.h"
 
-DelayLine::DelayLine()
+DelayLine::DelayLine ()
 {
 }
 
-DelayLine::~DelayLine()
+DelayLine::~DelayLine ()
 {
 }
 
 void DelayLine::fillBuffer (juce::AudioBuffer<float>& buffer, int channel) {
     auto bufferSize = buffer.getNumSamples();
     auto delayBufferSize = delayBuffer.getNumSamples();
-    
+
     if (delayBufferSize > bufferSize + writePosition)
     {
         delayBuffer.copyFrom (channel, writePosition, buffer.getWritePointer(channel), bufferSize);
@@ -32,11 +32,11 @@ void DelayLine::readFromBuffer (juce::AudioBuffer<float>& buffer, juce::AudioBuf
     auto delayBufferSize = delayBuffer.getNumSamples();
 
     // cant have negative array index ... wrap back circular buffer to get previous buffer
-    auto readPosition = writePosition - (48000 * 0.5f); // magic number for getSampleRate() for now
+    auto readPosition = writePosition - delayTime; // magic number for getSampleRate() for now
     if (readPosition < 0) {
         readPosition += delayBufferSize;
     }
-    auto g = 0.4f;
+    auto g = 0.6f;
     if (readPosition + bufferSize < delayBufferSize) {
         buffer.addFromWithRamp (channel, 0, delayBuffer.getReadPointer (channel, readPosition), bufferSize, g, g);
     }
@@ -59,7 +59,12 @@ void DelayLine::updateBufferPosition (juce::AudioBuffer<float>& buffer, juce::Au
     writePosition %= delayBufferSize;
 }
 
-juce::AudioBuffer<float>& DelayLine::get ()
+void DelayLine::setDelay (int time)
+{
+    delayTime = time;
+}
+
+juce::AudioBuffer<float>& DelayLine::getBuffer ()
 {
     return delayBuffer;
 }

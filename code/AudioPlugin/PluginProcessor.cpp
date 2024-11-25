@@ -1,6 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "DelayLine.h"
+#include "TestReverb.h"
 
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
@@ -89,11 +89,7 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-
-    line.get().clear();
-    auto delayBufferSize = sampleRate * 2.0;
-    line.get().setSize (getTotalNumOutputChannels(), (int) delayBufferSize);
-
+    reverb.prepareReverb(sampleRate);
     juce::ignoreUnused (sampleRate, samplesPerBlock);
 }
 
@@ -139,20 +135,15 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         buffer.clear (i, 0, buffer.getNumSamples());
     }
-        
+    
     for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+
         // step 1 - Diffuse Initial Impact Response
         
-
-
         // step 2 - Delay (Network ... eventually)
-        line.fillBuffer (buffer, channel);
-        line.readFromBuffer (buffer, line.get(), channel);
-        line.fillBuffer (buffer, channel);
+        reverb.processReverb(buffer, channel);
     }
-
-    line.updateBufferPosition (buffer, line.get());
-
+    reverb.updatePosition(buffer);
 }
 
 //==============================================================================
