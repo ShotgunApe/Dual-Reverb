@@ -12,11 +12,20 @@ public:
     Diffuser();
     ~Diffuser();
 
-    void processDiffuser(juce::AudioBuffer<float>& buffer, int sample);
+    void prepareDiffuser(double sampleRate);
+    void processDiffuser(juce::AudioBuffer<float>& buffer, int channel);
+    void updatePosition(juce::AudioBuffer<float>& buffer);
+    void invert(juce::AudioBuffer<float>& buffer, int channel);
+    void shuffle();
 
 private:
     // Matricies n stuff
     std::array<float, mixChannels * mixChannels> m_mixMatrix;
     std::array<float, mixChannels> m_flipPolarity;
-    std::vector<DelayLine> m_delays;
+
+    // Channels for Diffuser
+    DelayLine diffuseA;
+    DelayLine diffuseB;
+    DelayLine diffuseC;
+    DelayLine diffuseD;
 };

@@ -1,11 +1,31 @@
 %!TEX root = ../username.tex
-\chapter{Artificial Reverberation Algorithms}
+\chapter{Artificial Reverberation Techniques}
 \hspace*{-0.15cm}This chapter will begin with a brief overview of concepts related to Digital Signal Processing to understand artificial reverberation algorithms. After, a description of Feedback Delay Networks will be provided, associated with its corresponding implementation in C++.
 
-\section{A Brief Description of Filters and Signal Flow Graphs}
-A \textit{filter} is defined as a medium through which a signal enters as an input and exits as an output \cite{FILTERS07}. It is a type of \textit{black box system} whose inner workings may modify the sound in some way. By extension, a \textit{digital filter} is a type of filter that operates on digital signals in the form of a computation. This computation can take the form of an equation on paper, or a loop of code in a computer.
+\section{Filters \& Signal Flow Graphs}
+A \textit{filter} is defined as a medium through which a signal enters as an input and exits as an output \cite{FILTERS07}. It is a type of \textit{black box system} whose inner workings may modify the sound in some way. Filters can take the shape of several different [].
+
+By extension, a \textit{digital filter} is a type of filter that operates on digital signals in the form of a computation. This computation can take the form of an equation on paper, or a loop of code in a computer.
+
+Consider the following graph:
+
+It is worth emphasizing that this is a different representation of the previous sound, as they are a graph of frequency to amplitude as opposed to the waveform over time (reword this). In fact, [] For this reason [].
+
+[maybe talk about solving for a FFT of a specific waveform to describe that section? maybe introduce complex numbers here?]
 
 \textit{Signal Flow Graphs} are used to visualize how filters manipulate a provided input and output \cite{FILTERS07}. They represent a system of linear equations that compute an output signal based on past and present input signals and past output signals. For example, the following graph describes one type of filter known as a \textit{comb filter}:
 
 \section{Feedback Delay Networks}
 Feedback Delay Networks are described as a generalized comb filter. As opposed to having a single delay line in the system, a number of delay lines are used in parallel each containing some combination of the output signal \cite{PUCKE}. A typical FDN is built with several delay lines \textit{N}, each having a length provided by the equation [].
+
+A typical FDN is represented by the following relation:
+
+\begin{defn}[Definition of a typical FDN in the time domain \cite{OnLossless}]\label{def2}
+	\begin{equation}\label{nextdef(t)}
+	y(n)=\sum_{i=1}^{N} c_i s_i (n) + d x (n)
+	\end{equation}
+	\begin{equation}
+	s_i(n + m_i)=\sum_{j=1}^{N} a_{ij} s_j (n) + b_i x (n)
+\end{equation}\end{defn}
+
+\section{Convolution}

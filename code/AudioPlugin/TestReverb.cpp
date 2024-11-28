@@ -10,7 +10,11 @@ TestReverb::~TestReverb()
 }
 
 void TestReverb::prepareReverb(double sampleRate)
-{   
+{
+    // prepare diffuser
+    diffuserA.prepareDiffuser(sampleRate);
+
+    // preparing delay line stuff
     auto delayBufferSize = sampleRate * 2;
     channelA.getBuffer().clear();
     channelA.getBuffer().setSize (2, (int) delayBufferSize); // output is STEREO (this caused me so much pain)
@@ -24,7 +28,7 @@ void TestReverb::prepareReverb(double sampleRate)
     // create random amount of delay length for delay line :)
     std::random_device dev;
     std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist6(2400, 4800);
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(4800, 9600); // buffer duration 100ms - 200ms (for 48000hz sample rate, need to fix any any sample rate)
     channelA.setDelay(dist6(rng));
     channelB.setDelay(dist6(rng));
     channelC.setDelay(dist6(rng));
@@ -33,6 +37,10 @@ void TestReverb::prepareReverb(double sampleRate)
 
 void TestReverb::processReverb(juce::AudioBuffer<float>& buffer, int channel)
 {
+    // Diffuse! (can specify number of steps with for loop in future)
+    diffuserA.processDiffuser(buffer, channel);
+
+    //Feedback Delays!
     channelA.fillBuffer (buffer, channel);
     channelA.readFromBuffer (buffer, channelA.getBuffer(), channel);
     channelA.fillBuffer (buffer, channel);
@@ -52,6 +60,8 @@ void TestReverb::processReverb(juce::AudioBuffer<float>& buffer, int channel)
 
 void TestReverb::updatePosition(juce::AudioBuffer<float>& buffer)
 {
+    diffuserA.updatePosition(buffer);
+
     channelA.updateBufferPosition (buffer, channelA.getBuffer());
     channelB.updateBufferPosition (buffer, channelB.getBuffer());
     channelC.updateBufferPosition (buffer, channelC.getBuffer());

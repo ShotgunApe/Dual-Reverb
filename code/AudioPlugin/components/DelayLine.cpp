@@ -32,11 +32,11 @@ void DelayLine::readFromBuffer (juce::AudioBuffer<float>& buffer, juce::AudioBuf
     auto delayBufferSize = delayBuffer.getNumSamples();
 
     // cant have negative array index ... wrap back circular buffer to get previous buffer
-    auto readPosition = writePosition - delayTime; // magic number for getSampleRate() for now
+    auto readPosition = writePosition - delayTime;
     if (readPosition < 0) {
         readPosition += delayBufferSize;
     }
-    auto g = 0.6f;
+    auto g = 0.4f;
     if (readPosition + bufferSize < delayBufferSize) {
         buffer.addFromWithRamp (channel, 0, delayBuffer.getReadPointer (channel, readPosition), bufferSize, g, g);
     }

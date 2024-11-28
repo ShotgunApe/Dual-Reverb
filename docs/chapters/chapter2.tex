@@ -2,7 +2,7 @@
 \chapter{Real-time Audio Programming}
 \hspace*{-0.15cm}This chapter will consider the theory behind real-time audio programming and the different principles that are followed to create a functional program. It will begin with an overview of digital signal processing. Specifically, this will include the mathematical background required to understand sound. Next, it will cover the methods by which a digital system communicates with several components to create sound. Specifically, this will include how audio data is handled by a digital system's drivers and its corresponding speakers. After, the requirements that a real-time audio program needs in order to function will be considered. This will include a program's typical structure and functionality. Finally, libraries and other software available that handles these requirements will be discussed in length - focusing primarily on the Virtual Studio Technology specification.
 
-\section{Sound As A Discrete Signal}
+\section{Sound As a Discrete Signal}
 Sound is a physical phenomenon. Vibrations travel though a medium such as air to create waves and differences in pressure, which travel at the the speed of sound (roughly 331 m/s) \cite{Ling_2016}. These vibrations have varying lengths and intensity depending on the manner in which the sound is created. Changes in frequency are reflected as the pitch of a tone, such as different notes on an instrument. Changes in intensity reflect how loud a particular sound is, such as the different dynamics one can play on an instrument \cite{Ling_2016}. The human brain interprets these differences in pressure by converting waves into electrical signals. When a wave reaches the human ear, the ear canal resonates and converts the sound into mechanical vibrations for the cochlea \cite{Ling_2016}. The cochlea in turn converts these into electrical signals for the brain. Like the human brain, interpreting sound in a digital setting involves simplifying the physical nature of sound waves into a format understandable by computers.
 
 Consider Figure 3.1.
@@ -90,7 +90,7 @@ where \textit{k} is one sinusoid in the sum, $N_h$ is the number of total sinuso
 \end{center}
 \end{figure}
 
-To create a digitial representation of this signal, the \textit{Nyquist-Shannon Sampling Theorem} provides guidelines for how signals should be \textit{bandlimited} - or rather, have their frequencies limited - and how frequently a signal should be sampled to ensure its accuracy.
+To create a digitial representation of this signal, the \textit{Nyquist-Shannon Sampling Theorem} provides guidelines for how signals should be \textit{bandlimited} - or rather, have their frequencies limited - and how often a signal should be sampled to ensure its accuracy.
 
 \begin{defn}[The Nyquist-Shannon Sampling Theorem \cite{Orfanidis_1998}]\label{def3}
 \hfill
@@ -345,8 +345,8 @@ A real-time program does not play audio files akin to one using sound effects fo
 
 %\section{Discrete Signals Applied}
 
-\section{Program Structure}
-The typical structure of a audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.7 provides a diagram of this.
+\section{Program Structure \& Libraries}
+The typical structure of an audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.7 provides a diagram of this.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]
@@ -366,6 +366,12 @@ The typical structure of a audio program separates the internal processing and t
 	\end{center}
 \end{figure}
 
+This alone can provide the higher-level structure to a UML diagram. If one were to separate the processing and view of a particular application, this could be done by separating the processing and GUI into two distinct classes:
+
+[insert UML diagram here with just two things ig]
+
+For the purposes of this thesis, [].
+
 %\lstset{language =[ANSI]C++}
 %\lstset{backgroundcolor=\color{white},rulecolor=\color{black}}
 %\lstset{linewidth=.95\textwidth,breaklines=true}
@@ -378,7 +384,5 @@ The typical structure of a audio program separates the internal processing and t
 %\begin{singlespace}
 %\lstinputlisting[caption=VST3 Project Generator Script Usage, label=motion]{source/template.txt}
 %\end{singlespace}
-
-
 
 With the design of the plugin taken care of, one can begin implementation of the plugin processor that will manipulate the input signal.
