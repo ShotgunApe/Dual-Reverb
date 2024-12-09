@@ -15,17 +15,23 @@ It is worth emphasizing that this is a different representation of the previous 
 
 \textit{Signal Flow Graphs} are used to visualize how filters manipulate a provided input and output \cite{FILTERS07}. They represent a system of linear equations that compute an output signal based on past and present input signals and past output signals. For example, the following graph describes one type of filter known as a \textit{comb filter}:
 
+[insert comb filter here]
+
+
+
 \section{Feedback Delay Networks}
 Feedback Delay Networks are described as a generalized comb filter. As opposed to having a single delay line in the system, a number of delay lines are used in parallel each containing some combination of the output signal \cite{PUCKE}. A typical FDN is built with several delay lines \textit{N}, each having a length provided by the equation [].
 
 A typical FDN is represented by the following relation:
 
-\begin{defn}[Definition of a typical FDN in the time domain \cite{OnLossless}]\label{def2}
+\begin{defn}[A typical FDN in the time domain \cite{OnLossless}]\label{def2}
 	\begin{equation}\label{nextdef(t)}
 	y(n)=\sum_{i=1}^{N} c_i s_i (n) + d x (n)
 	\end{equation}
 	\begin{equation}
 	s_i(n + m_i)=\sum_{j=1}^{N} a_{ij} s_j (n) + b_i x (n)
 \end{equation}\end{defn}
+
+where $x(n)$ and $y(n)$ are the input and output values and []. Figure [] provides the Signal Flow Graph for Definition 4.1.
 
 \section{Convolution}
