@@ -15,7 +15,7 @@ public:
 
 private:
     // Reverb consists of a diffuser and feedback network (DelayLines)
-    Diffuser diffuserA;
+    // Diffuser diffuserA;
 
     // (2) Late Feedback Loop Step (with delay lines)
     DelayLine channelA;

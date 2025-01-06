@@ -12,7 +12,7 @@ TestReverb::~TestReverb()
 void TestReverb::prepareReverb(double sampleRate)
 {
     // prepare diffuser
-    diffuserA.prepareDiffuser(sampleRate);
+    //diffuserA.prepareDiffuser(sampleRate);
 
     // preparing delay line stuff
     auto delayBufferSize = sampleRate * 2;
@@ -38,7 +38,7 @@ void TestReverb::prepareReverb(double sampleRate)
 void TestReverb::processReverb(juce::AudioBuffer<float>& buffer, int channel)
 {
     // Diffuse! (can specify number of steps with for loop in future)
-    diffuserA.processDiffuser(buffer, channel);
+    //diffuserA.processDiffuser(buffer, channel);
 
     //Feedback Delays!
     channelA.fillBuffer (buffer, channel);
@@ -60,7 +60,7 @@ void TestReverb::processReverb(juce::AudioBuffer<float>& buffer, int channel)
 
 void TestReverb::updatePosition(juce::AudioBuffer<float>& buffer)
 {
-    diffuserA.updatePosition(buffer);
+    //diffuserA.updatePosition(buffer);
 
     channelA.updateBufferPosition (buffer, channelA.getBuffer());
     channelB.updateBufferPosition (buffer, channelB.getBuffer());
