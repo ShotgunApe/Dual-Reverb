@@ -137,9 +137,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     }
     
     for (int channel = 0; channel < totalNumInputChannels; ++channel) {
-
-        // step 1 - Diffuse Initial Impact Response
-        // step 2 - Delay (Network ... eventually)
+        // Delay (Network ... eventually)
         reverb.processReverb(buffer, channel);
     }
     reverb.updatePosition(buffer);
