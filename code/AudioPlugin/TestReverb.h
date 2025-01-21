@@ -15,4 +15,5 @@ public:
 private:
     // Late Feedback Loop Step (with delay lines)
     DelayLine channelA;
+    
 };

@@ -1,4 +1,3 @@
-#include <random>
 #include "TestReverb.h"
 
 TestReverb::TestReverb()
@@ -11,19 +10,15 @@ TestReverb::~TestReverb()
 
 void TestReverb::prepareReverb(double sampleRate)
 {
+    int tmp = 5000;
     // preparing delay line stuff
     auto delayBufferSize = sampleRate * 2;
     channelA.getBuffer().clear();
     channelA.getBuffer().setSize (2, (int) delayBufferSize); // output is STEREO (this caused me so much pain)
 
-    // create random amount of delay length for delay line (for now)
-    std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist6(4800, 9600); // buffer duration 100ms - 200ms (for 48000hz sample rate, need to fix any any sample rate)
-    
-    // TODO: have it so that delaytime + gain are the same REGARDLESS of delay length
-    // also maybe pass parameter to delayline so that delaytimes can be set when delaylines are initialized?
-    channelA.setDelay(dist6(rng));
+    // SET DELAY CANNOT BE SO LOW OR ELSE UNDEFINED BEHAVIOR HAPPENS
+    // additoinal channels must be set in ratio of 1:1.5 (tmp * 1.5)
+    channelA.setDelay(tmp);
 }
 
 void TestReverb::processReverb(juce::AudioBuffer<float>& buffer, int channel)
