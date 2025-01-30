@@ -19,7 +19,9 @@ private:
     AudioPluginAudioProcessor& processorRef;
 
     juce::Slider roomSize;
-    juce::Label textLabel { {}, "woo!" };
+    juce::Slider mix;
+    juce::Slider gain;
+    juce::Label textLabel { {}, "v0.01" };
     juce::ComboBox styleMenu;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)

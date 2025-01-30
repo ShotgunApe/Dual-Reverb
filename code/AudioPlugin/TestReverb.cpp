@@ -1,5 +1,6 @@
-#include <random>
 #include "TestReverb.h"
+#include "juce_audio_basics/juce_audio_basics.h"
+#include "juce_core/juce_core.h"
 
 TestReverb::TestReverb()
 {
@@ -11,57 +12,80 @@ TestReverb::~TestReverb()
 
 void TestReverb::prepareReverb(double sampleRate)
 {
-    // prepare diffuser
-    //diffuserA.prepareDiffuser(sampleRate);
-
     // preparing delay line stuff
     auto delayBufferSize = sampleRate * 2;
+
     channelA.getBuffer().clear();
     channelA.getBuffer().setSize (2, (int) delayBufferSize); // output is STEREO (this caused me so much pain)
+
     channelB.getBuffer().clear();
-    channelB.getBuffer().setSize (2, (int) delayBufferSize); // ditto
+    channelB.getBuffer().setSize (2, (int) delayBufferSize);
+
     channelC.getBuffer().clear();
     channelC.getBuffer().setSize (2, (int) delayBufferSize);
+
     channelD.getBuffer().clear();
     channelD.getBuffer().setSize (2, (int) delayBufferSize);
 
-    // create random amount of delay length for delay line :)
-    std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist6(4800, 9600); // buffer duration 100ms - 200ms (for 48000hz sample rate, need to fix any any sample rate)
-    channelA.setDelay(dist6(rng));
-    channelB.setDelay(dist6(rng));
-    channelC.setDelay(dist6(rng));
-    channelD.setDelay(dist6(rng));
+    combOne.clear();
+    combOne.setSize(2, delayBufferSize);
+
+    combTwo.clear();
+    combTwo.setSize(2, delayBufferSize);
+
+    combThr.clear();
+    combThr.setSize(2, delayBufferSize);
+
+    combFou.clear();
+    combFou.setSize(2, delayBufferSize);
+
+    // SET DELAY CANNOT BE SO LOW OR ELSE UNDEFINED BEHAVIOR HAPPENS
+    // channels should be set to prime numbers - roughly 1:1.5 ratio
+    channelA.setDelay((int) 2423);
+    channelB.setDelay((int) 3121);
+    channelC.setDelay((int) 4451);
+    channelD.setDelay((int) 5903);
 }
 
 void TestReverb::processReverb(juce::AudioBuffer<float>& buffer, int channel)
 {
-    // Diffuse! (can specify number of steps with for loop in future)
-    //diffuserA.processDiffuser(buffer, channel);
+    // COMB FILTERS
+    // Start by holding the current dry signal as a temp var
+    combOne.makeCopyOf(buffer, 1);
+    combTwo.makeCopyOf(buffer, 1);
+    combThr.makeCopyOf(buffer, 1);
+    combFou.makeCopyOf(buffer, 1);
 
-    //Feedback Delays!
-    channelA.fillBuffer (buffer, channel);
-    channelA.readFromBuffer (buffer, channelA.getBuffer(), channel);
-    channelA.fillBuffer (buffer, channel);
+    // Complete each feedback loop and add them to their respective comb filter
+    channelA.fillBuffer (combOne, channel);
+    channelA.readFromBuffer (combOne, channelA.getBuffer(), channel);
+    channelA.fillBuffer (combOne, channel);
 
-    channelB.fillBuffer (buffer, channel);
-    channelB.readFromBuffer (buffer, channelB.getBuffer(), channel);
-    channelB.fillBuffer (buffer, channel);
+    // Once fed back, add each comb filter to the wet signal
+    buffer.addFrom(channel, 0, combOne, channel, 0, combOne.getNumSamples(), -1.0f);
 
-    channelC.fillBuffer (buffer, channel);
-    channelC.readFromBuffer (buffer, channelC.getBuffer(), channel);
-    channelC.fillBuffer (buffer, channel);
+    channelB.fillBuffer (combTwo, channel);
+    channelB.readFromBuffer (combTwo, channelB.getBuffer(), channel);
+    channelB.fillBuffer (combTwo, channel);
 
-    channelD.fillBuffer (buffer, channel);
-    channelD.readFromBuffer (buffer, channelD.getBuffer(), channel);
-    channelD.fillBuffer (buffer, channel);
+    buffer.addFrom(channel, 0, combTwo, channel, 0, combTwo.getNumSamples(), -1.0f);
+
+    channelC.fillBuffer (combThr, channel);
+    channelC.readFromBuffer (combThr, channelC.getBuffer(), channel);
+    channelC.fillBuffer (combThr, channel);
+
+    buffer.addFrom(channel, 0, combThr, channel, 0, combThr.getNumSamples(), -1.0f);
+
+    channelD.fillBuffer (combFou, channel);
+    channelD.readFromBuffer (combFou, channelD.getBuffer(), channel);
+    channelD.fillBuffer (combFou, channel);
+
+    buffer.addFrom(channel, 0, combFou, channel, 0, combFou.getNumSamples(), -1.0f);
+
 }
 
 void TestReverb::updatePosition(juce::AudioBuffer<float>& buffer)
 {
-    //diffuserA.updatePosition(buffer);
-
     channelA.updateBufferPosition (buffer, channelA.getBuffer());
     channelB.updateBufferPosition (buffer, channelB.getBuffer());
     channelC.updateBufferPosition (buffer, channelC.getBuffer());

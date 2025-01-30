@@ -73,8 +73,6 @@ target_sources(AudioPluginExample
         PluginProcessor.cpp
         TestReverb.cpp
         components/DelayLine.cpp
-        components/Diffuser.cpp
-        components/Matrix.h
         )
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer

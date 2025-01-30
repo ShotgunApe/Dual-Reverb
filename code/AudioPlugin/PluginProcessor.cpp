@@ -89,7 +89,14 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+
+    // First, prepare the temp buffer that will store the signal to be processed
+    tmp.clear();
+    tmp.setSize(2, sampleRate * 2);
+
+    // Next, prepare the reverb that will do the processing
     reverb.prepareReverb(sampleRate);
+
     juce::ignoreUnused (sampleRate, samplesPerBlock);
 }
 
@@ -137,12 +144,17 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     }
     
     for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+        // Make copy of dry signal to process
+        tmp.makeCopyOf(buffer, 1);
 
-        // step 1 - Diffuse Initial Impact Response
-        // step 2 - Delay (Network ... eventually)
-        reverb.processReverb(buffer, channel);
+        // Delay
+        reverb.processReverb(tmp, channel);
+
+        // Copy wet signal back to dry signal (allpass-kinda)
+        buffer.applyGain(0.3f);
+        buffer.addFrom(channel, 0, tmp, channel, 0, tmp.getNumSamples(), 0.3f);       
     }
-    reverb.updatePosition(buffer);
+    reverb.updatePosition(tmp);
 }
 
 //==============================================================================

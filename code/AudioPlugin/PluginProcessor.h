@@ -2,6 +2,7 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "TestReverb.h"
+#include "juce_audio_basics/juce_audio_basics.h"
 
 //==============================================================================
 class AudioPluginAudioProcessor final : public juce::AudioProcessor
@@ -46,6 +47,9 @@ public:
 private:
     //==============================================================================
     TestReverb reverb;
+
+    // tmp buffer to hold wet/dry signal
+    juce::AudioBuffer<float> tmp;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

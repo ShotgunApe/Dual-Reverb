@@ -15,12 +15,28 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     roomSize.setPopupDisplayEnabled (true, false, this);
     roomSize.setTextValueSuffix (" Room Size");
     roomSize.setValue(1.0);
+
+    mix.setSliderStyle (juce::Slider::RotaryVerticalDrag);
+    mix.setRange (0.0, 127.0, 1.0);
+    mix.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
+    mix.setPopupDisplayEnabled (true, false, this);
+    mix.setTextValueSuffix (" Wet/Dry");
+    mix.setValue(1.0);
+
+    gain.setSliderStyle (juce::Slider::LinearVertical);
+    gain.setRange (0.0, 127.0, 1.0);
+    gain.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
+    gain.setPopupDisplayEnabled (true, false, this);
+    gain.setTextValueSuffix (" Gain");
+    gain.setValue(1.0);
  
     addAndMakeVisible (&roomSize);
+    addAndMakeVisible (&mix);
+    addAndMakeVisible (&gain);
     addAndMakeVisible (&textLabel);
     addAndMakeVisible (&styleMenu);
 
-    setSize (600, 400);
+    setSize (450, 200);
 
 }
 
@@ -46,7 +62,9 @@ void AudioPluginAudioProcessorEditor::resized()
 
     auto area = getLocalBounds();
 
-    roomSize.setBounds (250, 100, 80, 80);
+    roomSize.setBounds (50, 100, 80, 80);
+    mix.setBounds (150, 100, 80, 80);
+    gain.setBounds (400, 25, 50, 150);
     textLabel.setBounds (10, 10, 300, 10);
-    styleMenu.setBounds (10, 30, 290, 25);
+    styleMenu.setBounds (50, 30, 350, 25);
 }

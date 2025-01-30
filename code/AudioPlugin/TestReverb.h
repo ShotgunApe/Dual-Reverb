@@ -1,7 +1,7 @@
 #pragma once
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "components/DelayLine.h"
-#include "components/Diffuser.h"
+#include "juce_audio_basics/juce_audio_basics.h"
 
 class TestReverb
 {
@@ -14,12 +14,17 @@ public:
     void updatePosition(juce::AudioBuffer<float>& buffer);
 
 private:
-    // Reverb consists of a diffuser and feedback network (DelayLines)
-    // Diffuser diffuserA;
 
-    // (2) Late Feedback Loop Step (with delay lines)
+    // Comb filters in parallel
+    juce::AudioBuffer<float> combOne;
+    juce::AudioBuffer<float> combTwo;
+    juce::AudioBuffer<float> combThr;
+    juce::AudioBuffer<float> combFou;
+
+    // DelayLine for each comb filter
     DelayLine channelA;
     DelayLine channelB;
     DelayLine channelC;
     DelayLine channelD;
+
 };
