@@ -15,6 +15,7 @@ public:
 
 private:
 
+    // Comb filters in parallel
     juce::AudioBuffer<float> combOne;
     juce::AudioBuffer<float> combTwo;
     juce::AudioBuffer<float> combThr;
@@ -25,4 +26,5 @@ private:
     DelayLine channelB;
     DelayLine channelC;
     DelayLine channelD;
+
 };

@@ -144,16 +144,15 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     }
     
     for (int channel = 0; channel < totalNumInputChannels; ++channel) {
-
         // Make copy of dry signal to process
         tmp.makeCopyOf(buffer, 1);
 
         // Delay
         reverb.processReverb(tmp, channel);
 
-        // Copy wet signal back to dry signal
-        buffer.addFrom(channel, 0, tmp, channel, 0, tmp.getNumSamples());
-
+        // Copy wet signal back to dry signal (allpass-kinda)
+        buffer.applyGain(0.3f);
+        buffer.addFrom(channel, 0, tmp, channel, 0, tmp.getNumSamples(), 0.3f);       
     }
     reverb.updatePosition(tmp);
 }
