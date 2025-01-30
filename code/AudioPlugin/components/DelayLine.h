@@ -16,7 +16,7 @@ public:
     juce::AudioBuffer<float>& getBuffer ();
 
 private:
-    // For circular buffer
+    // For circular array data structure
     juce::AudioBuffer<float> delayBuffer; 
     int writePosition { 0 };
     int delayTime;
