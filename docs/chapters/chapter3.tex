@@ -1,13 +1,13 @@
 %!TEX root = ../username.tex
 \chapter{Artificial Reverberation Techniques}
-\hspace*{-0.15cm}This chapter will begin with a brief overview of concepts related to Digital Signal Processing to understand artificial reverberation algorithms. After, a description of Feedback Delay Networks will be provided, associated with its corresponding implementation in C++.
+\hspace*{-0.15cm}This chapter will begin with a brief overview of concepts related to Digital Signal Processing to understand artificial reverberation algorithms.
 
 \section{Filters \& Signal Flow Graphs}
-A \textit{filter} is defined as a medium through which a signal enters as an input and exits as an output \cite{FILTERS07}. It is a type of \textit{black box system} whose inner workings may modify the sound in some way. Filters can take the shape of several different [].
-
-By extension, a \textit{digital filter} is a type of filter that operates on digital signals in the form of a computation. This computation can take the form of an equation on paper, or a loop of code in a computer.
+A \textit{filter} is defined as a medium through which a signal enters as an input and exits as an output \cite{FILTERS07}. It is a type of \textit{black box system} whose inner workings may modify the sound in some way. By extension, a \textit{digital filter} is a type of filter that operates on digital signals in the form of a computation. This computation can take the form of an equation, or a snippet of code in a computer.
 
 Consider the following graph:
+
+[show graph of low-pass filter and describe the differences in representation of sound in time vs frequency]
 
 It is worth emphasizing that this is a different representation of the previous sound, as they are a graph of frequency to amplitude as opposed to the waveform over time (reword this). In fact, [] For this reason [].
 
@@ -17,6 +17,8 @@ It is worth emphasizing that this is a different representation of the previous 
 
 [insert comb filter here]
 
+
+This comb filter can be represented through code, as well. To implement this, a data structure known as a \textit{circular array} will need to be implemented.
 
 
 \section{Feedback Delay Networks}

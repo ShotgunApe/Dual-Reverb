@@ -320,7 +320,7 @@ To summarize, Figure 3.6 describes how this data travels in a digital setting.
 			\node (C) [startstop, below of=B, yshift=-1.3cm] {OS \\
 			(Win, Mac, etc.)};
 			\node (D) [startstop, left of=C, xshift=-4cm] {Audio Driver \\
-			(ASIO, Core Audio, etc.)};
+			(ASIO, JACK, etc.)};
 			\node (end) [startstop, left of =D, xshift=-5cm] {Host Application \\
 				\begin{tikzpicture}
 					\node (start) [startstop] {Audio Plug-In \\
@@ -332,21 +332,21 @@ To summarize, Figure 3.6 describes how this data travels in a digital setting.
 			\draw [<->, thick] (A) -- node {} (B);
 			\draw [<->, thick] (B) -- node {} (C);
 			\draw [<->, thick] (C) -- node {} (D);
-			\draw [<->, thick] (D) ++(-3.55, 0) -- +(1.14, 0);
+			\draw [<->, thick] (D) ++(-3.55, 0) -- +(1.69, 0);
 		\end{tikzpicture}
 		}
 		\caption{The flow of information for audio data in a digital system.}
 	\end{center}
 \end{figure}
 
-Audio is first processed by the audio plugin under a particular host application. This host application is most commonly a \textit{Digital Audio Workstation} (DAW), which handles several different audio plugins to generate and manipulate sound. This audio is then processed by the audio driver into buffers. Buffers are stored in memory until the processor is interrupted by the audio chipset or sound card, upon which the buffer is sent to be output to the system's speakers. This is completed by the Digital-to-Analog Converter (DAC) which converts the discrete signal into a continuous form for the speaker.
+Audio is first processed by the audio plugin under a particular host application. This host application handles several different audio plugins to generate and manipulate sound. This audio is then processed by the audio driver into buffers. Buffers are stored in memory until the processor is interrupted by the audio chipset or sound card, upon which the buffer is sent to be output to the system's speakers. This is completed by the Digital-to-Analog Converter (DAC) which converts the discrete signal into a continuous form for the speaker.
 
 A real-time program does not play audio files akin to one using sound effects for a video game; the program needs to play this sound as it is being generated on-the-fly. As one can imagine, this will provide limitations into the implementation of the program to prevent buffers from being dropped.
 
 %\section{Discrete Signals Applied}
 
 \section{Program Structure \& Libraries}
-The typical structure of an audio program separates the internal processing and the external GUI. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.7 provides a diagram of this.
+The typical structure of an audio program separates the internal processing and the external GUI into multiple threads. The audio thread typically runs at a speed determined by the host application it runs under, often times configurable in the settings. Each buffer sent []. The GUI runs at a much lower speed [reword to be more rigorous] and communicates to the audio thread via signals (note that this is different to the audio signal being sent to the sound card). This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.7 provides a diagram of this.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]
