@@ -1,6 +1,6 @@
 %!TEX root = ../username.tex
 \chapter{Real-time Audio Programming}
-\hspace*{-0.15cm}This chapter will consider the theory behind real-time audio programming and the different principles that are followed to create a functional program. It will begin with an overview of digital signal processing. Specifically, this will include the mathematical background required to understand sound. Next, it will cover the methods by which a digital system communicates with several components to create sound. Specifically, this will include how audio data is handled by a digital system's drivers and its corresponding speakers. After, the requirements that a real-time audio program needs in order to function will be considered. This will include a program's typical structure and functionality. Finally, libraries and other software available that handles these requirements will be discussed in length - focusing primarily on the Virtual Studio Technology specification.
+\hspace*{-0.15cm}This chapter will consider the theory behind real-time audio programming and the different principles that are followed to create a functional program. It will begin with an overview of digital signal processing. Specifically, this will include the mathematical background required to understand sound. Next, it will cover the methods by which a digital system communicates with several components to create sound. Specifically, this will include how audio data is handled by a digital system's drivers and its corresponding speakers. After, the requirements that a real-time audio program needs in order to function will be considered. This will include a program's typical structure and functionality. Finally, libraries and other software available that handles these requirements will be discussed in length.
 
 \section{Sound As a Discrete Signal}
 Sound is a physical phenomenon. Vibrations travel though a medium such as air to create waves and differences in pressure, which travel at the the speed of sound (roughly 331 m/s) \cite{Ling_2016}. These vibrations have varying lengths and intensity depending on the manner in which the sound is created. Changes in frequency are reflected as the pitch of a tone, such as different notes on an instrument. Changes in intensity reflect how loud a particular sound is, such as the different dynamics one can play on an instrument \cite{Ling_2016}. The human brain interprets these differences in pressure by converting waves into electrical signals. When a wave reaches the human ear, the ear canal resonates and converts the sound into mechanical vibrations for the cochlea \cite{Ling_2016}. The cochlea in turn converts these into electrical signals for the brain. Like the human brain, interpreting sound in a digital setting involves simplifying the physical nature of sound waves into a format understandable by computers.
@@ -177,7 +177,7 @@ Consider Figure 3.4:
 				mark = text,
 				text mark = , % so jank
 				domain = -6.5:0,
-				samples = 59,
+				samples = 40,
 				red
 				] {(cos(deg(x))};
 
@@ -186,7 +186,7 @@ Consider Figure 3.4:
 				mark = text,
 				text mark = , % so jank
 				domain = 0:6.5,
-				samples = 59,
+				samples = 40,
 				red
 				] {(cos(deg(x))};
 
@@ -246,7 +246,7 @@ If a buffer is dropped in the digital system, it cannot be output by the speaker
 				mark = text,
 				text mark = , % so jank
 				domain = -6.5:0,
-				samples = 59,
+				samples = 40,
 				red
 				] {(cos(deg(x))};
 
@@ -255,7 +255,7 @@ If a buffer is dropped in the digital system, it cannot be output by the speaker
 				mark = text,
 				text mark = , % so jank
 				domain = 3.1415:6.5,
-				samples = 30,
+				samples = 20,
 				red
 				] {(cos(deg(x))};
 
@@ -296,7 +296,7 @@ If a buffer is dropped in the digital system, it cannot be output by the speaker
 	\end{center}
 \end{figure}
 
-To prevent this from occuring, processing must occur within the time it takes to output a single buffer. The maximum time to process buffers is dependent of the buffer size. Suppose a single buffer is measured by an amount, \textit{x}, which corresponds to the number of samples present in a single buffer of audio data. To obtain the amount of time \textit{t} that a digital system would take to output this buffer, \textit{x} can be divided by the \textit{sample rate}, measured in Hz. This measurement of Hz is by definition the reciprocal second. Thus, dividing the buffer size by the sample rate provides the time in seconds that the buffer takes to be output. For a buffer size \textit{x} of 256 samples and a \textit{sample rate} of 48,000 Hz, the resulting time \textit{t} would be $(256 / 48,000)$, or 0.0053 seconds. Any such program working with real-time audio must compute a buffer during this time frame. Should processing take too long, audio will be dropped as seen in Figure 3.5.
+To prevent this from occuring, processing must occur within the time it takes to output a single buffer. The maximum time to process buffers is dependent of the buffer size. Suppose a single buffer is measured by an amount, \textit{x}, which corresponds to the number of samples present in a single buffer of audio data. To obtain the amount of time \textit{t} that a digital system would take to output this buffer, \textit{x} can be divided by the \textit{sample rate}, measured in \textit{hertz}. This measurement of hertz is by definition the reciprocal second. Thus, dividing the buffer size by the sample rate provides the time in seconds that the buffer takes to be output. For a buffer size \textit{x} of 256 samples and a \textit{sample rate} of 48,000 Hz, the resulting time \textit{t} would be $(256 / 48,000)$, or 0.0053 seconds. Any such program working with real-time audio must compute a buffer during this time frame. Should processing take too long, audio will be dropped as seen in Figure 3.5.
 
 To summarize, Figure 3.6 describes how this data travels in a digital setting.
 
@@ -346,7 +346,7 @@ A real-time program does not play audio files akin to one using sound effects fo
 %\section{Discrete Signals Applied}
 
 \section{Program Structure \& Libraries}
-The typical structure of an audio program separates the internal processing and the external GUI into multiple threads. The audio thread typically runs at a speed determined by the host application it runs under, often times configurable in the settings. Each buffer sent []. The GUI runs at a much lower speed [reword to be more rigorous] and communicates to the audio thread via signals (note that this is different to the audio signal being sent to the sound card). This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.7 provides a diagram of this.
+The typical structure of an audio program separates the internal processing and the external GUI into multiple threads. The audio thread runs at a speed determined by the host application, often times configurable in its settings. Each buffer sent from the DAW to the audio driver []. The GUI runs at a much lower speed [reword to be more rigorous] and communicates to the audio thread through messages that can change [] upon being recieved. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.7 provides a diagram of this.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]
