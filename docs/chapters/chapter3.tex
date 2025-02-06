@@ -1,5 +1,5 @@
 %!TEX root = ../username.tex
-\chapter{Artificial Reverberation Techniques}
+\chapter{Artificial Reverberation Design}
 \hspace*{-0.15cm}This chapter will begin with a brief overview of concepts related to Digital Signal Processing to understand artificial reverberation algorithms.
 
 \section{Filters \& Signal Flow Graphs}
@@ -20,20 +20,21 @@ It is worth emphasizing that this is a different representation of the previous 
 
 This comb filter can be represented through code, as well. To implement this, a data structure known as a \textit{circular array} will need to be implemented.
 
+\section{The Schroeder Comb Filter Approach}
 
-\section{Feedback Delay Networks}
-Feedback Delay Networks are described as a generalized comb filter. As opposed to having a single delay line in the system, a number of delay lines are used in parallel each containing some combination of the output signal \cite{PUCKE}. A typical FDN is built with several delay lines \textit{N}, each having a length provided by the equation [].
+%\section{Feedback Delay Networks}
+%Feedback Delay Networks are described as a generalized comb filter. As opposed to having a single delay line in the system, a number %of delay lines are used in parallel each containing some combination of the output signal \cite{PUCKE}. A typical FDN is built with %several delay lines \textit{N}, each having a length provided by the equation [].
 
-A typical FDN is represented by the following relation:
+%A typical FDN is represented by the following relation:
 
-\begin{defn}[A typical FDN in the time domain \cite{OnLossless}]\label{def2}
-	\begin{equation}\label{nextdef(t)}
-	y(n)=\sum_{i=1}^{N} c_i s_i (n) + d x (n)
-	\end{equation}
-	\begin{equation}
-	s_i(n + m_i)=\sum_{j=1}^{N} a_{ij} s_j (n) + b_i x (n)
-\end{equation}\end{defn}
+%\begin{defn}[A typical FDN in the time domain \cite{OnLossless}]\label{def2}
+%	\begin{equation}\label{nextdef(t)}
+%	y(n)=\sum_{i=1}^{N} c_i s_i (n) + d x (n)
+%	\end{equation}
+%	\begin{equation}
+%	s_i(n + m_i)=\sum_{j=1}^{N} a_{ij} s_j (n) + b_i x (n)
+%\end{equation}\end{defn}
 
-where $x(n)$ and $y(n)$ are the input and output values and []. Figure [] provides the Signal Flow Graph for Definition 4.1.
+%where $x(n)$ and $y(n)$ are the input and output values and []. Figure [] provides the Signal Flow Graph for Definition 4.1.
 
 \section{Convolution}

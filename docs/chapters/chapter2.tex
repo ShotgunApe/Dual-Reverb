@@ -102,7 +102,7 @@ To create a digitial representation of this signal, the \textit{Nyquist-Shannon 
 
 The human ear provides sufficient guidelines for each of these requirements. Typical human hearing spans across a range of 20 Hz - 20,000 Hz \cite{Ling_2016}. As such, the \textit{Nyquist rate} - the minimum sampling rate - for a signal corresponding to an audio waveform must encompass this range. It is defined as $F_s = 2F_{max}$ \cite{Orfanidis_1998}. With an $F_{max} = 20,000$ Hz, the Nyquist rate for audio DSP applications is thus 40,000 Hz. This explains the sample rate for several audio applications. Modern audio recordings use 44,100 Hz, and Digital Audio Workstations usually produce with 48,000 Hz. With this Nyquist rate, the entire range of human hearing is covered.
 
-The process of \textit{sampling} an analog signal is done by taking measurements of a particular function at regular points in time. Each individual measurement of the original analog signal is a \textit{sample}. By convention, samples are in the range (-1,1). This is in alignment with []. [talk about format of .wav files and how 16bit wav uses ints of various size etc. etc.]
+The process of \textit{sampling} an analog signal is done by taking measurements of a particular function at regular points in time. Each individual measurement of the original analog signal is a \textit{sample}. By convention, samples are in the range (-1,1). This is in alignment with 32 bit wave files being of a \textit{floating-point type}, as opposed to 16 bit wave files being of the range (-32,768, 32,767).
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\begin{center}
@@ -134,7 +134,7 @@ The process of \textit{sampling} an analog signal is done by taking measurements
 
 This is a discrete representation of our original continuous signal. Such a snippet above represents a \textit{buffer} of data. Under this representation, one may predict how to represent this in code. If each sample refers to a \textit{float} in the range (-1,1), an array of floats is sufficient to store this waveform in memory. With this representation of sound, one can now use this data to process sound digitally.
 
-\section{The Real-time Programming Bus Schedule}
+\section{The Real-time Programming Bus Schedule}\label{chap:two}
 
 In a digital system, hardware components get the attention of the processor by sending \textit{interrupts} \cite{Rubini2005-kv}. Keyboards, hard drives, and network cards are all components that use interrupts. By using interrupts, one can account for real-world imperfections in the transfer of data. Speakers, likewise, utilize interrupts for the playback of sound. To play sound, a continuous stream of audio data must be sent to the sound card or audio chipset of the device \cite{Walker_2005}. To do this, data is sent in chunks, each known as a \textit{buffer}. When the sound card finishes playing a buffer, it sends an interrupt to the processor requesting a new one for playback. For most applications, buffer sizes can be large enough to prevent audio from ever dropping. This allows for intermediate applications or virtual mixers to play audio from multiple sources without issue. However, in the case that lower latency is expected for the end user, shortening buffer sizes can do so at the cost of higher performance requirements \cite{corless2009pc-based}. This high performant expectation is an example of a \textit{real-time system}, which is defined as follows:
 
@@ -343,10 +343,9 @@ Audio is first processed by the audio plugin under a particular host application
 
 A real-time program does not play audio files akin to one using sound effects for a video game; the program needs to play this sound as it is being generated on-the-fly. As one can imagine, this will provide limitations into the implementation of the program to prevent buffers from being dropped.
 
-%\section{Discrete Signals Applied}
 
 \section{Program Structure \& Libraries}
-The typical structure of an audio program separates the internal processing and the external GUI into multiple threads. The audio thread runs at a speed determined by the host application, often times configurable in its settings. Each buffer sent from the DAW to the audio driver []. The GUI runs at a much lower speed [reword to be more rigorous] and communicates to the audio thread through messages that can change [] upon being recieved. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.7 provides a diagram of this.
+The typical structure of an audio program separates the internal processing and the external GUI into multiple threads. The audio thread runs at a speed determined by the host application, often times configurable in its settings. Each buffer travels from the DAW to the audio driver after being processed. The GUI runs at a slower speed and communicates to the audio thread through messages that can change various parameters upon being recieved. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.7 provides a diagram of this.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]

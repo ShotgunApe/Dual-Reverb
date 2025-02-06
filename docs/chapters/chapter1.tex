@@ -3,7 +3,7 @@
 \hspace*{-0.155cm}This chapter will provide the backgorund information necessary to understanding what artificial reverberators are, why their use is important, and the different ways they are used by musicians today.
 
 \section{What is Reverb?}
-Reverb can be broadly defined as the persistence of sound after its initial impulse response [find good definition]. This can take the form of sound waves bouncing off the walls of a room, for example. It provides a texture that is considered ``wet'' and washes out the sound of an otherwise clear tone. In small amounts, it can be tasteful and enhance the timbre of an instrument. In large amounts, it can overpower the initial tone and can disrupt other elements of the music, such as rhythm.
+Reverb can be broadly defined as ``an ambient space in the perception of the listener'' \cite{dattorro1997effect}. This can take the form of sound waves bouncing off the walls of a room, for example. It provides a texture that is considered ``wet'' and washes out the sound of an otherwise clear tone. In small amounts, it can be tasteful and enhance the timbre of an instrument. In large amounts, it can overpower the initial tone and can disrupt other elements of the music, such as rhythm.
 
 Consider an instrument with a short impulse response:
 
@@ -59,19 +59,31 @@ By adding reverb, this same instrument can sound as if it were performed in a la
 	\end{center}
 \end{figure} %fix to compress waveform to -1 and 1
 
-Prior to the early 1960s, ``artificial reverberators'' were physical devices - that is, something that took input from an electromechanical transducer and manipulated the sound using a variety of physical methods. Some such devices used metal plates, springs, and oil canisters - each providing their own unique sound and characteristics \cite{FiftyYears}. In 1961, M. R. Schroeder introduced a number of methods to digitally recreate this effect without additional color \cite{schroeder1961natural}. This by no means replaced the physical devices, however - Schroeder's paper simply marked some of the first algorithms used to generate artificial reverberation by purely electronic means. These same algorithms are used in several programs today.
+Prior to the early 1960s, \textit{artificial reverberators} were physical devices - that is, something that took input from an electromechanical transducer and manipulated the sound using a variety of physical methods. Some such devices used metal plates, springs, and oil canisters - each providing their own unique sound and characteristics \cite{FiftyYears}. In some cases, these sounds were desirable and used for their specific timbral qualities. These characteristics were not for everyone, though. In 1961, M. R. Schroeder introduced a number of methods to digitally recreate this effect without additional color \cite{schroeder1961natural}. This by no means replaced the physical devices, however - Schroeder's paper simply marked some of the first algorithms used to generate artificial reverberation by purely electronic means. These same algorithms are used in several programs today.
 
 \section{How is Reverb Used?}
-Nearly every song one hears on the radio utilizes some kind of music application which allows one to record, edit, and manipulate several audio sources and recordings. Such applications are known as \textit{Digital Audio Workstations} (DAWs), one such program that reverb is commonly used in. By allowing the producer to manipulate these recordings in real time, musicians can quickly and efficiently create the music that one hears today. DAWs accomplish this by providing tools to record the notes or sounds of various instruments through multiple means. [Maybe talk about VSTs first - then MIDI? - I planned on doing this originally in the next paragraph] For example, standards such as MIDI exist that allow a musician to connect musical instruments to their computer. MIDI notes recorded in this manner can perform any type of virtual instrument stored on the machine. One such problem that programmers face is the latency of such programs. Should the resulting sound come too late when a key is pressed, then any attempt at recording will feel unnatural and clunky. Discussion of how to prevent these issues are discussed in Chapter 2 [find out how to reference chapters/figures properly].
+Nearly every song one hears on the radio utilizes some kind of music application which allows one to record, edit, and manipulate several audio sources and recordings. Such applications are known as \textit{Digital Audio Workstations} (DAWs). By allowing the producer to manipulate recordings in real time, they can quickly and efficiently create the music that one hears today. DAWs accomplish this by providing tools to record the notes or sounds of instruments through various means. For example, standards such as MIDI exist that allow a musician to connect musical instruments to their computer. MIDI notes recorded in this manner can perform any type of virtual instrument stored on the machine. These virtual instruments are known as \textit{plugins}, a type of application that runs under a DAW. Plugins are generally broken into two distinct categories: \textit{generator plugins} and \textit{effect plugins}. Their difference is self-explanatory; generator plugins sample or synthesize a sound within the application, while effect plugins manipulate a given input. For the purposes of this thesis, focus will be placed on the development of \textit{effect plugins}. The producer can apply several of these effect plugins to a source sound in series. This reveals one such issue that can arise in the creation of these plugins: their latency. Should the resulting sound take too long to process, then the signal will become lost when processed. Discussion of how to prevent these issues are discussed in Section 3.2: \nameref{chap:two}. Effect plugins can range from distortion to chorus to arpeggiators, but they all operate using the same principle - take a signal as input, perform some type of operation to it, and return the processed signal. Reverb is one type of effect plugin that is often used in DAWs. An example DAW can be seen below, in Figure 2.3.
 
-To manipulate the timbre of a sound further, DAWs allow the producer to apply a number of additional programs to a generator in series through the channel the sound originates from. [talk about generator vsts first? - synths/samplers/etc.]. These effect plugins are
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\includegraphics[width=16cm]{figures/DAW.png}
+		}
+		\caption{A screenshot of Reaper - a Digital Audio Workstation.}
+	\end{center}
+\end{figure}
 
+Digital audio workstations can differ in design, but are generally broken into three separate areas:
 
-%\subsection{Usage of DAWs}
-%\subsection{Virtual Studio Technology}
-
+\begin{itemize}
+  \item The timeline: located in the middle, this contains each waveform and allows the producer to arrange how and when tracks are played.
+  \item The track control panel: located on the left, this allows the producer to add and remove different tracks in a project.
+  \item The mixer control panel: located on the bottom, this allows the producer to adjust the volume of individual tracks and add effects.
+\end{itemize}
 
 \section{Reverberation Methods}
+As mentioned previously, M. R. Schroeder introduced some of the first algorithms to artificially reverberate a digital signal.
+
 %Spring reverberators work by [].
 %\subsection{Echo Chambers}
 %\subsection{Electromechanical Devices}
