@@ -102,7 +102,7 @@ To create a digitial representation of this signal, the \textit{Nyquist-Shannon 
 
 The human ear provides sufficient guidelines for each of these requirements. Typical human hearing spans across a range of 20 Hz - 20,000 Hz \cite{Ling_2016}. As such, the \textit{Nyquist rate} - the minimum sampling rate - for a signal corresponding to an audio waveform must encompass this range. It is defined as $F_s = 2F_{max}$ \cite{Orfanidis_1998}. With an $F_{max} = 20,000$ Hz, the Nyquist rate for audio DSP applications is thus 40,000 Hz. This explains the sample rate for several audio applications. Modern audio recordings use 44,100 Hz, and Digital Audio Workstations usually produce with 48,000 Hz. With this Nyquist rate, the entire range of human hearing is covered.
 
-The process of \textit{sampling} an analog signal is done by taking measurements of a particular function at regular points in time. Each individual measurement of the original analog signal is a \textit{sample}. By convention, samples are in the range (-1,1). This is in alignment with 32 bit wave files being of a \textit{floating-point type}, as opposed to 16 bit wave files being of the range (-32,768, 32,767).
+The process of \textit{sampling} an analog signal is done by taking measurements of a particular function at regular points in time. Each individual measurement of the original analog signal is a \textit{sample}. By convention, samples are in the range (-1,1). This is in alignment with 32 bit wave files being of a \textit{floating-point type}, as opposed to 16 bit wave files represented as \textit{integers} the range (-32,768, 32,767).
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\begin{center}
@@ -132,7 +132,7 @@ The process of \textit{sampling} an analog signal is done by taking measurements
 	\end{center}
 \end{figure}
 
-This is a discrete representation of our original continuous signal. Such a snippet above represents a \textit{buffer} of data. Under this representation, one may predict how to represent this in code. If each sample refers to a \textit{float} in the range (-1,1), an array of floats is sufficient to store this waveform in memory. With this representation of sound, one can now use this data to process sound digitally.
+This is a discrete representation of our original continuous signal. Such a snippet above represents a \textit{buffer} of data. If each sample refers to a \textit{float} in the range (-1,1), an array of floats is sufficient to store this waveform in memory. With this representation of sound, one can now use this data to process sound digitally.
 
 \section{The Real-time Programming Bus Schedule}\label{chap:two}
 
@@ -365,18 +365,18 @@ The typical structure of an audio program separates the internal processing and 
 	\end{center}
 \end{figure}
 
-This alone can provide the higher-level structure to a UML diagram. If one were to separate the processing and view of a particular application, this could be done by separating the processing and GUI into two distinct classes:
+%This alone can provide the higher-level structure to a UML diagram. If one were to separate the processing and view of a particular %application, this could be done by separating the processing and GUI into two distinct classes:
 
-[insert UML diagram here with just two things ig]
+%[insert UML diagram here with just two things ig]
 
-\begin{figure}[h]
-	\begin{center}
-		\fbox{\includegraphics{example.1}}
-		\caption{UML Diagram of an audio application.}
-	\end{center}
-\end{figure}
+%\begin{figure}[h]
+%	\begin{center}
+%		\fbox{\includegraphics{example.1}}
+%		\caption{UML Diagram of an audio application.}
+%	\end{center}
+%\end{figure}
 
-For the purposes of this thesis, [].
+%For the purposes of this thesis, [].
 
 %\lstset{language =[ANSI]C++}
 %\lstset{backgroundcolor=\color{white},rulecolor=\color{black}}

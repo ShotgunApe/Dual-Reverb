@@ -62,7 +62,9 @@ By adding reverb, this same instrument can sound as if it were performed in a la
 Prior to the early 1960s, \textit{artificial reverberators} were physical devices - that is, something that took input from an electromechanical transducer and manipulated the sound using a variety of physical methods. Some such devices used metal plates, springs, and oil canisters - each providing their own unique sound and characteristics \cite{FiftyYears}. In some cases, these sounds were desirable and used for their specific timbral qualities. These characteristics were not for everyone, though. In 1961, M. R. Schroeder introduced a number of methods to digitally recreate this effect without additional color \cite{schroeder1961natural}. This by no means replaced the physical devices, however - Schroeder's paper simply marked some of the first algorithms used to generate artificial reverberation by purely electronic means. These same algorithms are used in several programs today.
 
 \section{How is Reverb Used?}
-Nearly every song one hears on the radio utilizes some kind of music application which allows one to record, edit, and manipulate several audio sources and recordings. Such applications are known as \textit{Digital Audio Workstations} (DAWs). By allowing the producer to manipulate recordings in real time, they can quickly and efficiently create the music that one hears today. DAWs accomplish this by providing tools to record the notes or sounds of instruments through various means. For example, standards such as MIDI exist that allow a musician to connect musical instruments to their computer. MIDI notes recorded in this manner can perform any type of virtual instrument stored on the machine. These virtual instruments are known as \textit{plugins}, a type of application that runs under a DAW. Plugins are generally broken into two distinct categories: \textit{generator plugins} and \textit{effect plugins}. Their difference is self-explanatory; generator plugins sample or synthesize a sound within the application, while effect plugins manipulate a given input. For the purposes of this thesis, focus will be placed on the development of \textit{effect plugins}. The producer can apply several of these effect plugins to a source sound in series. This reveals one such issue that can arise in the creation of these plugins: their latency. Should the resulting sound take too long to process, then the signal will become lost when processed. Discussion of how to prevent these issues are discussed in Section 3.2: \nameref{chap:two}. Effect plugins can range from distortion to chorus to arpeggiators, but they all operate using the same principle - take a signal as input, perform some type of operation to it, and return the processed signal. Reverb is one type of effect plugin that is often used in DAWs. An example DAW can be seen below, in Figure 2.3.
+Nearly every song one hears on the radio utilizes some kind of music application which allows one to record, edit, and manipulate several audio sources and recordings. Such applications are known as \textit{Digital Audio Workstations} (DAWs). By allowing the producer to manipulate recordings in real time, they can quickly and efficiently create the music that one hears today. DAWs accomplish this by providing tools to record the notes or sounds of instruments through various means. For example, virtual instruments stored on the producer's PC can be performed by a MIDI keyboard conneced to the DAW. These virtual instruments are known as \textit{plugins}, a type of application that runs under a DAW.
+
+Plugins are generally broken into two distinct categories: \textit{generator plugins} and \textit{effect plugins}. Their difference is self-explanatory; generator plugins sample or synthesize a sound within the application, while effect plugins manipulate a given input. For the purposes of this thesis, focus will be placed on the development of \textit{effect plugins}. The producer can apply several of these effect plugins to a source sound in series. Effect plugins can range from distortion to chorus to arpeggiators, but they all operate using the same principle - take a signal as input, perform some type of operation to it, and return the processed signal. Reverb is one type of effect plugin that is often used in DAWs; an example of one such DAW can be seen in Figure 2.3.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\begin{center}
@@ -81,8 +83,19 @@ Digital audio workstations can differ in design, but are generally broken into t
   \item The mixer control panel: located on the bottom, this allows the producer to adjust the volume of individual tracks and add effects.
 \end{itemize}
 
+These three sections are included in nearly every DAW available today.
+
 \section{Reverberation Methods}
-As mentioned previously, M. R. Schroeder introduced some of the first algorithms to artificially reverberate a digital signal.
+As mentioned previously, M. R. Schroeder introduced some of the first algorithms to artificially reverberate a digital signal. Prior to this, there existed several methods of persisting sound with a short impulse. One such method was simply using a physical room. \textit{Echo Chambers}
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\includegraphics[width=16cm]{figures/elect.png}
+		}
+		\caption{A model of a Spring Reverberator \cite{devoe1977electronmusic}.}
+	\end{center}
+\end{figure}
 
 %Spring reverberators work by [].
 %\subsection{Echo Chambers}
