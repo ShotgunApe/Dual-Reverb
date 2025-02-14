@@ -68,6 +68,11 @@ void DelayLine::setDelay (int time)
     delayTime = time;
 }
 
+void DelayLine::setSize (int size)
+{
+    roomSize = size;
+}
+
 juce::AudioBuffer<float>& DelayLine::getBuffer ()
 {
     return delayBuffer;

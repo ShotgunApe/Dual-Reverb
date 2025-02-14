@@ -345,7 +345,7 @@ A real-time program does not play audio files akin to one using sound effects fo
 
 
 \section{Program Structure \& Libraries}
-The typical structure of an audio program separates the internal processing and the external GUI into multiple threads. The audio thread runs at a speed determined by the host application, often times configurable in its settings. Each buffer travels from the DAW to the audio driver after being processed. The GUI runs at a slower speed and communicates to the audio thread through messages that can change various parameters upon being recieved. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.7 provides a diagram of this.
+The typical structure of an audio program separates the internal processing and the external GUI into multiple threads. The audio thread runs at a speed determined by the host application, often times configurable in its settings. The GUI runs at a slower speed and communicates to the audio thread through messages that can change various parameters upon being recieved. This type of structure is more generally known as a \textit{Model View Controller} design pattern. Specifically, a variation of this model is used that combines the view and controller of the model \cite{Bucanek2009}. Figure 3.7 provides a diagram of this.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\tikzstyle{startstop} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, align=center, draw=black]
@@ -364,6 +364,8 @@ The typical structure of an audio program separates the internal processing and 
 		\caption{A Model of an Audio Plugin Application.}
 	\end{center}
 \end{figure}
+
+Libraries are available to the programmer that aid the development of audio applications. They do this by providing generators and unit tests to ensure that applications will not have undefined behavior under different host applications. One such library is JUCE, which includes several different classes to quickly prototype audio applications. A UML diagram of a typical audio application can be created with this knowledge in mind.
 
 %This alone can provide the higher-level structure to a UML diagram. If one were to separate the processing and view of a particular %application, this could be done by separating the processing and GUI into two distinct classes:
 

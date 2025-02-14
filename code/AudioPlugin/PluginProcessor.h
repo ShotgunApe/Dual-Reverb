@@ -44,11 +44,18 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //==============================================================================
+    // parameters here
+    float proc_gain;
+    int proc_roomsize;
+
+
 private:
     //==============================================================================
+    // Reverb classes
     TestReverb reverb;
 
-    // tmp buffer to hold wet/dry signal
+    // Temporary processing buffer
     juce::AudioBuffer<float> tmp;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)

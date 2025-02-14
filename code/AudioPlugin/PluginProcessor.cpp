@@ -152,7 +152,12 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
         // Copy wet signal back to dry signal (allpass-kinda)
         buffer.applyGain(0.3f);
-        buffer.addFrom(channel, 0, tmp, channel, 0, tmp.getNumSamples(), 0.3f);       
+
+        // Apply gain from parameter
+        buffer.applyGain(proc_gain);
+        
+        buffer.addFrom(channel, 0, tmp, channel, 0, tmp.getNumSamples(), 0.3f);
+        
     }
     reverb.updatePosition(tmp);
 }
@@ -175,6 +180,8 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
     juce::ignoreUnused (destData);
+
+    juce::MemoryOutputStream (destData, true).writeFloat (proc_gain);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -182,6 +189,9 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
     juce::ignoreUnused (data, sizeInBytes);
+
+    // I forgot why I have this
+    //proc_gain = juce::MemoryInputStream (data, static_cast<size_t> (sizeInBytes), false).readFloat();
 }
 
 //==============================================================================

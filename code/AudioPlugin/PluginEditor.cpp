@@ -6,11 +6,10 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     : AudioProcessorEditor (&p), processorRef (p)
 {
     juce::ignoreUnused (processorRef);
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
 
+    // UI EDITING!
     roomSize.setSliderStyle (juce::Slider::RotaryVerticalDrag);
-    roomSize.setRange (0.0, 127.0, 1.0);
+    roomSize.setRange (19350, 1935000, 1.0);
     roomSize.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
     roomSize.setPopupDisplayEnabled (true, false, this);
     roomSize.setTextValueSuffix (" Room Size");
@@ -24,12 +23,13 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     mix.setValue(1.0);
 
     gain.setSliderStyle (juce::Slider::LinearVertical);
-    gain.setRange (0.0, 127.0, 1.0);
+    gain.setRange (0.0f, 1.0f, 0.01f);
     gain.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
     gain.setPopupDisplayEnabled (true, false, this);
     gain.setTextValueSuffix (" Gain");
-    gain.setValue(1.0);
- 
+    gain.setValue(0.8f);
+    
+    // Make UI Visible
     addAndMakeVisible (&roomSize);
     addAndMakeVisible (&mix);
     addAndMakeVisible (&gain);
@@ -37,6 +37,10 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     addAndMakeVisible (&styleMenu);
 
     setSize (450, 200);
+
+    // ADD LISTENERS FOR UI
+    gain.addListener (this);
+    roomSize.addListener (this);
 
 }
 
@@ -67,4 +71,10 @@ void AudioPluginAudioProcessorEditor::resized()
     gain.setBounds (400, 25, 50, 150);
     textLabel.setBounds (10, 10, 300, 10);
     styleMenu.setBounds (50, 30, 350, 25);
+}
+
+void AudioPluginAudioProcessorEditor::sliderValueChanged (juce::Slider* slider) 
+{
+    processorRef.proc_gain = gain.getValue();
+    processorRef.proc_roomsize = roomSize.getValue();
 }

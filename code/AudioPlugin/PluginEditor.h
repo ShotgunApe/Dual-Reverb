@@ -1,9 +1,11 @@
 #pragma once
 
 #include "PluginProcessor.h"
+#include "juce_gui_basics/juce_gui_basics.h"
 
 //==============================================================================
-class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
+class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor,
+                                              private juce::Slider::Listener
 {
 public:
     explicit AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor&);
@@ -14,10 +16,13 @@ public:
     void resized() override;
 
 private:
+    void sliderValueChanged (juce::Slider* slider) override;
+
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     AudioPluginAudioProcessor& processorRef;
 
+    // Frontend parameters
     juce::Slider roomSize;
     juce::Slider mix;
     juce::Slider gain;

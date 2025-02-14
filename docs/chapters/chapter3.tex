@@ -1,9 +1,9 @@
 %!TEX root = ../username.tex
 \chapter{Artificial Reverberation Design}
-\hspace*{-0.15cm}This chapter will begin with a brief overview of concepts related to Digital Signal Processing to understand artificial reverberation algorithms.
+\hspace*{-0.15cm}This chapter will begin with a brief overview of digital signal processing to understand artificial reverberation algorithms. After various methods of reverberation will be explored; specifically going into detail how they work and their corresponding signal flow graphs.
 
 \section{Filters \& Signal Flow Graphs}
-A \textit{filter} is defined as a medium through which a signal enters as an input and exits as an output \cite{FILTERS07}. It is a type of \textit{black box system} whose inner workings may modify the sound in some way. By extension, a \textit{digital filter} is a type of filter that operates on digital signals in the form of a computation. This computation can take the form of an equation, or a snippet of code in a computer.
+Recall the way a digital audio workstation functions. Generated sound is sent through various mixer channels to be modified before combining in the master channel. While various effects are available to manipulate sound in the mixer, exactly \textit{how} they work is behind closed doors. Musicians may be familiar with tools such as ``lowpass filters'' and ``highpass filters'' - audio engineers expand what exactly a ``filter'' is to include \textit{all} types of different effects. With this in mind, a \textit{filter} can be defined as a medium through which a signal enters as an input and exits as an output \cite{FILTERS07}. It is a type of \textit{black box system} whose inner workings modify the sound in some way; it is inclusive of any type of effect one can think of. By extension, a \textit{digital filter} is a type of filter that operates on digital signals in the form of a computation. This computation can take the form of an equation, or a snippet of code in a computer.
 
 Consider the following graph:
 

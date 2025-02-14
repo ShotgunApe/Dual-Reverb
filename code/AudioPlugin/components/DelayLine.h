@@ -12,6 +12,7 @@ public:
     void readFromBuffer (juce::AudioBuffer<float>& buffer, juce::AudioBuffer<float>& delayBuffer, int channel);
     void updateBufferPosition (juce::AudioBuffer<float>& buffer, juce::AudioBuffer<float>& delayBuffer);
     void setDelay (int time);
+    void setSize (int size);
     
     juce::AudioBuffer<float>& getBuffer ();
 
@@ -20,4 +21,5 @@ private:
     juce::AudioBuffer<float> delayBuffer; 
     int writePosition { 0 };
     int delayTime;
+    int roomSize;
 };
