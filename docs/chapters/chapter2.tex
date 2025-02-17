@@ -37,7 +37,7 @@ This is a representation of a sinusoid under the time domain. Each crest and tro
 
 \begin{defn}[Definition of a continuous sinusoid]\label{def1}
 	\begin{equation}\label{introf(t)}
-	f(t)=Acos(2\pi ft + \varTheta), t \in (-\infty, \infty)
+	f(t)=Acos(2\pi ft + \varTheta), \quad t \in (-\infty, \infty)
 \end{equation}\end{defn}
 
 where \textit{f} is frequency, \textit{t} is time, and $\varTheta$ is the phase offset in radians \cite{Symons_2013}. By taking the sum of several sinusoids, one can create (or deconstruct) any type of non-sinusoidal signal, given a sufficiently high number of sine waves are used. This is defined as:
@@ -113,7 +113,9 @@ The process of \textit{sampling} an analog signal is done by taking measurements
 				xlabel = \(t\),
 				ylabel = {\(f(t)\)},
 				height = 5cm,
-				width = 12cm
+				width = 12cm,
+				xtick distance=2,
+				ytick distance=1
 				]
 
 				\addplot+ [
@@ -365,32 +367,70 @@ The typical structure of an audio program separates the internal processing and 
 	\end{center}
 \end{figure}
 
-Libraries are available to the programmer that aid the development of audio applications. They do this by providing generators and unit tests to ensure that applications will not have undefined behavior under different host applications. One such library is JUCE, which includes several different classes to quickly prototype audio applications. A UML diagram of a typical audio application can be created with this knowledge in mind.
+Libraries are available to the programmer that aid the development of audio applications. They do this by providing generators and unit tests to ensure that applications will not have undefined behavior under different host applications. One such library is JUCE, which includes several classes to quickly prototype audio applications \cite{JUCE}. Knowing that the audio thread and GUI must run under different threads, one can intuit that these should be represented as separate classes in code. Figure 3.8 describes a UML diagram of the application; while this one includes additional classes for different features of the program, the $PluginProcessor$ and $PluginEditor$ classes can be expected for any type of plugin application.
+
+\renewcommand {\umltextcolor}{black}
+\renewcommand {\umlfillcolor}{white}
+\renewcommand {\umldrawcolor}{black}
+
+\begin{sidewaysfigure}
+	\begin{center}
+	\fbox{
+	\begin{footnotesize}
+	\begin{tikzpicture}
+	\begin{class}[ text width =9 cm ]{ PluginProcessor }{-8,0}
+	\attribute {+ AudioPluginAudioProcessor () }
+	\attribute {+ \textasciitilde AudioPluginAudioProcessor () }
+	\operation {+ prepareToPlay (double, int) : void }
+	\operation {+ releaseResources (void) : void }
+	\operation {+ isBusesLayoutSupported (BusesLayout\&) : void}
+	\operation {+ processBlock (juce::AudioBuffer<float>\&) : void}
+	\operation {+ createEditor (void) : juce::AudioProcessorEditor*}
+	\operation {+ hasEditor (void) : bool}
+	\operation {+ getName (void) : juce::String}
+	\operation {+ acceptsMidi (void) : bool}
+	\operation {+ producesMidi (void) : bool}
+	\operation {+ isMidiEffect (void) : bool}
+	\operation {+ getTailLengthSeconds (void) : double}
+	\operation {+ getNumPrograms (void) : int}
+	\operation {+ getCurrentProgram (void) : int}
+	\operation {+ setCurrentProgram (int) : void}
+	\operation {+ getProgramName (int) : juce::String}
+	\operation {+ changeProgramName (int, juce::String\&) : void}
+	\operation {+ getStateInformation (juce::MemoryBlock\&) : void}
+	\operation {+ setStateInformation (const void*, int) : void}
+
+	%\attribute {+ float proc_gain}
+	%\attribute {+ int proc_roomsize}
+	%\attribute {- TestReverb reverb}
+	%attribute {- juce::AudioBuffer<float> tmp}
+	\end{class}
+
+	\begin{class}[ text width =12 cm ]{ PluginEditor }{3,0}
+	\attribute {+ AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor\&) }
+	\attribute {+ \textasciitilde AudioPluginAudioProcessorEditor () }
+	\operation {+ paint (juce::Graphics\&) : void }
+	\operation {+ resized (void) : void}
+	\operation {+ sliderValueChanged (juce::Slider* Slider) : void }
+	\end{class}
+
+	\begin{class}[ text width =10 cm ]{ TestReverb }{-4,-6}
+	\attribute {+ TestReverb () }
+	\attribute {+ \textasciitilde TestReverb () }
+	\operation {+ prepareReverb (double) : void }
+	\operation {+ processReverb (juce::AudioBuffer<float\&>, int) : void}
+	\operation {+ updatePosition (juce::AudioBuffer<float>\&) : void}
+	\end{class}
+
+	\end{tikzpicture}
+	\end{footnotesize}
+	}
+	\caption{UML diagram of the Audio Plugin.}
+	\end{center}
+\end{sidewaysfigure}
+
 
 %This alone can provide the higher-level structure to a UML diagram. If one were to separate the processing and view of a particular %application, this could be done by separating the processing and GUI into two distinct classes:
 
-%[insert UML diagram here with just two things ig]
-
-%\begin{figure}[h]
-%	\begin{center}
-%		\fbox{\includegraphics{example.1}}
-%		\caption{UML Diagram of an audio application.}
-%	\end{center}
-%\end{figure}
-
-%For the purposes of this thesis, [].
-
-%\lstset{language =[ANSI]C++}
-%\lstset{backgroundcolor=\color{white},rulecolor=\color{black}}
-%\lstset{linewidth=.95\textwidth,breaklines=true}
-%\lstset{commentstyle=\textit,stringstyle=\upshape,showspaces=false}
-%\lstset{frame = single}
-%\lstset{numbers=left,numberstyle=\tiny,basicstyle=\small}
-%\lstset{commentstyle=\normalfont\itshape,breakautoindent=true}
-%\lstset{abovecaptionskip=1.2\baselineskip,xleftmargin=30pt}
-%\lstset{framesep=6pt}
-%\begin{singlespace}
-%\lstinputlisting[caption=VST3 Project Generator Script Usage, label=motion]{source/template.txt}
-%\end{singlespace}
 
 With the design of the plugin taken care of, one can begin implementation of the plugin processor that will manipulate the input signal.

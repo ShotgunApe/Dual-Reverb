@@ -1,8 +1,69 @@
 %!TEX root = ../username.tex
 \chapter{Artificial Reverberation Design}
-\hspace*{-0.15cm}This chapter will begin with a brief overview of digital signal processing to understand artificial reverberation algorithms. After various methods of reverberation will be explored; specifically going into detail how they work and their corresponding signal flow graphs.
+\hspace*{-0.15cm}This chapter will begin with a brief overview of digital signal processing to understand artificial reverberation algorithms. After, various methods of reverberation will be explored; specifically going into detail how they work and their corresponding signal flow graphs.
 
 \section{Filters \& Signal Flow Graphs}
+Thus far, signals have been represented as a function with respect to time. This is not the only manner in which one can visualize audio, however - by computing the \textit{Fourier Transform} of a function, it can be graphed as a function with respect to \textit{frequency}, as opposed to time. At a high level, the Fourier Transform deconstructs a signal to its sinusoids; this was discussed in Chapter 3. However, to compute the Fourier Transform, the previously discussed mathematical representation of sound will need to be reevaluated.
+
+Phase shifted sinusoids are ambiguous as to how they can be represented mathematically. That is, the same sinusoid can be represented as a function of sine \textit{or} cosine. To perform calculations useful to the programmer, one needs a representation of a sinusoidal wave that removes this ambiguity. The \textit{complex sinusoid} does exactly that by encapsulating both functions under the complex plane \cite{pirkle2019designing}:
+
+\begin{defn}[Definition of a complex sinusoid]\label{def-complex}
+	\begin{equation}\label{eq-complex)}
+	e^{j\omega t} = cos(\omega t) + j sin(\omega t)
+\end{equation}\end{defn}
+
+where $\omega$ is radians, $t$ is time, and $j$ is $ \sqrt{-1}$. With this definition, the Fourier Transform $X(\theta)$ may be calculated from a signal $x(t)$.
+
+\begin{defn}[Definition of the Fourier Transform \cite{MDFTWEB07}]\label{def-Cont-FT}
+	\begin{equation}\label{eq-Cont-FT)}
+	X(\omega) = \int_{-\infty}^\infty x(t)e^{-j\omega t}dt, \quad \omega \in (-\infty, \infty)
+\end{equation}\end{defn}
+
+In a digital setting, this process is computed via the summation of samples from a given input buffer:
+
+\begin{defn}[Definition of the Discrete Fourier Transform \cite{MDFTWEB07}]\label{def-disCont-FT}
+	\begin{equation}\label{eq-disCont-FT)}
+	X(\omega_k) = \sum_{n=0}^{N-1} x(t_n)e^{-j\omega_k t_n}, \quad k = 0,1,2,..., N - 1
+\end{equation}\end{defn}
+
+Revisiting the Nyquist-Shannon Sampling Theorem, one may graph the bandlimited signal $F_{max}$ and Nyquist Rate $F_s$ with respect to frequency using a DFT. Such an example can be seen below:
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\begin{tikzpicture}
+            \begin{axis} [
+			axis x line = middle, % The x axis should go through the origin
+			axis y line = middle,
+			xmin = -7,
+			xmax = 7,
+			ymin = -1.5,
+			ymax = 7,
+			xlabel = \(f\),
+			ylabel = {\(X(f)\)},
+			height = 7cm,
+			width = 13cm,
+			xtick distance=6,
+			ytick distance=-10,
+			xticklabel = \empty
+			]
+			\addplot[very thick, red][domain=-3:-2]{+0.8*x^3+7.2*x^2+22.5*x^1+24.3*x^0};
+			\addplot[very thick, red][domain=-2:-1]{+-2.4*x^3+-12*x^2+-15.9*x^1+-1.3*x^0};
+			\addplot[very thick, red][domain=-1:0]{+2.9*x^3+3.9*x^2+8.608e-62*x^1+4*x^0};
+			\addplot[very thick, red][domain=0:1]{+-2.9*x^3+3.9*x^2+8.608e-62*x^1+4*x^0};
+			\addplot[very thick, red][domain=1:2]{+2.4*x^3+-12*x^2+15.9*x^1+-1.3*x^0};
+			\addplot[very thick, red][domain=2:3]{+-0.8*x^3+7.2*x^2+-22.5*x^1+24.3*x^0};
+			\node[draw] at (1000, 70) {$F_{max}$};
+			\node[draw] at (400, 70) {$F_{max}$};
+			\node[draw] at (1300, 70) {$F_{s}$};
+			\node[draw] at (100, 70) {$F_{s}$};
+			\end{axis}
+		\end{tikzpicture}
+		}
+		\caption{An example of a Fourier Transform taken from a function.}
+	\end{center}
+\end{figure}
+
 Recall the way a digital audio workstation functions. Generated sound is sent through various mixer channels to be modified before combining in the master channel. While various effects are available to manipulate sound in the mixer, exactly \textit{how} they work is behind closed doors. Musicians may be familiar with tools such as ``lowpass filters'' and ``highpass filters'' - audio engineers expand what exactly a ``filter'' is to include \textit{all} types of different effects. With this in mind, a \textit{filter} can be defined as a medium through which a signal enters as an input and exits as an output \cite{FILTERS07}. It is a type of \textit{black box system} whose inner workings modify the sound in some way; it is inclusive of any type of effect one can think of. By extension, a \textit{digital filter} is a type of filter that operates on digital signals in the form of a computation. This computation can take the form of an equation, or a snippet of code in a computer.
 
 Consider the following graph:
