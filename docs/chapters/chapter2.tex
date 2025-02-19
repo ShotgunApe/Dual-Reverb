@@ -378,7 +378,7 @@ Libraries are available to the programmer that aid the development of audio appl
 	\fbox{
 	\begin{footnotesize}
 	\begin{tikzpicture}
-	\begin{class}[ text width =9 cm ]{ PluginProcessor }{-8,0}
+	\begin{class}[ text width =9 cm ]{PluginProcessor}{-8,2}
 	\attribute {+ AudioPluginAudioProcessor () }
 	\attribute {+ \textasciitilde AudioPluginAudioProcessor () }
 	\operation {+ prepareToPlay (double, int) : void }
@@ -406,22 +406,35 @@ Libraries are available to the programmer that aid the development of audio appl
 	%attribute {- juce::AudioBuffer<float> tmp}
 	\end{class}
 
-	\begin{class}[ text width =12 cm ]{ PluginEditor }{3,0}
+	\begin{class}[ text width =12 cm ]{PluginEditor}{3,-0.935}
 	\attribute {+ AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor\&) }
 	\attribute {+ \textasciitilde AudioPluginAudioProcessorEditor () }
 	\operation {+ paint (juce::Graphics\&) : void }
 	\operation {+ resized (void) : void}
-	\operation {+ sliderValueChanged (juce::Slider* Slider) : void }
+	\operation {- sliderValueChanged (juce::Slider* Slider) : void }
+	\attribute {- AudioPluginAudioProcessor\&}
 	\end{class}
 
-	\begin{class}[ text width =10 cm ]{ TestReverb }{-4,-6}
+	\begin{class}[ text width =10 cm ]{TestReverb}{-8,-10}
 	\attribute {+ TestReverb () }
 	\attribute {+ \textasciitilde TestReverb () }
 	\operation {+ prepareReverb (double) : void }
-	\operation {+ processReverb (juce::AudioBuffer<float\&>, int) : void}
+	\operation {+ processReverb (juce::AudioBuffer<float>\&, int) : void}
 	\operation {+ updatePosition (juce::AudioBuffer<float>\&) : void}
 	\end{class}
 
+	\begin{class}[ text width =10 cm ]{Convolution}{4,-10}
+	\attribute {+ Convolution () }
+	\attribute {+ \textasciitilde Convolution () }
+	\operation {+ prepareReverb (double) : void }
+	\operation {+ processReverb (juce::AudioBuffer<float>\&, int) : void}
+	\operation {+ updatePosition (juce::AudioBuffer<float>\&) : void}
+	\end{class}
+
+	\draw[umlcd style, ->] (Convolution.north) -- node[above, sloped, black]{} ++(0,1) -| (PluginProcessor);
+
+	\draw[umlcd style, ->] (TestReverb.north) -- (PluginProcessor);
+	\draw[umlcd style] (PluginEditor.west) -- (PluginProcessor);
 	\end{tikzpicture}
 	\end{footnotesize}
 	}

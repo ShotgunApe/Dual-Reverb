@@ -12,7 +12,7 @@ Phase shifted sinusoids are ambiguous as to how they can be represented mathemat
 	e^{j\omega t} = cos(\omega t) + j sin(\omega t)
 \end{equation}\end{defn}
 
-where $\omega$ is radians, $t$ is time, and $j$ is $ \sqrt{-1}$. With this definition, the Fourier Transform $X(\theta)$ may be calculated from a signal $x(t)$.
+where $\omega$ is radians, $t$ is time, and $j$ is $ \sqrt{-1}$. With this definition, the Fourier Transform $X(\omega)$ may be calculated from a signal $x(t)$.
 
 \begin{defn}[Definition of the Fourier Transform \cite{MDFTWEB07}]\label{def-Cont-FT}
 	\begin{equation}\label{eq-Cont-FT)}
@@ -60,26 +60,80 @@ Revisiting the Nyquist-Shannon Sampling Theorem, one may graph the bandlimited s
 			\end{axis}
 		\end{tikzpicture}
 		}
-		\caption{An example of a Fourier Transform taken from a function.}
+		\caption{An example of a Fourier Transform taken from a bandlimited function.}
 	\end{center}
 \end{figure}
 
-Recall the way a digital audio workstation functions. Generated sound is sent through various mixer channels to be modified before combining in the master channel. While various effects are available to manipulate sound in the mixer, exactly \textit{how} they work is behind closed doors. Musicians may be familiar with tools such as ``lowpass filters'' and ``highpass filters'' - audio engineers expand what exactly a ``filter'' is to include \textit{all} types of different effects. With this in mind, a \textit{filter} can be defined as a medium through which a signal enters as an input and exits as an output \cite{FILTERS07}. It is a type of \textit{black box system} whose inner workings modify the sound in some way; it is inclusive of any type of effect one can think of. By extension, a \textit{digital filter} is a type of filter that operates on digital signals in the form of a computation. This computation can take the form of an equation, or a snippet of code in a computer.
+It is worth reiterating - with this representation, $f$ represents frequency on the x-axis, and $X(f)$ represents the \textit{amplitude} of frequencies. It begs the question - how does this relate to reverberation, exactly?
 
-Consider the following graph:
+Recall the way a digital audio workstation functions. Generated sound is sent through various mixer channels to be modified before combining in the master channel. While various effects are available to manipulate sound in the mixer, exactly \textit{how} they work is behind closed doors. Musicians may be familiar with tools such as ``lowpass filters'' and ``highpass filters''. Audio engineers expand what exactly a ``filter'' is to include \textit{all} types of different effects - or black boxes, rather.
 
-[show graph of low-pass filter and describe the differences in representation of sound in time vs frequency]
+With this in mind, a \textit{filter} can be defined as a medium through which a signal enters as an input and exits as an output \cite{FILTERS07}. It is a type of \textit{black box system} whose inner workings modify the sound in some way; it is inclusive of any type of effect one can think of. By extension, a \textit{digital filter} is a type of filter that operates on digital signals in the form of a computation. This computation can take the form of an equation, or a snippet of code in a computer.
 
-It is worth emphasizing that this is a different representation of the previous sound, as they are a graph of frequency to amplitude as opposed to the waveform over time (reword this). In fact, [] For this reason [].
+Take the following filter, for example:
 
-[maybe talk about solving for a FFT of a specific waveform to describe that section? maybe introduce complex numbers here?]
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\begin{tikzpicture}
+            \begin{axis} [
+			axis x line = middle, % The x axis should go through the origin
+			axis y line = middle,
+			xmin = -1.5,
+			xmax = 7,
+			ymin = -1.5,
+			ymax = 7,
+			xlabel = \(f\),
+			ylabel = {\(X(f)\)},
+			height = 7cm,
+			width = 12cm,
+			xtick distance=3.956,
+			ytick distance=-10,
+			xticklabel = \empty
+			]
+			\addplot[very thick, red][domain=0:3.974]{4};
+			\node[draw] at (550, 70) {$f_c$};
+			\end{axis}
+			\draw [very thick, red] (6.688,0.95) -- (6.688,3.5);
+		\end{tikzpicture}
+		}
+		\caption{The Amplitude Response of a simple lowpass filter.}
+	\end{center}
+\end{figure}
 
-\textit{Signal Flow Graphs} are used to visualize how filters manipulate a provided input and output \cite{FILTERS07}. They represent a system of linear equations that compute an output signal based on past and present input signals and past output signals. For example, the following graph describes one type of filter known as a \textit{comb filter}:
+This type of filter only amplifies the frequencies below a particular \textit{cutoff} $f_c$. This type of filter is known as a \textit{lowpass filter}, as it only allows frequencies lower than the number specified to pass through the black box. What $X(f)$ represents in this context is known as the \textit{Amplitude Response} - this is just another way of saying that it is the Frequency Transform of a particular buffer. By definition, the Amplitude Reponse takes the absolute value of $X(f)$ \cite{FILTERS07}.
 
-[insert comb filter here]
+Understanding filters, one is able to construct graphs consisting of multiple filters. \textit{Signal Flow Graphs} are used to visualize how filters manipulate a provided input and output \cite{FILTERS07}. They represent a system of linear equations that compute an output signal based on past and present input signals and past output signals. For example, the following graph describes one type of filter known as a \textit{comb filter}:
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\framebox[13cm]{%
+		\parbox{10.5cm}{
+		\begin{tikzpicture}
+			% - delay element
+			\tikzgrid{
+			% building blocks
+				\node[input] (in)  {$IN$} \\ & &
+				\node[delay] (g0)  {$+$} & & &
+				\node[delay] (d0) {DELAY $T$} & & &
+				\node[node]  (n0)  {} & &
+				\node[output] (out) {$OUT$} & \\ & & & & &
+				\node[delay] (g1) {GAIN $g$} &
+			}
+			\path[r>] (in) -| (g0);
+			\path[r>] (g0) -- (d0);
+			\path[r>] (d0) -- (n0);
+			\path[r>] (n0) |- (g1);
+			\path[r>] (g1) -| (g0);
+			\path[r>] (n0) -- (out);
+		\end{tikzpicture}
+		}}
+		\caption{The Signal Flow Diagram of a Comb Filter \cite{schroeder1961colorless}.}
+	\end{center}
+\end{figure}
 
 
-This comb filter can be represented through code, as well. To implement this, a data structure known as a \textit{circular array} will need to be implemented.
+This comb filter can be represented through code, as well. This will be discussed in Chapter 6.
 
 \section{The Schroeder Comb Filter Approach}
 
