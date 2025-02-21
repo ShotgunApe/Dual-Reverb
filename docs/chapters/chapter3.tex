@@ -103,7 +103,7 @@ Take the following filter, for example:
 
 This type of filter only amplifies the frequencies below a particular \textit{cutoff} $f_c$. This type of filter is known as a \textit{lowpass filter}, as it only allows frequencies lower than the number specified to pass through the black box. What $X(f)$ represents in this context is known as the \textit{Amplitude Response} - this is just another way of saying that it is the Frequency Transform of a particular buffer. By definition, the Amplitude Reponse takes the absolute value of $X(f)$ \cite{FILTERS07}.
 
-Understanding filters, one is able to construct graphs consisting of multiple filters. \textit{Signal Flow Graphs} are used to visualize how filters manipulate a provided input and output \cite{FILTERS07}. They represent a system of linear equations that compute an output signal based on past and present input signals and past output signals. For example, the following graph describes one type of filter known as a \textit{comb filter}:
+Understanding filters, one is able to construct graphs consisting of multiple filters. \textit{Signal Flow Graphs} are used to visualize how filters manipulate a provided input and output \cite{FILTERS07}. They represent a system of linear equations that compute an output signal based on past and present input signals and past output signals. Using signal flow graphs, one can describe a system through which buffers of audio travel and are processed. The following graph describes one important type of filter known as a \textit{comb filter}:
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\begin{center}
@@ -122,7 +122,7 @@ Understanding filters, one is able to construct graphs consisting of multiple fi
 			}
 			\path[r>] (in) -| (g0);
 			\path[r>] (g0) -- (d0);
-			\path[r>] (d0) -- (n0);
+			\path[r] (d0) -- (n0);
 			\path[r>] (n0) |- (g1);
 			\path[r>] (g1) -| (g0);
 			\path[r>] (n0) -- (out);
@@ -132,10 +132,121 @@ Understanding filters, one is able to construct graphs consisting of multiple fi
 	\end{center}
 \end{figure}
 
+This type of filter describes the process of delaying a signal after some time $T$ \cite{schroeder1961colorless}. It is arranged in a feedback loop to produce multiple echos and applies a gain $g$ less than one to ensure the signal remains stable. By itself, it is a relatively simple design that producers may know as a ``delay effect''. In such programs, the time $T$ can often be specified to a specific amount, or be synchronized to the tempo of the song being produced.
 
-This comb filter can be represented through code, as well. This will be discussed in Chapter 6.
+A comb filter does not have all the desired qualities for a reverb, however. Schroeder derives the Amplitude Response of a comb filter to be \cite{schroeder1961natural}:
+\begin{equation}\label{comb}
+	|X(\omega)|=\frac{1}{1+g^2-2g cos(\omega(\frac{\pi}{2}))^{1/2}}
+\end{equation}
+
+Which results in the following graph, explaining the comb filter's name:
+\pagebreak
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\begin{tikzpicture}
+            \begin{axis} [
+			axis x line = middle, % The x axis should go through the origin
+			axis y line = middle,
+			xmin = -1.5,
+			xmax = 15,
+			ymin = -1.5,
+			ymax = 8,
+			xlabel = \(f\),
+			ylabel = {\(X(f)\)},
+			height = 7cm,
+			width = 12cm,
+			xtick distance=15,
+			ytick distance=10,
+			xticklabel = \empty
+			]
+			\addplot[very thick, red, samples = 500, domain = 0:15]{1/((1 + (0.6^2) - 2*0.6 * (cos(x*deg(pi/1.5))))};
+			\end{axis}
+		\end{tikzpicture}
+		}
+		\caption{The Amplitude Response of a Comb Filter.}
+	\end{center}
+\end{figure}
+
+These peaks in the Amplitude Response result in what is described as a ``metallic'' and ``harsh'' sound, which alone would not produce a convincing reverb. To achieve a flat frequency response to the comb filter, Schroeder introduces the \textit{Allpass filter} as a method by including an additional feed-forward signal to the output of the comb filter.
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\framebox[13cm]{%
+		\parbox{10.5cm}{
+		\begin{tikzpicture}
+			% - delay element
+			\tikzgrid{
+			% building blocks
+				\node[input] (in)  {$IN$} & &
+				\node[node]  (n1)  {} & &
+				\node[delay] (d2) {$-g$} & & & &
+				\node[delay] (d1) {$+$} \\ & &
+				\node[delay] (g0)  {$+$} & &
+				\node[delay] (d0) {DELAY $T$} & &
+				\node[node]  (n0)  {} & &
+				\node[delay] (d3) {GAIN $1-g^2$} & &
+				\node[output] (out) {$OUT$} & \\ & & & &
+				\node[delay] (g1) {GAIN $g$} &
+			}
+			\path[r>] (in) -| (g0);
+			\path[r>] (g0) -- (d0);
+			\path[r] (d0) -- (n0);
+			\path[r>] (n0) |- (g1);
+			\path[r>] (g1) -| (g0);
+			\path[r>] (n1) -- (d2);
+			\path[r>] (d2) -- (d1);
+			\path[r>] (n0) -- (d3);
+			\path[r>] (d3) -- (d1);
+			\path[r>] (d1) -| (out);
+		\end{tikzpicture}
+		}}
+		\caption{The Signal Flow Diagram of an Allpass Filter \cite{schroeder1961natural}.}
+	\end{center}
+\end{figure}
+
+With the additional feed-forward signal $1-g^2$, Schroeder derives the Amplitude Response to be \cite{schroeder1961natural}:
+\begin{equation}\label{comb}
+	|X(\omega)|=1
+\end{equation}
+
+Which results in a flat response, removing the ``metallic'' and ``harsh'' sound of the Comb Filter. With these tools, they construct a reverb design that produces sound through purely artificial means. Chapter 6 will discuss how to implement these in code.
+
+% \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+% 	\begin{center}
+% 		\fbox{
+% 		\begin{tikzpicture}
+%             \begin{axis} [
+% 			axis x line = middle, % The x axis should go through the origin
+% 			axis y line = middle,
+% 			xmin = -1.5,
+% 			xmax = 15,
+% 			ymin = -1.5,
+% 			ymax = 8,
+% 			xlabel = \(f\),
+% 			ylabel = {\(X(f)\)},
+% 			height = 7cm,
+% 			width = 12cm,
+% 			xtick distance=15,
+% 			ytick distance=10,
+% 			xticklabel = \empty
+% 			]
+% 			\addplot[very thick, red, samples = 10, domain = 0:15]{4};
+% 			\end{axis}
+% 		\end{tikzpicture}
+% 		}
+% 		\caption{The Amplitude Response of an Allpass Filter.}
+% 	\end{center}
+% \end{figure}
 
 \section{The Schroeder Comb Filter Approach}
+To achieve a convincing reverb, the \textit{echo density} of the output must be sufficiently large. This measurement is simply the number of echos per second that occur in the resulting output \cite{pirkle2019designing}:
+\begin{equation}\label{comb}
+	E_D=\frac{echoes}{second}
+\end{equation}
+
+According to Schroeder, the echo density must be greater than 1000 to achieve a ``realistic'' output. One method he provides is by connecting several allpass filters in series, which he postulates can be accomplished with five. This provides an echo density ``sufficiently close'' to the required 1000 \cite{schroeder1961natural}.
 
 %\section{Feedback Delay Networks}
 %Feedback Delay Networks are described as a generalized comb filter. As opposed to having a single delay line in the system, a number %of delay lines are used in parallel each containing some combination of the output signal \cite{PUCKE}. A typical FDN is built with %several delay lines \textit{N}, each having a length provided by the equation [].
