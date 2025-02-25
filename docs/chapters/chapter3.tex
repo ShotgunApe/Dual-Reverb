@@ -134,12 +134,12 @@ Understanding filters, one is able to construct graphs consisting of multiple fi
 
 This type of filter describes the process of delaying a signal after some time $T$ \cite{schroeder1961colorless}. It is arranged in a feedback loop to produce multiple echos and applies a gain $g$ less than one to ensure the signal remains stable. By itself, it is a relatively simple design that producers may know as a ``delay effect''. In such programs, the time $T$ can often be specified to a specific amount, or be synchronized to the tempo of the song being produced.
 
-A comb filter does not have all the desired qualities for a reverb, however. Schroeder derives the Amplitude Response of a comb filter to be \cite{schroeder1961natural}:
+A single Comb Filter is not perfect, though. Schroeder derives the Amplitude Response of a Comb Filter to be \cite{schroeder1961natural}:
 \begin{equation}\label{comb}
 	|X(\omega)|=\frac{1}{1+g^2-2g cos(\omega(\frac{\pi}{2}))^{1/2}}
 \end{equation}
 
-Which results in the following graph, explaining the comb filter's name:
+Which results in the following graph, explaining the Comb Filter's name:
 \pagebreak
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
@@ -169,7 +169,7 @@ Which results in the following graph, explaining the comb filter's name:
 	\end{center}
 \end{figure}
 
-These peaks in the Amplitude Response result in what is described as a ``metallic'' and ``harsh'' sound, which alone would not produce a convincing reverb. To achieve a flat frequency response to the comb filter, Schroeder introduces the \textit{Allpass filter} as a method by including an additional feed-forward signal to the output of the comb filter.
+These peaks in the Amplitude Response result in what is described as a ``metallic'' sound, which by itself may not produce a convincing reverb. To achieve a flat frequency response to the comb filter, Schroeder introduces the \textit{Allpass filter} as a method by including an additional feed-forward signal to the output of the comb filter.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\begin{center}
@@ -211,7 +211,7 @@ With the additional feed-forward signal $1-g^2$, Schroeder derives the Amplitude
 	|X(\omega)|=1
 \end{equation}
 
-Which results in a flat response, removing the ``metallic'' and ``harsh'' sound of the Comb Filter. With these tools, they construct a reverb design that produces sound through purely artificial means. Chapter 6 will discuss how to implement these in code.
+which results in a flat response, removing the ``metallic'' sound of the Comb Filter. With these tools, Schroeder constructs a reverb design that produces sound through purely artificial means.
 
 % \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 % 	\begin{center}
@@ -246,21 +246,8 @@ To achieve a convincing reverb, the \textit{echo density} of the output must be 
 	E_D=\frac{echoes}{second}
 \end{equation}
 
-According to Schroeder, the echo density must be greater than 1000 to achieve a ``realistic'' output. One method he provides is by connecting several allpass filters in series, which he postulates can be accomplished with five. This provides an echo density ``sufficiently close'' to the required 1000 \cite{schroeder1961natural}.
+According to Schroeder, the echo density must be greater than 1000 to achieve a ``realistic'' sound\footnote{The now-accepted value of sufficient echo density is much higher. In 1989, Griesinger proposed that this value should be 10,000 echoes/second \textit{or higher} due to short impulses providing a ``grainy'' sound, especially for long decay times \cite{griesinger1989practical}. Modern reverberation techniques, however, propose adding a ``diffuser'' step, which removes the graininess that would come from the early reflections of a short impulse. With this additional step, the number of echoes/second can be lowered to 2000-4000 \cite{FiftyYears}.}. To accomplish this, one method he provides is by connecting several Allpass Filters in series, which he postulates can be done with five. This provides an echo density ``sufficiently close'' to the required 1000 \cite{schroeder1961natural}. However, Schroeder goes on to introduce a design that includes both Allpass Filters \textit{and} the aforementioned Comb Filters. Despite the imperfect Amplitude Response of the Comb Filter, Schroeder argues that it may represent real rooms better as they likewise contain irregular responses.
 
-%\section{Feedback Delay Networks}
-%Feedback Delay Networks are described as a generalized comb filter. As opposed to having a single delay line in the system, a number %of delay lines are used in parallel each containing some combination of the output signal \cite{PUCKE}. A typical FDN is built with %several delay lines \textit{N}, each having a length provided by the equation [].
-
-%A typical FDN is represented by the following relation:
-
-%\begin{defn}[A typical FDN in the time domain \cite{OnLossless}]\label{def2}
-%	\begin{equation}\label{nextdef(t)}
-%	y(n)=\sum_{i=1}^{N} c_i s_i (n) + d x (n)
-%	\end{equation}
-%	\begin{equation}
-%	s_i(n + m_i)=\sum_{j=1}^{N} a_{ij} s_j (n) + b_i x (n)
-%\end{equation}\end{defn}
-
-%where $x(n)$ and $y(n)$ are the input and output values and []. Figure [] provides the Signal Flow Graph for Definition 4.1.
+To create a sufficient echo density, a number of Comb Filters of varying delay lengths are connected in parallel before the Allpass Filters in series. In his design, he uses four Comb Filters in parallel with two Allpass Filters in series after. The delay lengths of the Comb Filters are said to be incommensurate in order to prevent regular ``peaks'' from occuring in the output signal \cite{schroeder1961natural}. With this design, a sufficient echo density is created to allow for a reverberation time of approximately one second, similar to what one may find in a real acoustic space. The following Signal Flow Diagram describes this design [].
 
 \section{Convolution}
