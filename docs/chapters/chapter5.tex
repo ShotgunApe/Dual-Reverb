@@ -1,8 +1,20 @@
 %!TEX root = ../username.tex
 \chapter{The Software}
-
+\hspace*{-0.15cm}This chapter will cover how the application was created using JUCE. It will begin with a description of the data structures that were used before describing their implementation. Then, the process of creating the user interface will be described. Finally, it will end with how the software runs under several different host applications.
 \section{Data Structures and Implementation}
-The previously mentioned Comb Filter [actually talk in-depth about comb filters]
+Both Comb Filters and Allpass Filters use a queue ADT for their implementation. However, they rely on an implementation that uses a \textit{circular array} so that audio data can be continuously fed into the application. This ignores the usual problem that come from circular arrays; that current lengths can be ambiguous for the same \textit{front} and \textit{back} pointer \cite{carrano2016data}. For the purposes that one uses this data structure for, all that matters is that data can be continuously processed in the system and overwritten when new data comes in.
+
+To implement a Comb Filter, this type of queue is created by creating a buffer of floats and filling the buffer with the audio data. This data is then repeated
+
+\lstset{language =[ANSI]C++}
+\lstset{backgroundcolor=\color{white},rulecolor=\color{black}}
+\lstset{linewidth=.95\textwidth,breaklines=true}
+\lstset{commentstyle=\textit,stringstyle=\upshape,showspaces=false}
+\lstset{frame = single}
+\lstset{numbers=left,numberstyle=\tiny,basicstyle=\small}
+\lstset{commentstyle=\normalfont\itshape,breakautoindent=true}
+\lstset{abovecaptionskip=1.2\baselineskip,xleftmargin=30pt}
+\lstset{framesep=6pt}
 
 \section{User Interface}
 

@@ -128,7 +128,7 @@ Understanding filters, one is able to construct graphs consisting of multiple fi
 			\path[r>] (n0) -- (out);
 		\end{tikzpicture}
 		}}
-		\caption{The Signal Flow Diagram of a Comb Filter \cite{schroeder1961colorless}.}
+		\caption{The Signal Flow Graph of a Comb Filter \cite{schroeder1961colorless}.}
 	\end{center}
 \end{figure}
 
@@ -202,7 +202,7 @@ These peaks in the Amplitude Response result in what is described as a ``metalli
 			\path[r>] (d1) -| (out);
 		\end{tikzpicture}
 		}}
-		\caption{The Signal Flow Diagram of an Allpass Filter \cite{schroeder1961natural}.}
+		\caption{The Signal Flow Graph of an Allpass Filter \cite{schroeder1961natural}.}
 	\end{center}
 \end{figure}
 
@@ -211,7 +211,7 @@ With the additional feed-forward signal $1-g^2$, Schroeder derives the Amplitude
 	|X(\omega)|=1
 \end{equation}
 
-which results in a flat response, removing the ``metallic'' sound of the Comb Filter. With these tools, Schroeder constructs a reverb design that produces sound through purely artificial means.
+which results in a flat response, removing the ``metallic'' sound of the Comb Filter. With these tools, Schroeder constructs several designs of reverberators that produce sound through purely artificial means. What follows is a description of one such design that he proposes.
 
 % \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 % 	\begin{center}
@@ -248,6 +248,35 @@ To achieve a convincing reverb, the \textit{echo density} of the output must be 
 
 According to Schroeder, the echo density must be greater than 1000 to achieve a ``realistic'' sound\footnote{The now-accepted value of sufficient echo density is much higher. In 1989, Griesinger proposed that this value should be 10,000 echoes/second \textit{or higher} due to short impulses providing a ``grainy'' sound, especially for long decay times \cite{griesinger1989practical}. Modern reverberation techniques, however, propose adding a ``diffuser'' step, which removes the graininess that would come from the early reflections of a short impulse. With this additional step, the number of echoes/second can be lowered to 2000-4000 \cite{FiftyYears}.}. To accomplish this, one method he provides is by connecting several Allpass Filters in series, which he postulates can be done with five. This provides an echo density ``sufficiently close'' to the required 1000 \cite{schroeder1961natural}. However, Schroeder goes on to introduce a design that includes both Allpass Filters \textit{and} the aforementioned Comb Filters. Despite the imperfect Amplitude Response of the Comb Filter, Schroeder argues that it may represent real rooms better as they likewise contain irregular responses.
 
-To create a sufficient echo density, a number of Comb Filters of varying delay lengths are connected in parallel before the Allpass Filters in series. In his design, he uses four Comb Filters in parallel with two Allpass Filters in series after. The delay lengths of the Comb Filters are said to be incommensurate in order to prevent regular ``peaks'' from occuring in the output signal \cite{schroeder1961natural}. With this design, a sufficient echo density is created to allow for a reverberation time of approximately one second, similar to what one may find in a real acoustic space. The following Signal Flow Diagram describes this design [].
+To create a sufficient echo density, a number of Comb Filters of varying delay lengths are connected in parallel before the Allpass Filters in series. In his design, he uses four Comb Filters in parallel with two Allpass Filters in series after. The delay lengths of the Comb Filters are said to be incommensurate in order to prevent regular ``peaks'' from occuring in the output signal \cite{schroeder1961natural}. With this design, a sufficient echo density is created to allow for a reverberation time of approximately one second, similar to what one may find in a real acoustic space. Figure 4.6 provides a Signal Flow Graph of this design.
+
+\begin{figure}[h]
+	\begin{center}
+	\framebox[16cm]{%
+		\parbox{10.5cm}{
+			\begin{footnotesize}
+			\begin{tikzpicture}
+			\tikzgrid{
+			% building blocks
+				\node[node] (r1)  {} &
+				\node[delay] (p1)  {$+$} &
+				\node[delay] (d1)  {$T_1$} & \\
+				\node[node] (i1) {} &
+				\node[node] (r2)  {} & \\
+				\node[input] (in) {$IN$} & & & & &
+				\node[output] (out) {$OUT$} \\
+				\node[node] (r3)  {} & \\
+				\node[node] (r4)  {} & \\
+			}
+			\path[r>] (in) -- (out);
+			\end{tikzpicture}
+			\end{footnotesize}
+		}}
+	\caption{A Signal Flow Graph of Schroeder's Reverberator using Comb Filters and Allpass Filters.}
+	\end{center}
+\end{figure}
+
+Many artificial reverberation designs use similar principles of repeating the given input signal but can differ in what or how many filters are used. One of the first open-source designs, \textit{Freeverb}\footnote{Interestingly, Freeverb predates a large majority of Open-Source Software, having been released in the public domain on May 24th, 2000.}, used four Allpass Filters in series and Eight parallel Filtered-Feedback Comb Filters (or rather, a Comb Filter with a Lowpass Filter placed in the feedback loop) \cite{PASPWEB2010}. For each of the designs provided, channels of audio are processed under a single mono channel of audio data. As will be discussed in Chapter 8, splitting audio data into multiple channels is another method of creating a greater echo density.
 
 \section{Convolution}
+Convolution is a fundamentally different approach to the Schroeder Comb Filter Approach.
