@@ -252,31 +252,14 @@ To create a sufficient echo density, a number of Comb Filters of varying delay l
 
 \begin{figure}[h]
 	\begin{center}
-	\framebox[16cm]{%
-		\parbox{10.5cm}{
-			\begin{footnotesize}
-			\begin{tikzpicture}
-			\tikzgrid{
-			% building blocks
-				\node[node] (r1)  {} &
-				\node[delay] (p1)  {$+$} &
-				\node[delay] (d1)  {$T_1$} & \\
-				\node[node] (i1) {} &
-				\node[node] (r2)  {} & \\
-				\node[input] (in) {$IN$} & & & & &
-				\node[output] (out) {$OUT$} \\
-				\node[node] (r3)  {} & \\
-				\node[node] (r4)  {} & \\
-			}
-			\path[r>] (in) -- (out);
-			\end{tikzpicture}
-			\end{footnotesize}
-		}}
-	\caption{A Signal Flow Graph of Schroeder's Reverberator using Comb Filters and Allpass Filters.}
+	\fbox{
+	\includegraphics[width=14cm]{figures/schroeder.png}
+	}
+	\caption{A Signal Flow Graph of Schroeder's Reverberator using Comb Filters and Allpass Filters \cite{schroeder1961natural}.}
 	\end{center}
 \end{figure}
 
-Many artificial reverberation designs use similar principles of repeating the given input signal but can differ in what or how many filters are used. One of the first open-source designs, \textit{Freeverb}\footnote{Interestingly, Freeverb predates a large majority of Open-Source Software, having been released in the public domain on May 24th, 2000.}, used four Allpass Filters in series and Eight parallel Filtered-Feedback Comb Filters (or rather, a Comb Filter with a Lowpass Filter placed in the feedback loop) \cite{PASPWEB2010}. For each of the designs provided, channels of audio are processed under a single mono channel of audio data. As will be discussed in Chapter 8, splitting audio data into multiple channels is another method of creating a greater echo density.
+Many artificial reverberation designs use similar principles of repeating the given input signal but can differ in what or how many filters are used. One of the first open-source designs, \textit{Freeverb}\footnote{Interestingly, Freeverb predates a large majority of Open-Source Software, having been released in the public domain on May 24th, 2000 \cite{freeverb}.}, used four Allpass Filters in series and eight parallel Filtered-Feedback Comb Filters (or rather, a Comb Filter with a Lowpass Filter placed in the feedback loop) \cite{PASPWEB2010}. For each of the designs provided, channels of audio are processed under a single mono channel of audio data. As will be discussed in Chapter 8, splitting audio data into multiple channels is another method of creating a greater echo density.
 
 \section{Convolution}
-Convolution is a fundamentally different approach to the Schroeder Comb Filter Approach.
+Convolution is a fundamentally different approach to the Schroeder Comb Filter Approach. Unlike Comb Filters and Allpass Filters, they involve taking an input signal and manipulating it with a particular \textit{impulse response}. In doing so, [].
