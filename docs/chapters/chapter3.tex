@@ -262,4 +262,26 @@ To create a sufficient echo density, a number of Comb Filters of varying delay l
 Many artificial reverberation designs use similar principles of repeating the given input signal but can differ in what or how many filters are used. One of the first open-source designs, \textit{Freeverb}\footnote{Interestingly, Freeverb predates a large majority of Open-Source Software, having been released in the public domain on May 24th, 2000 \cite{freeverb}.}, used four Allpass Filters in series and eight parallel Filtered-Feedback Comb Filters (or rather, a Comb Filter with a Lowpass Filter placed in the feedback loop) \cite{PASPWEB2010}. For each of the designs provided, channels of audio are processed under a single mono channel of audio data. As will be discussed in Chapter 8, splitting audio data into multiple channels is another method of creating a greater echo density.
 
 \section{Convolution}
-Convolution is a fundamentally different approach to the Schroeder Comb Filter Approach. Unlike Comb Filters and Allpass Filters, they involve taking an input signal and manipulating it with a particular \textit{impulse response}. In doing so, the signal is manipulated (or convolved, rather) by the state of a room at a point in time. While room responses are useful to convolve with, there is nothing stopping one from using Convolution for [].
+Convolution is a fundamentally different approach to the Schroeder Comb Filter Approach. Unlike Comb Filters and Allpass Filters, they involve taking an input signal and manipulating it with a particular \textit{impulse response}. In doing so, the two signals are combined (or convolved, rather) such that the output signal contains the product of the input signal and the state of the room measured \cite{pirkle2019designing}. While room responses are useful to convolve with, there is nothing stopping one from convolving one signal $x(n)$ with any other arbitrary signal $y(n)$. For discrete signals, the multiplication of Discrete Fourier Transforms (Definition 4.3) correspond to \textit{circular convolution}, which is defined by the following (under the time domain):
+
+\makeatletter
+\newcommand\xleftrightarrow[2][]{%
+  \ext@arrow 9999{\longleftrightarrowfill@}{#1}{#2}}
+\newcommand\longleftrightarrowfill@{%
+  \arrowfill@\leftarrow\relbar\rightarrow}
+\makeatother
+
+\begin{defn}[Definition of Circular Convolution \cite{wolfsound}]\label{def-cir-FT}
+	\begin{equation}\label{eq-cir-FT)}
+	x(n) \circledast y(n) \xleftrightarrow{\text{DFT}} X(k)Y(k)
+	\end{equation}
+	\begin{equation}\label{next-ig}
+	x(n) \circledast y(n) = \sum_{m=0}^{N-1} x(m) h[(m - n) \% N]
+	\end{equation}
+\end{defn}
+
+where $\circledast$ refers to the process of convolving a signal under the time domain, and $X(k)Y(k)$ are the corresponding signals under the frequency domain (similar to that of the Amplitude Responses mentioned earlier). In an intuitive sense, this process can be described as the ``sliding'' of the impulse response over the input the create ``overlapping areas''. The area under these signals are then computed for each iteration of the slide, resulting in an output signal that is the convolution between the two. Figure [] describes this process visually.
+
+[]
+
+To summarize, Convolution is the process of computing the Fourier Transform of a particular input signal and - in the context of artificial reverberation - the impulse response of a room, multiplying the two signals together such that their frequency responses match what one would hear if the signals were combined (as opposed to played at the same time), and then computing the inverse DFT (summing the output of the DFT back together again).
