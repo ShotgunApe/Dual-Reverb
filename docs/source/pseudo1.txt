@@ -1,0 +1,3 @@
+delayLine.fillBuffer (buffer, channel);
+delayLine.readFromBuffer (buffer, delayLine, channel);
+delayLine.fillBuffer (buffer, channel);

@@ -48,6 +48,7 @@ public:
     // parameters here
     float proc_gain;
     int proc_roomsize;
+    int proc_reverb_type;
 
 
 private:

@@ -34,6 +34,10 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     // Load File from Button try #1
     loadSample.onClick = [this] { openSample();};
 
+    // Stylemenu options for selecting reverb type
+    styleMenu.addItem("Comb + Allpass", 1);
+    styleMenu.addItem("Convolution (DSP Module)", 2);
+
     // Make UI Visible
     addAndMakeVisible (&roomSize);
     addAndMakeVisible (&mix);
@@ -47,6 +51,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     // ADD LISTENERS FOR UI
     gain.addListener (this);
     roomSize.addListener (this);
+    styleMenu.addListener (this);
 
     // boilerplate
     formatManager.registerBasicFormats();
@@ -87,6 +92,11 @@ void AudioPluginAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
 {
     processorRef.proc_gain = gain.getValue();
     processorRef.proc_roomsize = roomSize.getValue();
+}
+
+void AudioPluginAudioProcessorEditor::comboBoxChanged (juce::ComboBox* box)
+{
+    processorRef.proc_reverb_type = styleMenu.getSelectedId();
 }
 
 void AudioPluginAudioProcessorEditor::openSample () {

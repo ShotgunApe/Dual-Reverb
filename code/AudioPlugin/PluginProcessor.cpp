@@ -94,8 +94,12 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     tmp.clear();
     tmp.setSize(2, sampleRate * 2);
 
+    // Prepare reverb if option is selected
+    if (proc_reverb_type == 1) {
+        reverb.prepareReverb(sampleRate);
+    }
+
     // Next, prepare the reverb that will do the processing
-    reverb.prepareReverb(sampleRate);
 
     juce::ignoreUnused (sampleRate, samplesPerBlock);
 }
@@ -142,24 +146,32 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         buffer.clear (i, 0, buffer.getNumSamples());
     }
-    
-    for (int channel = 0; channel < totalNumInputChannels; ++channel) {
-        // Make copy of dry signal to process
-        tmp.makeCopyOf(buffer, 1);
+    // Schroeder Reverberator
+    if (proc_reverb_type == 1) {
+        for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+            // Make copy of dry signal to process
+            tmp.makeCopyOf(buffer, 1);
 
-        // Delay
-        reverb.processReverb(tmp, channel);
+            // Delay
+            reverb.processReverb(tmp, channel);
 
-        // Copy wet signal back to dry signal (allpass-kinda)
-        buffer.applyGain(0.3f);
+            // Copy wet signal back to dry signal (allpass-kinda)
+            buffer.applyGain(0.3f);
 
-        // Apply gain from parameter
-        buffer.applyGain(proc_gain);
-        
-        buffer.addFrom(channel, 0, tmp, channel, 0, tmp.getNumSamples(), 0.3f);
-        
+            // Apply gain from parameter
+            buffer.applyGain(proc_gain);
+
+            buffer.addFrom(channel, 0, tmp, channel, 0, tmp.getNumSamples(), 0.3f);
+        }
+        reverb.updatePosition(tmp);
     }
-    reverb.updatePosition(tmp);
+    // tmp for now
+    else {
+        for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+
+        }
+    }
+    
 }
 
 //==============================================================================
