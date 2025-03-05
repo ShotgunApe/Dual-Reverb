@@ -1,6 +1,7 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_dsp/juce_dsp.h>
 #include "TestReverb.h"
 #include "juce_audio_basics/juce_audio_basics.h"
 
@@ -50,11 +51,18 @@ public:
     int proc_roomsize;
     int proc_reverb_type = 1;
 
+    // files for IR
+    juce::dsp::Convolution irLoader {juce::dsp::Convolution::NonUniform{ 1024 }};
+    juce::File savedFile;
+
 
 private:
     //==============================================================================
     // Reverb classes
     TestReverb reverb;
+
+    // For Convolution reverb
+    juce::dsp::ProcessSpec spec;
 
     // Temporary processing buffer
     juce::AudioBuffer<float> tmp;

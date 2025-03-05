@@ -30,9 +30,6 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     gain.setValue (0.8f);
 
     loadSample.setButtonText ("Load IR...");
-    
-    // Load File from Button try #1
-    loadSample.onClick = [this] { openSample();};
 
     // Stylemenu options for selecting reverb type
     styleMenu.addItem("Comb + Allpass", 1);
@@ -52,8 +49,17 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     gain.addListener (this);
     roomSize.addListener (this);
 
-    styleMenu.onChange = [this] { styleMenuChanged(); };
+    styleMenu.onChange = [this] { 
+        styleMenuChanged(); 
+    };
     styleMenu.setSelectedId (1);
+
+    // Load File from Button try #1
+    loadSample.onClick = [this] { 
+        if (styleMenu.getSelectedId() == 2) {
+            openSample();
+        }
+    };
 
     // boilerplate
     formatManager.registerBasicFormats();
@@ -67,12 +73,10 @@ AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 //==============================================================================
 void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
-   // g.drawFittedText ("Hello World again!", getLocalBounds(), juce::Justification::centred, 1);
 }
 
 void AudioPluginAudioProcessorEditor::resized()
@@ -98,18 +102,24 @@ void AudioPluginAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
 
 void AudioPluginAudioProcessorEditor::styleMenuChanged ()
 {
-    processorRef.proc_reverb_type = styleMenu.getSelectedId();
+    processorRef.proc_reverb_type = (int) styleMenu.getSelectedId();
 }
 
 void AudioPluginAudioProcessorEditor::openSample () {
     
-    chooser = std::make_unique<juce::FileChooser>("Choose an Impulse Response", juce::File::getSpecialLocation(juce::File::userDesktopDirectory), "*.wav");
-    auto fileFlags = juce::FileBrowserComponent::openMode;
+    chooser = std::make_unique<juce::FileChooser>("Choose an Impulse Response", juce::File::getSpecialLocation(juce::File::userDesktopDirectory), "*");
+    const auto fileFlags = juce::FileBrowserComponent::openMode;
 
     chooser->launchAsync(fileFlags, [this](const juce::FileChooser& opened)
     {
-        juce::File chosenFile = opened.getResult();
+        juce::File chosenFile (opened.getResult());
         // Code to handle chosen files data
+
+        if (chosenFile.getFileExtension() == ".wav") {
+            processorRef.savedFile = chosenFile;
+            processorRef.irLoader.reset();
+            processorRef.irLoader.loadImpulseResponse(chosenFile, juce::dsp::Convolution::Stereo::no, juce::dsp::Convolution::Trim::yes, 0);
+        }
 
     });
 }

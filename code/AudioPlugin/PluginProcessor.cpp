@@ -89,14 +89,25 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-
-    // First, prepare the temp buffer that will store the signal to be processed
     tmp.clear();
     tmp.setSize(2, sampleRate * 2);
 
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.sampleRate = sampleRate;
+    spec.numChannels = getTotalNumOutputChannels();
+
+    irLoader.reset();
     // Prepare reverb if option is selected
     if (proc_reverb_type == 1) {
+        // First, prepare the temp buffer that will store the signal to be processed
+
+        // Then call custom reverb function
         reverb.prepareReverb(sampleRate);
+
+    } else if (proc_reverb_type == 2) {
+
+        // else, prepare JUCE DSP Module
+        irLoader.prepare(spec);
     }
 
     // Next, prepare the reverb that will do the processing
@@ -166,10 +177,16 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         }
         reverb.updatePosition(tmp);
     }
-    // tmp for now
-    else {
+    // tmp for now, change to switch statement?
+    if (proc_reverb_type == 2) {
         for (int channel = 0; channel < totalNumInputChannels; ++channel) {
 
+            juce::dsp::AudioBlock<float> block {buffer};
+
+            // only process if IR is loaded from GUI
+            if (irLoader.getCurrentIRSize() > 0) {
+                irLoader.process(juce::dsp::ProcessContextReplacing<float>(block));
+            }
         }
     }
     
@@ -195,6 +212,8 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
     juce::ignoreUnused (destData);
 
     juce::MemoryOutputStream (destData, true).writeFloat (proc_gain);
+    juce::MemoryOutputStream (destData, true).writeFloat (proc_roomsize);
+    juce::MemoryOutputStream (destData, true).writeFloat (proc_reverb_type);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -203,8 +222,9 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
     // whose contents will have been created by the getStateInformation() call.
     juce::ignoreUnused (data, sizeInBytes);
 
-    // I forgot why I have this
-    //proc_gain = juce::MemoryInputStream (data, static_cast<size_t> (sizeInBytes), false).readFloat();
+    proc_gain = juce::MemoryInputStream (data, static_cast<size_t> (sizeInBytes), false).readFloat();
+    proc_roomsize = juce::MemoryInputStream (data, static_cast<size_t> (sizeInBytes), false).readFloat();
+    proc_reverb_type = juce::MemoryInputStream (data, static_cast<size_t> (sizeInBytes), false).readFloat();
 }
 
 //==============================================================================

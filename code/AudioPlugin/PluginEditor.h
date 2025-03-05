@@ -33,7 +33,7 @@ private:
     juce::Slider roomSize;
     juce::Slider mix;
     juce::Slider gain;
-    juce::Label textLabel { {}, "v0.01" };
+    juce::Label textLabel { {}, "v0.02" };
     juce::ComboBox styleMenu;
     juce::TextButton loadSample;
 
