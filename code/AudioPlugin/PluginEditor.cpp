@@ -51,7 +51,9 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     // ADD LISTENERS FOR UI
     gain.addListener (this);
     roomSize.addListener (this);
-    styleMenu.addListener (this);
+
+    styleMenu.onChange = [this] { styleMenuChanged(); };
+    styleMenu.setSelectedId (1);
 
     // boilerplate
     formatManager.registerBasicFormats();
@@ -94,7 +96,7 @@ void AudioPluginAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
     processorRef.proc_roomsize = roomSize.getValue();
 }
 
-void AudioPluginAudioProcessorEditor::comboBoxChanged (juce::ComboBox* box)
+void AudioPluginAudioProcessorEditor::styleMenuChanged ()
 {
     processorRef.proc_reverb_type = styleMenu.getSelectedId();
 }

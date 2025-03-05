@@ -6,8 +6,7 @@
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor,
-                                              private juce::Slider::Listener,
-                                              private juce::ComboBox::Listener
+                                              private juce::Slider::Listener
 {
 public:
     explicit AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor&);
@@ -19,7 +18,7 @@ public:
 
 private:
     void sliderValueChanged (juce::Slider* slider) override;
-    void comboBoxChanged (juce::ComboBox* box) override;
+    void styleMenuChanged ();
     void openSample ();
 
     // This reference is provided as a quick way for your editor to

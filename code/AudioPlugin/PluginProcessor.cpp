@@ -146,6 +146,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         buffer.clear (i, 0, buffer.getNumSamples());
     }
+
     // Schroeder Reverberator
     if (proc_reverb_type == 1) {
         for (int channel = 0; channel < totalNumInputChannels; ++channel) {
