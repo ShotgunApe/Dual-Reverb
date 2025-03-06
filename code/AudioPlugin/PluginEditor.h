@@ -2,6 +2,7 @@
 
 #include "PluginProcessor.h"
 #include "juce_audio_formats/juce_audio_formats.h"
+#include "juce_core/juce_core.h"
 #include "juce_gui_basics/juce_gui_basics.h"
 
 //==============================================================================
@@ -28,6 +29,10 @@ private:
     // Formatmanager keeps track of opened files in the audio plugin
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::FileChooser> chooser;
+
+    // pathMutex is used as a background process to avoid problems with unsynchronized loading of IRs (see juce::dsp::Convolution ref)
+    juce::CriticalSection pathMutex;
+    juce::String chosenPath;
 
     // Frontend parameters
     juce::Slider roomSize;

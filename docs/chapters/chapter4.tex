@@ -3,10 +3,23 @@
 \hspace*{-0.15cm}This chapter will cover impulse responses and their use in artificial reverberation. It will begin with the mathematical background of rooms and how their echo is measured. Next, several methods of measuring a room's impulse response will be discussed. Finally, the measurements taken from an acoustic space will be provided and the results analyzed.
 
 \section{Mathematical Background}
-With the tools [], it is easy to presume that the []. It comes naturally the one will need the impulse response of a room in order to have something to convolve with. While several can be found online, measuring the impulse respones oneself []. Unlike purely artificial means where the delay lines of the same design can be tuned to one's taste, convolving with an impulse response should result in the same output
+With the previously mentioned algorithm, it comes naturally that one will need the impulse response of a room in order to have something to convolve with. While several can be found online, measuring the the impulse response from a real acoustic space can provide a baseline to evaluate other methods in a unique and novel way. Unlike purely artificial means where delay lines and filters can be tuned to one's taste, convolving the signal with an impulse response should, in theory, result in the same output regardless of the exact algorithm used.
+
+The reverberation of an acoustic space is most commonly measured by its $RT_{60}$ time. This measurement refers to the amount of time it takes for the persisted sound after a short impulse to reach less than 60 dB. This is defined as:
+
+\begin{defn}[Definition of reverberation time]\label{def-complex}
+	\begin{equation}\label{reverbtime-complex)}
+	RT_{60} = 0.5 \frac{V_R}{S_R A_{R Ave}}
+\end{equation}\end{defn}
+
+where $V_R$ is the volume of the room, $S_R$ the surface area, and $A_{R Ave}$ the absorption coefficient of the room \cite{pirkle2019designing}. Should the approximate room volume, surface area, and materials be known, the approximate reverberation time can be measured and predicted. [ehh maybe not include]
+
+For a room volume of
+
+This begs the question: how is the impulse response of rooms measured, exactly?
 
 \section{Measuring the Impulse Response}
-While any space could have been used to measure an impulse response, there were practical limitations that prevented just any room from being measured. A potential room needed to be both acoustically interesting, but also have the eqipment necessary to perform accurate measurements. For these reasons, Gault Recital Hall - located in Scheide Music Center - was the room chosen. To measure the impulse response of Gault Recital Hall, a logarithmic sine sweep of the room was performed, spanning the range of typical human hearing. These were played from Bag End TA6002-I speakers located approximately halfway up the room on stage left and stage right, with an array of Infra Subwoofers in the middle of the ceiling. There, the response of the sweep was recorded with a Zoom XYH-6 X/Y Capsule placed roughly in the center of the room. Several measurements were taken for redundancy, in case any one recording did not suffice or included unwanted noise.
+To obtain the impulse response, Farina introduces method that relies on the deconvolution of swept sinusoids \cite{farina2000simultaneous}. Unlike previous methods of using []. While any space could have been used to measure an impulse response, there were practical limitations that prevented just any room from being measured. A potential room needed to be both acoustically interesting, but also have the equipment necessary to perform accurate measurements. For these reasons, Gault Recital Hall - located in Scheide Music Center - was the room chosen. To measure the impulse response of Gault Recital Hall, a logarithmic sine sweep of the room was performed, spanning the range of typical human hearing. These were played from Bag End TA6000-I speakers located approximately halfway up the room on stage left and stage right, with an array of Community IHP-3564 Subwoofers on the ceiling in the middle \cite{woosound}. Back on the ground, the response of the sweep was recorded with a Zoom XYH-6 X/Y Capsule placed roughly in the center of the room. Several measurements were taken for redundancy, in case any one recording did not suffice.
 
 From these recordings, the raw audio files were then processed with ReaVerb - an application included with Reaper that allows for impulse response generation by providing the raw audio and the inverse logarithmic sweep.
 
