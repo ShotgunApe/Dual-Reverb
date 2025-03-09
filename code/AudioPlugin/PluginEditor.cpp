@@ -52,7 +52,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     styleMenu.onChange = [this] { 
         styleMenuChanged(); 
     };
-    styleMenu.setSelectedId (1);
+    styleMenu.setSelectedId (2);
 
     // Load File from Button try #1
     loadSample.onClick = [this] { 

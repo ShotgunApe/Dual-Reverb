@@ -5,21 +5,26 @@
 \section{Mathematical Background}
 With the previously mentioned algorithm, it comes naturally that one will need the impulse response of a room in order to have something to convolve with. While several can be found online, measuring the the impulse response from a real acoustic space can provide a baseline to evaluate other methods in a unique and novel way. Unlike purely artificial means where delay lines and filters can be tuned to one's taste, convolving the signal with an impulse response should, in theory, result in the same output regardless of the exact algorithm used.
 
-The reverberation of an acoustic space is most commonly measured by its $RT_{60}$ time. This measurement refers to the amount of time it takes for the persisted sound after a short impulse to reach less than 60 dB. This is defined as:
+The reverberation of an acoustic space is most commonly measured by its $RT_{60}$ time. This measurement refers to the amount of time it takes for the persisted sound after a short impulse to decay by 60 dB\footnote{It is often difficult to measure a difference of 60 dB, so it is common practice to take a $RT_{20}$ measurement or $RT_{30}$ measurement instead and extrapolate the results to determine the appropriate $RT_{60}$ time \cite{larson}}. This is defined as:
 
 \begin{defn}[Definition of reverberation time]\label{def-complex}
 	\begin{equation}\label{reverbtime-complex)}
-	RT_{60} = 0.5 \frac{V_R}{S_R A_{R Ave}}
-\end{equation}\end{defn}
+	RT_{60} = 0.049 \frac{V_R}{A_{t}}
+\end{equation}\begin{equation}\label{parttwo}
+	A_t = S_1\alpha_1 + S_2\alpha_2 + S_3\alpha_3 + \ldots + S_n\alpha_n
+\end{equation}
+\end{defn}
 
-where $V_R$ is the volume of the room, $S_R$ the surface area, and $A_{R Ave}$ the absorption coefficient of the room \cite{pirkle2019designing}. Should the approximate room volume, surface area, and materials be known, the approximate reverberation time can be measured and predicted. [ehh maybe not include]
+where $V_R$ is the volume of the room, and $A_{t}$ the total area of absorption in the room, measured in sabins \cite{LONG2014313}. In this context, sabins refer to the surface area of a wall or floor $S_n$ measured in square feet, multiplied by the absorption coefficient $\alpha_n$ determined by the material of that area. Should the approximate room volume, surface area, and materials be known, the reverberation time can be measured and predicted.
 
-For a room volume of
+It is at this point that a potential space to measure should be chosen - while any space can be used for reverberation, there may be practical limitations that prevent just any room from being measured and recorded. For the purposes of this thesis, Gault Recital Hall - located in Scheide Music Center - was the room chosen for acoustic analysis.
+
+Simplifying the architecture of the space, Gault Recital Hall is largely composed of two areas. The stage itself contains a footprint of approximately $1,473.25 ft^{2}$, made of reflective plywood and plasterboard paneling on the ceiling \cite{construction, woogault}. The theater space contains a footprint of approximately $2,360 ft^{2}$, with its wall composed of coarse concrete installed in an uneven pattern. As a whole, []. Table [] provides the measurements from the original blueprints \cite{construction}.
 
 This begs the question: how is the impulse response of rooms measured, exactly?
 
 \section{Measuring the Impulse Response}
-To obtain the impulse response, Farina introduces method that relies on the deconvolution of swept sinusoids \cite{farina2000simultaneous}. Unlike previous methods of using []. While any space could have been used to measure an impulse response, there were practical limitations that prevented just any room from being measured. A potential room needed to be both acoustically interesting, but also have the equipment necessary to perform accurate measurements. For these reasons, Gault Recital Hall - located in Scheide Music Center - was the room chosen. To measure the impulse response of Gault Recital Hall, a logarithmic sine sweep of the room was performed, spanning the range of typical human hearing. These were played from Bag End TA6000-I speakers located approximately halfway up the room on stage left and stage right, with an array of Community IHP-3564 Subwoofers on the ceiling in the middle \cite{woosound}. Back on the ground, the response of the sweep was recorded with a Zoom XYH-6 X/Y Capsule placed roughly in the center of the room. Several measurements were taken for redundancy, in case any one recording did not suffice.
+To obtain the impulse response, Farina introduces method that relies on the deconvolution of swept sinusoids \cite{farina2000simultaneous}. Unlike previous methods of using []. A potential room needed to be both acoustically interesting, but also have the equipment necessary to perform accurate measurements. To measure the impulse response of Gault Recital Hall, a logarithmic sine sweep of the room was performed, spanning the range of typical human hearing. These were played from Bag End TA6000-I speakers located approximately halfway up the room on stage left and stage right, with an array of Community IHP-3564 Subwoofers on the ceiling in the middle \cite{woosound}. Back on the ground, the response of the sweep was recorded with a Zoom XYH-6 X/Y Capsule placed roughly in the center of the room. Several measurements were taken for redundancy, in case any one recording did not suffice.
 
 From these recordings, the raw audio files were then processed with ReaVerb - an application included with Reaper that allows for impulse response generation by providing the raw audio and the inverse logarithmic sweep.
 
