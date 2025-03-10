@@ -17,11 +17,53 @@ The reverberation of an acoustic space is most commonly measured by its $RT_{60}
 
 where $V_R$ is the volume of the room, and $A_{t}$ the total area of absorption in the room, measured in sabins \cite{LONG2014313}. In this context, sabins refer to the surface area of a wall or floor $S_n$ measured in square feet, multiplied by the absorption coefficient $\alpha_n$ determined by the material of that area. Should the approximate room volume, surface area, and materials be known, the reverberation time can be measured and predicted.
 
-It is at this point that a potential space to measure should be chosen - while any space can be used for reverberation, there may be practical limitations that prevent just any room from being measured and recorded. For the purposes of this thesis, Gault Recital Hall - located in Scheide Music Center - was the room chosen for acoustic analysis.
+It is at this point that a potential space to measure should be chosen - while any space can be used for reverberation, there are practical limitations that prevent just any room from being measured and recorded. For the purposes of this thesis, Gault Recital Hall - located in Scheide Music Center - was the room chosen for acoustic analysis.
 
-Simplifying the architecture of the space, Gault Recital Hall is largely composed of two areas. The stage itself contains a footprint of approximately $1,473.25 ft^{2}$, made of reflective plywood and plasterboard paneling on the ceiling \cite{construction, woogault}. The theater space contains a footprint of approximately $2,360 ft^{2}$, with its wall composed of coarse concrete installed in an uneven pattern. As a whole, []. Table [] provides the measurements from the original blueprints \cite{construction}.
+Simplifying the architecture of the space, Gault Recital Hall is largely composed of two areas. The stage itself contains a footprint of approximately $1,473.25 ft^{2}$, made of reflective plywood and plasterboard paneling on the ceiling \cite{construction, woogault}. The theater space contains a footprint of approximately $2,360 ft^{2}$, with its walls composed of coarse concrete installed in an uneven pattern. As a whole, the total volume - stage and seating included - is approximately $104,609 ft^3$, with a surface area of approximately $15,052 ft^2$ \cite{construction}.
 
-This begs the question: how is the impulse response of rooms measured, exactly?
+To determine the total area of absorption, then, the average absorption coefficient must be found for each surface's material in the hall. Table 5.1 provides the relevant coefficients \cite{absorptions}. As one will observe when measuring the impulse response, coefficients must be averaged across frequencies as the entire range of human hearing is covered. The sum of each surface will result in the value $A_{t}$ to be used to find the $RT_{60}$ time. In an intuitive sense, a coefficient of 0 will absorb none of the sound - i.e., the surface reflects the sound back into the hall, creating a more reverberant space.
+
+\setlength{\cellspacetoplimit}{\tabcolsep}
+\setlength{\cellspacebottomlimit}{3pt} %evil evil magic number hack
+
+\begin{table}[ht]
+	\begin{center}
+		\begin{tabular}{|0c||0c|0c|0c|0c|0c|0c||0c|}
+			\hline
+			Materials & 125 Hz & 250 Hz & 500 Hz & 1 kHz & 2 kHz & 4 kHz & Average\\
+			\hline
+			Cushioned Seats & 0.32 & 0.4 & 0.42 & 0.44 & 0.43 & 0.48 & \textbf{0.415} \\ \hline
+			Wood Parquet & 0.04 & 0.04 & 0.07 & 0.06 & 0.06 & 0.07 & \textbf{0.057} \\ \hline
+			Rough Concrete & 0.01 & 0.02 & 0.04 & 0.06 & 0.08 & 0.1 & \textbf{0.052} \\ \hline
+			Plaster & 0.01 & 0.02 & 0.02 & 0.03 & 0.04 & 0.05 & \textbf{0.028} \\ \hline
+			Metal Panels & 0.51 & 0.78 & 0.57 & 0.77 & 0.9 & 0.79 & \textbf{0.72} \\ \hline
+		\end{tabular}
+		\caption{Relevant Absorption Coefficients \cite{absorptions}.}
+	\end{center}
+\end{table}
+
+Taking each measurement of the hall into consideration\footnote{These measurements simplify the structure of the room heavily, which assume that the room is composed of two rectangles - one for the stage and one for the audience. In reality, the architecture of Gault is composed of steps leading to the stage with curved walls along the stage.}, the value $A_t$ becomes:
+\begin{multline}
+ A_t =
+	\underbrace{2360.3 ft^2 * 0.415}_\text{Audience Floor} + \underbrace{1473.75 ft^2 * 0.057}_{\text{Stage Floor}} +
+	\underbrace{4953.3 ft^2 * 0.052}_\text{Audience Walls} \\ + \underbrace{2431 ft^2 * 0.028}_{\text{Stage Walls}} +
+	\underbrace{3834.1 ft^2 * 0.72}_\text{Ceiling}
+\end{multline}
+
+\begin{equation}
+  A_t = 4149.7 \; \text{sabins}
+\end{equation}
+
+This results in a reverberation time of:
+
+\begin{equation}
+ RT_{60} = 0.049 \frac{104,609 ft^3}{4149.7}
+\end{equation}
+\begin{equation}
+ \therefore RT_{60} = 1.23s
+\end{equation}
+
+This begs the question: how is the impulse response measured, exactly?
 
 \section{Measuring the Impulse Response}
 To obtain the impulse response, Farina introduces method that relies on the deconvolution of swept sinusoids \cite{farina2000simultaneous}. Unlike previous methods of using []. A potential room needed to be both acoustically interesting, but also have the equipment necessary to perform accurate measurements. To measure the impulse response of Gault Recital Hall, a logarithmic sine sweep of the room was performed, spanning the range of typical human hearing. These were played from Bag End TA6000-I speakers located approximately halfway up the room on stage left and stage right, with an array of Community IHP-3564 Subwoofers on the ceiling in the middle \cite{woosound}. Back on the ground, the response of the sweep was recorded with a Zoom XYH-6 X/Y Capsule placed roughly in the center of the room. Several measurements were taken for redundancy, in case any one recording did not suffice.
