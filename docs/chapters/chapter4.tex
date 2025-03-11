@@ -19,7 +19,7 @@ where $V_R$ is the volume of the room, and $A_{t}$ the total area of absorption 
 
 It is at this point that a potential space to measure should be chosen - while any space can be used for reverberation, there are practical limitations that prevent just any room from being measured and recorded. For the purposes of this thesis, Gault Recital Hall - located in Scheide Music Center - was the room chosen for acoustic analysis.
 
-Simplifying the architecture of the space, Gault Recital Hall is largely composed of two areas. The stage itself contains a footprint of approximately $1,473.25 ft^{2}$, made of reflective plywood and plasterboard paneling on the ceiling \cite{construction, woogault}. The theater space contains a footprint of approximately $2,360 ft^{2}$, with its walls composed of coarse concrete installed in an uneven pattern. As a whole, the total volume - stage and seating included - is approximately $104,609 ft^3$, with a surface area of approximately $15,052 ft^2$ \cite{construction}.
+Simplifying the architecture of the space, Gault Recital Hall is largely composed of two areas. The stage itself contains a footprint of approximately $1,473.25 ft^{2}$, made of reflective plywood and plasterboard \cite{construction, woogault}. The theater space contains a footprint of approximately $2,360 ft^{2}$, with its walls composed of coarse concrete installed in an uneven pattern. As a whole, the total volume - stage and seating included - is approximately $104,609 ft^3$, with a surface area of approximately $15,052 ft^2$ \cite{construction}.
 
 To determine the total area of absorption, then, the average absorption coefficient must be found for each surface's material in the hall. Table 5.1 provides the relevant coefficients \cite{absorptions}. As one will observe when measuring the impulse response, coefficients must be averaged across frequencies as the entire range of human hearing is covered. The sum of each surface will result in the value $A_{t}$ to be used to find the $RT_{60}$ time. In an intuitive sense, a coefficient of 0 will absorb none of the sound - i.e., the surface reflects the sound back into the hall, creating a more reverberant space.
 
@@ -42,17 +42,17 @@ To determine the total area of absorption, then, the average absorption coeffici
 	\end{center}
 \end{table}
 
-Taking each measurement of the hall into consideration\footnote{These measurements simplify the structure of the room heavily, which assume that the room is composed of two rectangles - one for the stage and one for the audience. In reality, the architecture of Gault is composed of steps leading to the stage with curved walls along the stage.}, the value $A_t$ becomes:
-\begin{multline}
- A_t =
-	\underbrace{2360.3 ft^2 * 0.415}_\text{Audience Floor} + \underbrace{1473.75 ft^2 * 0.057}_{\text{Stage Floor}} +
-	\underbrace{4953.3 ft^2 * 0.052}_\text{Audience Walls} \\ + \underbrace{2431 ft^2 * 0.028}_{\text{Stage Walls}} +
-	\underbrace{3834.1 ft^2 * 0.72}_\text{Ceiling}
-\end{multline}
-
-\begin{equation}
-  A_t = 4149.7 \; \text{sabins}
-\end{equation}
+Taking each measurement of the hall into consideration\footnote{These measurements simplify the structure of the room heavily, which assume that the room is composed of two rectanglular prisms - one for the stage and one for the audience. In reality, the architecture of Gault is more complex - most notably containing steps leading to the stage with curved walls along the stage.}, the value $A_t$ becomes:
+\begin{center}
+\scalebox{0.95}{
+	$
+	A_t = \underbrace{2360.3 ft^2 \cdot 0.415}_\text{Audience Floor} + \underbrace{1473.75 ft^2 \cdot 0.057}_{\text{Stage Floor}} +\underbrace{4953.3 ft^2 \cdot 0.052}_\text{Audience Walls}  + \underbrace{2431 ft^2 \cdot 0.028}_{\text{Stage Walls}} +\underbrace{3834.1 ft^2 \cdot 0.72}_\text{Ceiling}
+	$
+}
+\end{center}
+\begin{center}
+  $A_t = 4149.7 \; \text{sabins}$
+\end{center}
 
 This results in a reverberation time of:
 
@@ -66,8 +66,39 @@ This results in a reverberation time of:
 This begs the question: how is the impulse response measured, exactly?
 
 \section{Measuring the Impulse Response}
-To obtain the impulse response, Farina introduces method that relies on the deconvolution of swept sinusoids \cite{farina2000simultaneous}. Unlike previous methods of using []. A potential room needed to be both acoustically interesting, but also have the equipment necessary to perform accurate measurements. To measure the impulse response of Gault Recital Hall, a logarithmic sine sweep of the room was performed, spanning the range of typical human hearing. These were played from Bag End TA6000-I speakers located approximately halfway up the room on stage left and stage right, with an array of Community IHP-3564 Subwoofers on the ceiling in the middle \cite{woosound}. Back on the ground, the response of the sweep was recorded with a Zoom XYH-6 X/Y Capsule placed roughly in the center of the room. Several measurements were taken for redundancy, in case any one recording did not suffice.
+To obtain the impulse response, Farina introduces method that relies on the deconvolution of swept sinusoids \cite{farina2000simultaneous}. Unlike previous methods, this method does not rely on short impulses (such as popping balloons or firing blanks). Rather, a sinusoid is played through a range of frequencies, which is then deconvolved via its inverse.
 
-From these recordings, the raw audio files were then processed with ReaVerb - an application included with Reaper that allows for impulse response generation by providing the raw audio and the inverse logarithmic sweep.
+To measure the impulse response of Gault Recital Hall, a logarithmic sine sweep of the room was performed, spanning the range of 20 Hz - 20,000 Hz. These were played from Bag End TA6000-I speakers located approximately halfway up the room on stage left and stage right, with an array of Community IHP-3564 Subwoofers on the ceiling in the middle \cite{woosound}. Back on the ground, the response of the sweep was recorded with a Zoom XYH-6 X/Y Capsule placed roughly in the center of the room. Several measurements were taken for redundancy, in case any one recording did not suffice.
+
+The sine sweep itself was generated via Room EQ Wizard, a program used to measure acoustic spaces \cite{REW}. The sweep follows the equation:
+
+\begin{center}
+\scalebox{1.3}{
+$
+x(t) = sin\left(\frac{\omega_1 T}{\ln{\left(\frac{\omega_2}{\omega_1}\right)}} e^{\frac{t}{T} \ln{\left(\frac{\omega_2}{\omega_1}\right)}} - 1 \right)
+$
+}
+\end{center}
+
+where $\omega_1$ and $\omega_2$ are the starting and ending frequencies, respectively, and $T$ is the duration of the sweep in seconds \cite{farina2000simultaneous}. After performing the generated sweep, the response was then processed by convolving the raw output audio with the inverse filter $f(t)$ \cite{inversecalc}:
+
+\begin{center}
+\scalebox{1.3}{
+$
+f(t) = \frac{x_{rev}(t)}{e^{\frac{t}{T} \ln{\left(\frac{\omega_2}{\omega_1}\right)}}}
+$
+}
+\end{center}
+
+which is created by utilizing a time reversed $x_{rev}(t)$. The following graphs depict the logarithmic sine sweep and inverse filter, respectively:
+
+
+\begin{figure}[h]
+\subfloat[Logarithmic Sinusoid Sweep $x(t)$.]{\includegraphics[height=0.8in]{figures/to-replace-two.png}}
+\subfloat[Inverse filter $f(t)$ from $x(t)$.]{\includegraphics[height=0.8in]{figures/to-replace-three.png}}
+\caption{A graph of the logarithmic sinusoid sweep (a) and its inverse (b).}
+\end{figure}
 
 \section{Results of a Sinusoid Sweep}
+
+In practice, tools are available that calculate the inverse filter based on the impulse response. To accomplish this, raw audio files were processed with ReaVerb - a VST application included with Reaper. This program allows for impulse response generation by providing the raw audio and the original impulse, automatically .
