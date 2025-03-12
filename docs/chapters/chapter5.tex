@@ -1,10 +1,10 @@
 %!TEX root = ../username.tex
 \chapter{The Software}
-\hspace*{-0.15cm}This chapter will cover how the application was created using JUCE. It will begin with a description of the data structures that were used before describing their implementation. Then, the process of creating the user interface will be described. Finally, it will end with how the software runs under several different host applications.
+\hspace*{-0.15cm}To bring everything together, this chapter will cover how the application was created using JUCE. It will begin with a description of the data structures that were used before describing their implementation. Then, the process of creating the user interface will be described. Finally, it will end with how the software runs under several different host applications.
 \section{Data Structures and Implementation}
 Both Comb Filters and Allpass Filters use a queue ADT for their implementation. However, they rely on an implementation that uses a \textit{circular array} so that audio data can be continuously fed into the application. In other words, an array with modular arithmetic is used so that audio data can be continuously queued. This ignores the usual problem that come from circular arrays; that current lengths can be ambiguous for the same \textit{front} and \textit{back} pointer \cite{carrano2016data}. For the purposes that this data structure is being used for for, all that matters is that data can be continuously processed in the system and overwritten when new data comes in.
 
-To implement a Comb Filter, one can imagine an array of floats representing a buffer of data to be processed. A subsection of this buffer will be specified as the signal to repeat of an arbitrary length. This is the delay buffer. To match the behavior expected of a Comb Filter in code, one can imagine filling a temporary buffer with data. One can then read this data back to the original buffer once it has been processed (i.e., the write pointer of the circular array has moved past the data read thus far). JUCE provides a datatype \verb|AudioBuffer<Type>| that allows the programmer to copy data from one buffer to the next - however, it is up to the programmer to implement the circular behavior themselves so that undefined behavior does not occur.
+To implement a Comb Filter, one can imagine an array of floats representing a buffer of data to be processed. A subsection of this buffer will be specified as the signal to repeat of an arbitrary length. This is the delay buffer. To match the behavior expected of a Comb Filter in code, one can imagine filling a temporary buffer with data. One can then read this data back to the original buffer once it has been processed (i.e., the write pointer of the circular array has moved past the data read thus far). JUCE provides a datatype \verb|AudioBuffer<Type>| that allows the programmer to copy data from one buffer to the next (or rather, the primary buffer to output and a buffer containing the temporary delayed signal) - however, it is up to the programmer to implement the circular behavior themselves so that undefined behavior does not occur.
 \lstset{language =[ANSI]C++}
 \lstset{backgroundcolor=\color{white},rulecolor=\color{black}}
 \lstset{linewidth=.95\textwidth,breaklines=true}
@@ -17,9 +17,36 @@ To implement a Comb Filter, one can imagine an array of floats representing a bu
 \begin{singlespace}
 \lstinputlisting[caption=The high level code of a Comb Filter., label=motion]{source/pseudo1.txt}
 \end{singlespace} \hfill \break
-\hspace*{0.6cm}This provides the programmer with a single Comb Filter to which they can specify the delay length. Appendix A includes how these functions are implemented at length. What is important to understand from the code is that the gain \textit{g} applied during the \verb|readFromBuffer()| step \textit{must} be calculated for each different delay length. For multiple delays, if a constant \textit{g} is applied for each different delay length, the comb filters will finish decaying at different points in time. This is part of what separates this approach from being just a number of delays occuring at the same time - they all finish at the same time, despite being of different lengths at each repeated signal.
+\hspace*{0.6cm}This circular behavior can be defined as a custom class \verb|DelayLine|, whose members are defined in Listing A.1. As part of this class, to implement \verb|fillBuffer()|, JUCE provides functions under the \verb|juce_audio_basics/juce_audio_basics.h| header. These include the functions \verb|getNumSamples()|, \verb|copyFrom()|, and \verb|getWritePointer()|. Essentially, the function \verb|fillBuffer()| first checks the size of the delay buffer. Upon doing so, if the write position (the \textit{front} pointer of the circular array) is within the bounds of the delay buffer, then the audio data can simply be copied from the delay buffer to the buffer via the \verb|copyFrom()| function. If not, care is taken to calculate the correct length of the delay buffer and how many samples are present between the \textit{head} and the \textit{back} pointer of the delay line. The \verb|copyFrom()| function can then be used in a similar manner.
 
-One of the issues that will arise from
+This takes care of filling the buffer with the data sent through the delay line (Figure 4.3, filling the buffer with the delay of time \textit{T}), however, this data must be read from and sent back through the filter as an input with some gain \text{g}. To calculate the gain parameter, the naive approach would be to set the variable to some constant. However, this does not work as the length of the decay would not be the same for different delay times \textit{T}. To ensure that each delay line does not have different lengths, \textit{g} must function with respect to the length of time in \textit{buffers} that the programmer wishes to have the Comb Filter last. This can be done with the following equation:
+
+\begin{center}
+\scalebox{1.3}{
+$
+g = 10^{\frac{-3DT_s}{RT_{60}}}
+$
+}
+\end{center}
+
+where $D$ is the delay line length and $T_s$ is the sample rate \cite{pirkle2019designing}. However, one can simplify this further as the sample rate conversion is simply an intermediary to convert seconds to discrete buffers. If working purely with lengths of buffers, this simplifies to:
+
+\begin{center}
+\scalebox{1.3}{
+$
+g = 10^{\frac{-3D}{L_b}}
+$
+}
+\end{center}
+
+Where $D$ is the delay line length and $L_b$ is the $RT_{60}$ time in buffers. This translates to the following code:
+
+\begin{singlespace}
+\lstinputlisting[caption=Code to calculate the gain $g$ within a delay line., label=motion]{source/pseudo2.txt}
+\end{singlespace} \hfill \break
+\hspace*{0.6cm}It is worth reiterating, the gain \textit{g} applied during the \verb|readFromBuffer()| step \textit{must} be calculated for each different delay length. For multiple delays, if a constant \textit{g} is applied for each different delay length, the comb filters will finish decaying at different points in time. This is part of what separates this approach from being just a number of delays occuring at the same time - they all finish at the same time, despite being of different delay lengths with each repeated signal.
+
+Extrapolating a single delay line further, the Schroeder Comb Filter approach can be implemented by [].
 
 \section{User Interface}
 

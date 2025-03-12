@@ -68,7 +68,7 @@ This begs the question: how is the impulse response measured, exactly?
 \section{Measuring the Impulse Response}
 To obtain the impulse response, Farina introduces method that relies on the deconvolution of swept sinusoids \cite{farina2000simultaneous}. Unlike previous methods, this method does not rely on short impulses (such as popping balloons or firing blanks). Rather, a sinusoid is played through a range of frequencies, which is then deconvolved via its inverse.
 
-To measure the impulse response of Gault Recital Hall, a logarithmic sine sweep of the room was performed, spanning the range of 20 Hz - 20,000 Hz. These were played from Bag End TA6000-I speakers located approximately halfway up the room on stage left and stage right, with an array of Community IHP-3564 Subwoofers on the ceiling in the middle \cite{woosound}. Back on the ground, the response of the sweep was recorded with a Zoom XYH-6 X/Y Capsule placed roughly in the center of the room. Several measurements were taken for redundancy, in case any one recording did not suffice.
+To measure the impulse response of Gault Recital Hall, a logarithmic sine sweep of the room was performed, spanning the range of 20 Hz - 20,000 Hz in 10s. These were played from Bag End TA6000-I speakers located approximately halfway up the room on stage left and stage right, with an array of Community IHP-3564 Subwoofers on the ceiling in the middle \cite{woosound}. Back on the ground, the response of the sweep was recorded with a Zoom XYH-6 X/Y Capsule placed roughly in the center of the room. Several measurements were taken for redundancy, in case any one recording did not suffice.
 
 The sine sweep itself was generated via Room EQ Wizard, a program used to measure acoustic spaces \cite{REW}. The sweep follows the equation:
 
@@ -101,4 +101,54 @@ which is created by utilizing a time reversed $x_{rev}(t)$. The following graphs
 
 \section{Results of a Sinusoid Sweep}
 
-In practice, tools are available that calculate the inverse filter based on the impulse response. To accomplish this, raw audio files were processed with ReaVerb - a VST application included with Reaper. This program allows for impulse response generation by providing the raw audio and the original impulse, automatically .
+In practice, tools are available that calculate the inverse filter based on the impulse response. To accomplish this, raw audio files were processed with ReaVerb - a VST application included with Reaper. This program allows for impulse response generation by providing the raw audio and the original impulse, automatically generating the inverse filter. Through this program, the following impulse response was generated from the raw audio:
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\includegraphics[width=14cm]{figures/Deconvolved.png}
+		}
+		\caption{A screenshot of the Impulse Response of Gault via Reaverb.}
+	\end{center}
+\end{figure}
+
+Viewing the IR as a function of time does not reveal much.
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\includegraphics[width=9cm]{figures/time-domain.png}
+		}
+		\caption{A screenshot of the Impulse Response as a function of amplitude and time.}
+	\end{center}
+\end{figure}
+
+However, by normalizing the audio output, one is able to clearly see the impulse response.
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\includegraphics[width=9cm]{figures/normalized.png}
+		}
+		\caption{The IR normalized.}
+	\end{center}
+\end{figure}
+
+Some may notice in Figures 5.2 and 5.4 that there appears to be unwanted noise in the IR. By applying a lowpass filter at approximately 17 kHz, this noise is removed.
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\includegraphics[width=9cm]{figures/lowpass.png}
+		}
+		\caption{The IR normalized and filtered.}
+	\end{center}
+\end{figure}
+Lastly, the audio file is then cropped to remove areas of silence. Viewing the Impulse Response's amplitude with regard to dB, the resulting $RT_{60}$ time is within 15\% of the predicted value at approximately 1.05s:
+\begin{figure}[h]
+\begin{center}
+\subfloat[The IR cropped.]{\includegraphics[height=1.2in]{figures/cropped.png}} \hspace*{1.15cm}
+\subfloat[The IR with regard to dB.]{\includegraphics[height=1.2in]{figures/dB-result.png}}
+\caption{The IR as a function of amplitude with respect to time (a) and dB with respect to time (b).}
+\end{center}
+\end{figure}
