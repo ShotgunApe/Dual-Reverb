@@ -1,0 +1,5 @@
+auto bufferSize = buffer.getNumSamples();
+auto delayBufferSize = delayBuffer.getNumSamples();
+
+writePosition += bufferSize;
+writePosition %= delayBufferSize;

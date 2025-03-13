@@ -1,0 +1,19 @@
+auto bufferSize = buffer.getNumSamples();
+auto delayBufferSize = delayBuffer.getNumSamples();
+
+auto readPosition = writePosition - delayTime;
+
+if (readPosition < 0) {
+    readPosition += delayBufferSize;
+}
+
+if (readPosition + bufferSize < delayBufferSize) {
+    buffer.addFromWithRamp (channel, 0, delayBuffer.getReadPointer (channel, readPosition), bufferSize, g, g);
+}
+else {
+    auto numSamplesToEnd = delayBufferSize - readPosition;
+    buffer.addFromWithRamp (channel, 0, delayBuffer.getReadPointer (channel, readPosition), numSamplesToEnd, g, g);
+
+    auto numSamplesAtStart = bufferSize - numSamplesToEnd;
+    buffer.addFromWithRamp (channel, numSamplesToEnd, delayBuffer.getReadPointer (channel, 0), numSamplesAtStart, g, g);
+}
