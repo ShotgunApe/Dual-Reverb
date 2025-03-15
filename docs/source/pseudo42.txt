@@ -1,0 +1,3 @@
+if (irLoader.getCurrentIRSize() > 0) {
+    irLoader.process(juce::dsp::ProcessContextReplacing<float>(block));
+}

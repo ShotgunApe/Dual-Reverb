@@ -30,7 +30,6 @@ target_sources(AudioPluginExample
         PluginEditor.cpp
         PluginProcessor.cpp
         TestReverb.cpp
-        Convolution.cpp
         components/DelayLine.cpp
         )
 

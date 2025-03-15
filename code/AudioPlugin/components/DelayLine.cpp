@@ -57,7 +57,6 @@ void DelayLine::updateBufferPosition (juce::AudioBuffer<float>& buffer, juce::Au
     auto bufferSize = buffer.getNumSamples();
     auto delayBufferSize = delayBuffer.getNumSamples();
 
-    // wrap
     writePosition += bufferSize;
     writePosition %= delayBufferSize;
 }

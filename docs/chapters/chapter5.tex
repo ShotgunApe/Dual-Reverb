@@ -58,20 +58,27 @@ With the gain parameter handled, the \verb|readFromBuffer()| function can be imp
 \end{singlespace} \hfill \break
 \hspace*{0.6cm}Placing each component in context, these functions work together by being called within a greater \verb|processBlock()| function that takes a buffer, applies some processing, and returns the buffer back to the DAW. This function is run every time a buffer is sent from the DAW to the VST application. As mentioned in Chapter 3, there is only so much time for processing to be completed, so code must be efficient enough to avoid dropped buffers. The code within \verb|processBlock()| begins by checking how many channels are being processed within the buffer. Most cases, this number is either \textit{mono} (1 channel) or \textit{stereo} (2 channels). Upon determining the correct number of channels, the program then iterates through a \textit{for} loop to process the audio data for each channel. Here, one can begin by making a temporary copy of the buffer to process (allowing the programmer to make a separate \textit{wet} and \textit{dry} mix). This temporary buffer is then sent to a custom class \verb|TestReverb| that processes the buffer through the custom function \verb|processReverb()|. Here, the signal is separated into four separate channels - or, Comb Filters, rather - and processes the audio in the same manner done in Listing 6.1. Each channel of audio is then summed back with the original temporary buffer using JUCE's \verb|addFrom()| function. The programmer can specify any number of Comb Filters in parallel during this step. In a similar manner, Allpass Filters can be implemented by applying a gain of $1 - g^2$ to the signal (post-Comb Filter) that is summed with the inverse of the signal $-g$ prior to the Comb Filter being applied. Upon processing being completed, the function updating the \textit{head} pointer can be called, and the program is ready to recieve the next buffer from the DAW.
 
-Convolution reverbs can be implemented using a similar approach, but can be aided through the use of JUCE's DSP class. [].
+Convolution reverbs can be implemented using a similar approach, but can be aided through the use of JUCE's DSP class. This is done by creating a temporary buffer similar to that of the Schroeder Comb Filter approach, but by copying the buffer to a \verb|juce::dsp::AudioBlock<Type>| object, as opposed to a separate buffer. This object automatically handles the buffer in a circular array, taking care of needed to update the \textit{head} pointer as mentioned previously. Upon checking that an Impulse Response is loaded in memory, the program simply calls a \verb|process()| function that automatically handles the FIR filter that is described in Chapter 4.
 
+\begin{singlespace}
+\lstinputlisting[caption=Code to process a buffer via Convolution., label=motion]{source/pseudo42.txt}
+\end{singlespace} \hfill \break
+\hspace*{0.6cm}Regardless of the implementation chosen, the programmer must allocate any memory required to allow processing prior to the \verb|processBlock()| function being called. To do this, the \verb|prepareToPlay()| function is called whenever audio data is recieved for the first time by the application (i.e., a buffer that is not silent is sent to the application). It is here that any pre-processing is done within the application, which includes initializing any arrays to be used as delay lines within the application. Private members \verb|channelA| and \verb|combOne| represent some such values, respectively, that describe how the \verb|prepareToPlay()| function might be called within an audio application.
 
-Through these filters, Schroeder's design can be implemented in code. Should the user wish to manipulate parameters in real-time, however, additional functionality must be implemented.
+\begin{singlespace}
+\lstinputlisting[caption=Code to initialize values to process., label=motion]{source/pseudo52.txt}
+\end{singlespace} \hfill \break
+\hspace*{0.6cm}Through these functions, each design can be implemented in code. Should the user wish to manipulate parameters in real-time, however, additional functionality must be implemented.
 
 \section{User Interface}
 As previously discussed in Chapter 3, the structure of an audio plugin mandates that the user interface and backend processing are separated. While the code mentioned previously handles the back end processing, it is up to the programmer to handle how the user interface functions so that the user can specify various parameters of the plugin without modifying the code manually. This allows the user to specify items such as room size, gain, and wet/dry mix.
 
-To do this, private members can be added to the \verb|PluginEditor| class and \verb|PluginProcessor| class respectively. Private members in the \verb|PluginEditor| class handle the specific frontend objects - that is, the sliders, knobs, and menu items themselves. Listing 6.5 describes how one such UI element can be implemented from the class constructor.
+To do this, private members can be added to the \verb|PluginEditor| class and \verb|PluginProcessor| class respectively. Private members in the \verb|PluginEditor| class handle the specific frontend objects - that is, the sliders, knobs, and menu items themselves. Listing 6.7 describes how one such UI element can be implemented from the class constructor.
 
 \begin{singlespace}
 \lstinputlisting[caption=Code to create a UI element., label=motion]{source/pseudo5.txt}
 \end{singlespace} \hfill \break
-\hspace*{0.6cm}However, this does not take into account how the two threads communicate with one another. To do this, JUCE contains a \verb|private juce::Slider::Listener| object under the \verb|juce_gui_basics/juce_gui_basics.h| header that allows the program to track the current value of the user interface. Upon doing so, the GUI updates the state of the corresponding \verb|PluginProcessor| value to align with the frontend.
+\hspace*{0.6cm}However, this does not take into account how the two threads communicate with one another. To do this, JUCE contains a private \verb|juce::Slider::Listener| object under the \verb|juce_gui_basics/juce_gui_basics.h| header that allows the program to track the current value of the user interface. Upon doing so, the GUI updates the state of the corresponding \verb|PluginProcessor| value to align with the frontend. Due to each thread running at different speeds, changing parameters in the frontend may introduce a minor amount of error when processing. However, JUCE additionally includes optional functions such as \verb|addFromWithRamp()| that can be used where this may be an issue.
 
 \begin{singlespace}
 \lstinputlisting[caption=Code to update backend parameters., label=motion]{source/pseudo6.txt}
@@ -84,16 +91,15 @@ Testing the plugin on Debian GNU/Linux 12, it is verified working on DAWs such a
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\begin{center}
 		\fbox{
-		\includegraphics[width=14cm]{figures/DAW-1.png}
+		\includegraphics[width=16cm]{figures/DAW-1.png}
 		}
 		\caption{The reverb plugin running within Reaper.}
 	\end{center}
 \end{figure}
-
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\begin{center}
 		\fbox{
-		\includegraphics[width=14cm]{figures/DAW-2.png}
+		\includegraphics[width=16cm]{figures/DAW-2.png}
 		}
 		\caption{The reverb plugin running within Renoise.}
 	\end{center}

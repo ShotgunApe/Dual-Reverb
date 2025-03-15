@@ -1,0 +1,13 @@
+void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
+    tmp.clear();
+    tmp.setSize(2, sampleRate * 2);
+    auto delayBufferSize = sampleRate * 2;
+
+    channelA.getBuffer().clear();
+    channelA.getBuffer().setSize (2, (int) delayBufferSize);
+    combOne.clear();
+    combOne.setSize(2, delayBufferSize);
+
+    channelA.setDelay((int) 2423);
+}
+
