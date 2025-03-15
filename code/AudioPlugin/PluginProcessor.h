@@ -49,7 +49,7 @@ public:
     // parameters here
     float proc_gain;
     int proc_roomsize;
-    int proc_reverb_type = 2;
+    int proc_reverb_type = 1;
 
     // files for IR
     juce::dsp::Convolution irLoader {juce::dsp::Convolution::NonUniform{ 1024 }};

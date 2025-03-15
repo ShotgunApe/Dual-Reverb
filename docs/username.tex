@@ -137,17 +137,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{abstract}
-[abstract]
-%Artificial reverberation is a method of adding ``echo'' to a particular sound to achieve a desired effect. In doing so, a signal with a short response time can make sound as if it is played in a bathroom, concert hall, or cathedral. Common C++ implementations of this effect usually fall under two different categories: \textit{Feedback Delay Networks} (FDNs) or \textit{Convolution Algorithms}. The former creates this effect via a number of delay lines in parallel, resulting in a reverberated sound provided a sufficiently high echo density is created. The latter uses the frequency response of an acoustic space to generate a realistic sounding reverberation, which is added to the input signal. This thesis studies the practical and sonic differences between these algorithms and their implementations. The final program will allow producers to use either one of these algorithms independently in the Digital Audio Workstation of their choice.
+Artificial reverberation is a method of adding ``echo'' to a particular sound to achieve a desired effect. In doing so, a signal with a short impulse can make sound as if it is played from a large reverberant space, such as a concert hall. Common C++ implementations of this effect usually fall under two different categories: the first using purely artificial means, and the second mimicking a provided impulse response. The former creates this effect via a number of delay lines in parallel, resulting in a reverberated sound provided a sufficiently high echo density is created. The latter uses the impulse response of an acoustic space to generate a realistic sounding reverb, which is added to the input signal. This thesis studies the practical and sonic differences between these algorithms and their implementations. This includes the recording and processing of impulse responses in an acoustic space. The final program will allow producers to use either one of these algorithms independently in the Digital Audio Workstation of their choice.
 \end{abstract}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                                       
 %                                                       Dedications					
 %                                                                                       
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%\dedication{This work is dedicated to the future generations of Wooster students.}
+\dedication{I shall be telling this with a sigh \\
+Somewhere ages and ages hence: \\
+Two roads diverged in a wood, and I - \\
+I took the one less traveled by, \\
+And that has made all the difference. \\ \hfill
+\\
+Robert Frost}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -157,7 +160,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{acknowl}  
-[acknowledgments]
+This thesis would not have been possible without the help and guidance of many people. First, I would like to thank my advisors Dr. Palmer and Greg Slawson for being patient with me during the creation of this thesis. Through the countless false starts and dead ends, they helped guide me and motivate me when I needed it most. In a similar vein, I would also like to thank Melissa Puster, Dan Krites, Dr. John Musgrave and Paul Musgrave for their help obtaining information and answering the (many) questions I had. Without them, this thesis would not be complete.
+
+I would like to thank my academic advisor Dr. Cara Haxo for providing a listening ear whenever I needed it. She has helped me academically and emotionally throughout my time at Wooster, and it is her guidance that has allowed me to make the most out of my time at Wooster. I would also likewise like to thank Dr. Heather Guarnera for her guidance and support during my Junior IS; it is with her help that I was able to see the light at the end of the tunnel for the first time.
+
+I would like to thank Grace and Lina for the time we spent together working (and struggling) through IS. While IS can be isolating at times, you both provided an outlet for me to share my latest interests with. You helped make the journey enjoyable, and motivated me to see things through to the very end.
+
+I would similarly like to thank my friends here and back at home for giving me motivation to see this project through. To Mom, Dad, Grandma \& Grandpa, Ethan, Jacob, CJ, Emma, Lee, Henry, Elena, Ethan \& Anthony, and to Mikey and friends, you have helped me in more ways than you can imagine.
+
+Most importantly, I would like to thank my partner Lily for their neverending support, love, and understanding as I have worked on this project. Through the long days and late nights, they have stuck by my side and provided more support than I could ever ask or wish to receive. You are the love of my life, and I cannot wait to spend the rest of my life with you.
 \end{acknowl}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
