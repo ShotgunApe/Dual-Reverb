@@ -1,0 +1,4 @@
+void AudioPluginAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
+{
+    processorRef.proc_gain = gain.getValue();
+}

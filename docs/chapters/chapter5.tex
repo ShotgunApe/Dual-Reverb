@@ -19,7 +19,7 @@ To implement a Comb Filter, one can imagine an array of floats representing a bu
 \end{singlespace} \hfill \break
 \hspace*{0.6cm}This circular behavior can be defined as a custom class \verb|DelayLine|, whose members are defined in Listing A.1. As part of this class, to implement \verb|fillBuffer()|, JUCE provides functions under the \verb|juce_audio_basics/juce_audio_basics.h| header. These include the functions \verb|getNumSamples()|, \verb|copyFrom()|, and \verb|getWritePointer()|. Essentially, the function \verb|fillBuffer()| first checks the size of the delay buffer. Upon doing so, if the write position (the \textit{front} pointer of the circular array) is within the bounds of the delay buffer, then the audio data can simply be copied from the delay buffer to the buffer via the \verb|copyFrom()| function. If not, care is taken to calculate the correct length of the delay buffer and how many samples are present between the \textit{head} and the \textit{back} pointer of the delay line. The \verb|copyFrom()| function can then be used in a similar manner.
 
-This takes care of filling the buffer with the data sent through the delay line (Figure 4.3, filling the buffer with the delay of time \textit{T}). However, \verb|readFromBuffer()| must read this data to be sent back through the filter as an input with some gain \text{g}. To calculate the gain parameter, the naive approach would be to set the variable to some constant. However, this does not work as the length of the decay would be different for each delay time \textit{T}. To ensure that each delay line does not have different lengths, \textit{g} be calculated as a function with respect to the length of time that the programmer wishes to have the Comb Filter last. This can be done with the following equation:
+This takes care of filling the buffer with the data sent through the delay line (Figure 4.3, filling the buffer with the delay of time \textit{T}). However, \verb|readFromBuffer()| must read this data to be sent back through the filter as an input with some gain \textit{g}. To calculate the gain parameter, the naive approach would be to set the variable to some constant. However, this does not work as the length of the decay would be different for each delay time \textit{T}. To ensure that each delay line does not have different lengths, \textit{g} be calculated as a function with respect to the length of time that the programmer wishes to have the Comb Filter last. This can be done with the following equation:
 
 \begin{center}
 \scalebox{1.3}{
@@ -56,8 +56,44 @@ With the gain parameter handled, the \verb|readFromBuffer()| function can be imp
 \begin{singlespace}
 \lstinputlisting[caption=Code to implement circular behavior in an array., label=motion]{source/pseudo4.txt}
 \end{singlespace} \hfill \break
-\hspace*{0.6cm}Placing each component in context, these functions work together by being placed within a greater \verb|processBlock()| function that takes a buffer, applies some processing, and sends it back to the DAW.
+\hspace*{0.6cm}Placing each component in context, these functions work together by being called within a greater \verb|processBlock()| function that takes a buffer, applies some processing, and returns the buffer back to the DAW. This function is run every time a buffer is sent from the DAW to the VST application. As mentioned in Chapter 3, there is only so much time for processing to be completed, so code must be efficient enough to avoid dropped buffers. The code within \verb|processBlock()| begins by checking how many channels are being processed within the buffer. Most cases, this number is either \textit{mono} (1 channel) or \textit{stereo} (2 channels). Upon determining the correct number of channels, the program then iterates through a \textit{for} loop to process the audio data for each channel. Here, one can begin by making a temporary copy of the buffer to process (allowing the programmer to make a separate \textit{wet} and \textit{dry} mix). This temporary buffer is then sent to a custom class \verb|TestReverb| that processes the buffer through the custom function \verb|processReverb()|. Here, the signal is separated into four separate channels - or, Comb Filters, rather - and processes the audio in the same manner done in Listing 6.1. Each channel of audio is then summed back with the original temporary buffer using JUCE's \verb|addFrom()| function. The programmer can specify any number of Comb Filters in parallel during this step. In a similar manner, Allpass Filters can be implemented by applying a gain of $1 - g^2$ to the signal (post-Comb Filter) that is summed with the inverse of the signal $-g$ prior to the Comb Filter being applied. Through these filters, Schroeder's design can be implemented in code.
+
+To implement a Convolution reverb, JUCE contains a \verb|| [].
+
+Should the user wish to manipulate parameters in real-time, however, additional functionality must be implemented.
 
 \section{User Interface}
+As previously discussed in Chapter 3, the structure of an audio plugin mandates that the user interface and backend processing are separated. While the code mentioned previously handles the back end processing, it is up to the programmer to handle how the user interface functions so that the user can specify various parameters of the plugin without modifying the code manually. This allows the user to specify items such as room size, gain, and wet/dry mix.
+
+To do this, private members can be added to the \verb|PluginEditor| class and \verb|PluginProcessor| class respectively. Private members in the \verb|PluginEditor| class handle the specific frontend objects - that is, the sliders, knobs, and menu items themselves. Listing 6.5 describes how one such UI element can be implemented from the class constructor.
+
+\begin{singlespace}
+\lstinputlisting[caption=Code to create a UI element., label=motion]{source/pseudo5.txt}
+\end{singlespace} \hfill \break
+\hspace*{0.6cm}However, this does not take into account how the two threads communicate with one another. To do this, JUCE contains a \verb|private juce::Slider::Listener| object under the \verb|juce_gui_basics/juce_gui_basics.h| header that allows the program to track the current value of the user interface. Upon doing so, the GUI updates the state of the corresponding \verb|PluginProcessor| value to align with the frontend.
+
+\begin{singlespace}
+\lstinputlisting[caption=Code to update backend parameters., label=motion]{source/pseudo6.txt}
+\end{singlespace} \hfill \break
+\hspace*{0.6cm} Through these principles, multiple UI elements can be added that allow the programmer to update any parameter in real time.
 
 \section{Compatibility with DAWs}
+Testing the plugin on Debian GNU/Linux 12, it is verified working on DAWs such as Reaper and Renoise. It is expected to work on Windows as well, but may require additional code signing to compile in Mac OSX without enabling developer mode.
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\includegraphics[width=14cm]{figures/DAW-1.png}
+		}
+		\caption{The reverb plugin running within Reaper.}
+	\end{center}
+\end{figure}
+
+\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
+	\begin{center}
+		\fbox{
+		\includegraphics[width=14cm]{figures/DAW-2.png}
+		}
+		\caption{The reverb plugin running within Renoise.}
+	\end{center}
+\end{figure}

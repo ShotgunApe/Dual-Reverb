@@ -1,0 +1,6 @@
+gain.setSliderStyle (juce::Slider::LinearVertical);
+gain.setRange (0.0f, 1.0f, 0.01f);
+gain.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
+gain.setPopupDisplayEnabled (true, false, this);
+gain.setTextValueSuffix ("Gain");
+gain.setValue (0.8f);
