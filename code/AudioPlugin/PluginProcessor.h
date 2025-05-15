@@ -48,7 +48,7 @@ public:
     //==============================================================================
     // parameters here
     float proc_gain;
-    int proc_roomsize;
+    int proc_roomsize = 50400;
     int proc_reverb_type = 1;
 
     // files for IR

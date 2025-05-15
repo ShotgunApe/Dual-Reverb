@@ -26,7 +26,7 @@ void DelayLine::fillBuffer (juce::AudioBuffer<float>& buffer, int channel) {
     }
 }
 
-void DelayLine::readFromBuffer (juce::AudioBuffer<float>& buffer, juce::AudioBuffer<float>& delayBuffer, int channel)
+void DelayLine::readFromBuffer (juce::AudioBuffer<float>& buffer, juce::AudioBuffer<float>& delayBuffer, int channel, int grabRoom)
 {
     auto bufferSize = buffer.getNumSamples();
     auto delayBufferSize = delayBuffer.getNumSamples();
@@ -39,7 +39,7 @@ void DelayLine::readFromBuffer (juce::AudioBuffer<float>& buffer, juce::AudioBuf
 
     // Calculate g based on length of delay itself to prevent different rates of decay (in the wise words of Will Pirkle, would otherwise "fail miserably")
     // RT_60 (157350) should be changed to variable which will (eventually) be parameter to change when setting "room size"
-    auto g = pow(10, ((double)(-3 * ((double) delayTime) / (int) 50400)));
+    auto g = pow(10, ((double)(-3 * ((double) delayTime) / (int) grabRoom)));
     if (readPosition + bufferSize < delayBufferSize) {
         buffer.addFromWithRamp (channel, 0, delayBuffer.getReadPointer (channel, readPosition), bufferSize, g, g);
     }

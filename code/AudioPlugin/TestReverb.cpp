@@ -45,7 +45,7 @@ void TestReverb::prepareReverb(double sampleRate)
     channelD.setDelay((int) 5903);
 }
 
-void TestReverb::processReverb(juce::AudioBuffer<float>& buffer, int channel)
+void TestReverb::processReverb(juce::AudioBuffer<float>& buffer, int channel, int size)
 {
     // COMB FILTERS
     // Start by holding the current dry signal as a temp var
@@ -56,26 +56,26 @@ void TestReverb::processReverb(juce::AudioBuffer<float>& buffer, int channel)
 
     // Complete each feedback loop and add them to their respective comb filter
     channelA.fillBuffer (combOne, channel);
-    channelA.readFromBuffer (combOne, channelA.getBuffer(), channel);
+    channelA.readFromBuffer (combOne, channelA.getBuffer(), channel, size);
     channelA.fillBuffer (combOne, channel);
 
     // Once fed back, add each comb filter to the wet signal
     buffer.addFrom(channel, 0, combOne, channel, 0, combOne.getNumSamples(), -1.0f);
 
     channelB.fillBuffer (combTwo, channel);
-    channelB.readFromBuffer (combTwo, channelB.getBuffer(), channel);
+    channelB.readFromBuffer (combTwo, channelB.getBuffer(), channel, size);
     channelB.fillBuffer (combTwo, channel);
 
     buffer.addFrom(channel, 0, combTwo, channel, 0, combTwo.getNumSamples(), -1.0f);
 
     channelC.fillBuffer (combThr, channel);
-    channelC.readFromBuffer (combThr, channelC.getBuffer(), channel);
+    channelC.readFromBuffer (combThr, channelC.getBuffer(), channel, size);
     channelC.fillBuffer (combThr, channel);
 
     buffer.addFrom(channel, 0, combThr, channel, 0, combThr.getNumSamples(), -1.0f);
 
     channelD.fillBuffer (combFou, channel);
-    channelD.readFromBuffer (combFou, channelD.getBuffer(), channel);
+    channelD.readFromBuffer (combFou, channelD.getBuffer(), channel, size);
     channelD.fillBuffer (combFou, channel);
 
     buffer.addFrom(channel, 0, combFou, channel, 0, combFou.getNumSamples(), -1.0f);

@@ -165,7 +165,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             tmp.makeCopyOf(buffer, 1);
 
             // Delay
-            reverb.processReverb(tmp, channel);
+            reverb.processReverb(tmp, channel, proc_roomsize);
 
             // Copy wet signal back to dry signal (allpass-kinda)
             buffer.applyGain(0.3f);

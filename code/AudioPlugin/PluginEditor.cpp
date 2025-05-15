@@ -9,7 +9,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 
     // UI EDITING!
     roomSize.setSliderStyle (juce::Slider::RotaryVerticalDrag);
-    roomSize.setRange (19350, 1935000, 1.0);
+    roomSize.setRange (50400, 1935000, 1.0);
     roomSize.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
     roomSize.setPopupDisplayEnabled (true, false, this);
     roomSize.setTextValueSuffix (" Room Size");

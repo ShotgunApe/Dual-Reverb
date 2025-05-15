@@ -10,7 +10,7 @@ public:
     ~TestReverb();
 
     void prepareReverb(double sampleRate);
-    void processReverb(juce::AudioBuffer<float>& buffer, int channel);
+    void processReverb(juce::AudioBuffer<float>& buffer, int channel, int size);
     void updatePosition(juce::AudioBuffer<float>& buffer);
 
 private:

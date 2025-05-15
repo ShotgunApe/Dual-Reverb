@@ -9,7 +9,7 @@ public:
     ~DelayLine();
 
     void fillBuffer (juce::AudioBuffer<float>& buffer, int channel);
-    void readFromBuffer (juce::AudioBuffer<float>& buffer, juce::AudioBuffer<float>& delayBuffer, int channel);
+    void readFromBuffer (juce::AudioBuffer<float>& buffer, juce::AudioBuffer<float>& delayBuffer, int channel, int grabRoom);
     void updateBufferPosition (juce::AudioBuffer<float>& buffer, juce::AudioBuffer<float>& delayBuffer);
     void setDelay (int time);
     void setSize (int size);

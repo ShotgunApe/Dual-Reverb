@@ -19,7 +19,7 @@ To implement a Comb Filter, one can imagine an array of floats representing a bu
 \end{singlespace} \hfill \break
 \hspace*{0.6cm}This circular behavior can be defined as a custom class \verb|DelayLine|, whose members are defined in Listing A.1. As part of this class, to implement \verb|fillBuffer()|, JUCE provides functions under the \verb|juce_audio_basics/juce_audio_basics.h| header. These include the functions \verb|getNumSamples()|, \verb|copyFrom()|, and \verb|getWritePointer()|. Essentially, the function \verb|fillBuffer()| first checks the size of the delay buffer. Upon doing so, if the write position (the \textit{front} pointer of the circular array) is within the bounds of the delay buffer, then the audio data can simply be copied from the delay buffer to the buffer via the \verb|copyFrom()| function. If not, care is taken to calculate the correct length of the delay buffer and how many samples are present between the \textit{head} and the \textit{back} pointer of the delay line. The \verb|copyFrom()| function can then be used in a similar manner.
 
-This takes care of filling the buffer with the data sent through the delay line (Figure 4.3, filling the buffer with the delay of time \textit{T}). However, \verb|readFromBuffer()| must read this data to be sent back through the filter as an input with some gain \textit{g}. To calculate the gain parameter, the naive approach would be to set the variable to some constant. However, this does not work as the length of the decay would be different for each delay time \textit{T}. To ensure that each delay line does not have different lengths, \textit{g} be calculated as a function with respect to the length of time that the programmer wishes to have the Comb Filter last. This can be done with the following equation:
+This takes care of filling the buffer with the data sent through the delay line (Figure 4.3, filling the buffer with the delay of time \textit{T}). However, \verb|readFromBuffer()| must read this data to be sent back through the filter as an input with some gain \textit{g}. To calculate the gain parameter, the naive approach would be to set the variable to some constant. However, this does not work as the length of the decay would be different for each delay time \textit{T}. To ensure that each delay line does not have different lengths, \textit{g} must be calculated as a function with respect to the length of time that the programmer wishes to have the Comb Filter last. This can be done with the following equation:
 
 \begin{center}
 \scalebox{1.3}{
@@ -80,15 +80,15 @@ To do this, private members can be added to the \verb|PluginEditor| class and \v
 \end{singlespace} \hfill \break
 \hspace*{0.6cm}However, this does not take into account how the two threads communicate with one another. To do this, JUCE contains a private \verb|juce::Slider::Listener| object under the \verb|juce_gui_basics/juce_gui_basics.h| header that allows the program to track the current value of the user interface. Upon doing so, the GUI updates the state of the corresponding \verb|PluginProcessor| value to align with the frontend. Due to each thread running at different speeds, changing parameters in the frontend may introduce a minor amount of error when processing. However, JUCE additionally includes optional functions such as \verb|addFromWithRamp()| that can be used where this may be an issue.
 
+\hfill \break
+
 \begin{singlespace}
 \lstinputlisting[caption=Code to update backend parameters., label=motion]{source/pseudo6.txt}
 \end{singlespace} \hfill \break
 \hspace*{0.6cm} Through these principles, multiple UI elements can be added that allow the programmer to update any parameter in real time.
 
 \section{Compatibility with DAWs}
-Testing the plugin on Debian GNU/Linux 12, it is verified working on DAWs such as Reaper and Renoise. It is expected to work on Windows as well, but may require additional code signing to compile in Mac OSX without enabling developer mode. \hfill \break
-
-\clearpage
+Testing the plugin on Debian GNU/Linux 12, it is verified working on DAWs such as Reaper and Renoise. It is expected to work on Windows as well, but may require additional code signing to compile in Mac OSX without enabling developer mode.
 
 \begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
 	\begin{center}
@@ -96,14 +96,5 @@ Testing the plugin on Debian GNU/Linux 12, it is verified working on DAWs such a
 		\includegraphics[width=14cm]{figures/DAW-1.png}
 		}
 		\caption{The reverb plugin running within Reaper.}
-	\end{center}
-\end{figure}
-
-\begin{figure}[h] % [h] used to prevent {figure} from doing weird positioning
-	\begin{center}
-		\fbox{
-		\includegraphics[width=14cm]{figures/DAW-2.png}
-		}
-		\caption{The reverb plugin running within Renoise.}
 	\end{center}
 \end{figure}
